@@ -23,8 +23,9 @@
     [super viewDidLoad];
     
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+    self.navigationController.navigationBar.backgroundColor = color;
     [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
@@ -82,7 +83,7 @@
                     if ([self_.postLikes intValue]==0) {
                         self_.likeStatus = @"NO";
                     }
-                    NSLog(@"likes = %@",self_.postLikes);
+//                    NSLog(@"likes = %@",self_.postLikes);
                     
                     if (!(self_.postLikers == (id)[NSNull null])) {
                         if ([self_.postLikers containsObject:self_.myEmail]) {
@@ -95,7 +96,7 @@
                         //        NSLog(@"try try try");
                     }
                     
-                    NSLog(@"like status = %@",self_.likeStatus);
+//                    NSLog(@"like status = %@",self_.likeStatus);
                     
                     
                     if ([self_.likeStatus isEqualToString:@"YES"]) {
@@ -176,7 +177,7 @@
                     self_.postLikes = @"0";
                     
                     self_.likeStatus = @"NO";
-                    NSLog(@"likes = %@",self_.postLikes);
+//                    NSLog(@"likes = %@",self_.postLikes);
                     
                     self_.postLikers = [NSMutableArray arrayWithObject:self_.myEmail];
                     
@@ -211,7 +212,7 @@
                 self_.postLikes = @"0";
                 
                 self_.likeStatus = @"NO";
-                NSLog(@"likes = %@",self_.postLikes);
+//                NSLog(@"likes = %@",self_.postLikes);
                 
                 self_.postLikers = [NSMutableArray arrayWithObject:self_.myEmail];
                 
@@ -282,7 +283,7 @@
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+                //NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
                 [self.view setUserInteractionEnabled:YES];
                 
             }
@@ -294,6 +295,9 @@
 {
     [super viewWillAppear:animated];
     //    [self animateReload];
+    
+    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+    [self.view setBackgroundColor:color];
 }
 
 

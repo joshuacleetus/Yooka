@@ -48,7 +48,7 @@ const NSInteger yookaThumbnailSpace = 0;
     
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     
     [_gridScrollView removeFromSuperview];
     
@@ -160,7 +160,7 @@ const NSInteger yookaThumbnailSpace = 0;
                  [self.navigationItem setTitle:[_userFullName uppercaseString]];
                  _userPicUrl = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", _userName];
                  _userEmail = [user objectForKey:@"email"];
-                 NSLog(@"user pic url = %@",_userPicUrl);
+//                 NSLog(@"user pic url = %@",_userPicUrl);
                  [self getUserImage];
                  
                  _usernameLbl.text = _userFullName;
@@ -264,7 +264,7 @@ const NSInteger yookaThumbnailSpace = 0;
 
 - (void)userFollowing:(id)sender
 {
-    NSLog(@"Following Button pressed");
+//    NSLog(@"Following Button pressed");
     UserFollowingViewController *media = [[UserFollowingViewController alloc]init];
 //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
 //    self.navigationItem.backBarButtonItem = backBtn;
@@ -276,7 +276,7 @@ const NSInteger yookaThumbnailSpace = 0;
 
 - (void)userFollowers:(id)sender
 {
-    NSLog(@"Followers Button pressed");
+//    NSLog(@"Followers Button pressed");
     UserFollowersViewController *media = [[UserFollowersViewController alloc]init];
 //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
 //    self.navigationItem.backBarButtonItem = backBtn;
@@ -288,7 +288,7 @@ const NSInteger yookaThumbnailSpace = 0;
 
 - (void)backAction
 {
-    NSLog(@"BACK BUTTON");
+//    NSLog(@"BACK BUTTON");
 }
 
 - (void)getFollowingUsers
@@ -309,6 +309,7 @@ const NSInteger yookaThumbnailSpace = 0;
             if (!objectsOrNil || !objectsOrNil.count) {
                
             } else {
+                
                 YookaBackend *yooka = objectsOrNil[0];
 
                 _followingUsers = [NSMutableArray arrayWithArray:yooka.following_users];
@@ -322,6 +323,7 @@ const NSInteger yookaThumbnailSpace = 0;
                 _userFollowingLbl.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.0];
                 _userFollowingLbl.textAlignment = NSTextAlignmentLeft;
                 [self.gridScrollView addSubview:_userFollowingLbl];
+                
             }
             
         }
@@ -383,7 +385,7 @@ const NSInteger yookaThumbnailSpace = 0;
 - (void)saveUserImage
 {
     
-        NSLog(@"profile image");
+//        NSLog(@"profile image");
         YookaBackend *yookaObject = [[YookaBackend alloc]init];
         yookaObject.kinveyId = _userEmail;
         if (_userImage) {
@@ -397,11 +399,11 @@ const NSInteger yookaThumbnailSpace = 0;
         //Kinvey use code: add a new update to the updates collection
         [self.updateStore saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
             if (errorOrNil == nil) {
-                NSLog(@"saved successfully");
+//                NSLog(@"saved successfully");
                 YookaAppDelegate* appDelegate = (id)[UIApplication sharedApplication].delegate;
                 [appDelegate userLoggedIn];
             } else {
-                NSLog(@"save failed %@",errorOrNil);
+//                NSLog(@"save failed %@",errorOrNil);
             }
         } withProgressBlock:nil];
     
@@ -617,9 +619,9 @@ const NSInteger yookaThumbnailSpace = 0;
 
 - (void)buttonAction:(id)sender
 {
-    UIButton* button = sender;
-    NSUInteger b = button.tag;
-    NSLog(@"button %lu pressed",(unsigned long)b);
+//    UIButton* button = sender;
+//    NSUInteger b = button.tag;
+//    NSLog(@"button %lu pressed",(unsigned long)b);
     
 }
 

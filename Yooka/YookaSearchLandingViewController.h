@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PanelDelegate.h"
 
 @interface YookaSearchLandingViewController : UIViewController<UITableViewDataSource,UIAlertViewDelegate,UITableViewDelegate>
 
@@ -15,5 +16,9 @@
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (retain) NSIndexPath *lastSelected;
 
+@property (nonatomic, assign) id<PanelDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIButton *navButton;
+
+- (IBAction)navButtonClicked:(id)sender;
 
 @end

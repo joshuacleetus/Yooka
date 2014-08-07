@@ -8,7 +8,7 @@
 
 #import "YookaMenu2ViewController.h"
 #import "YookaPostViewController.h"
-#import <Foursquare2.h>
+#import "Foursquare2.h"
 #import "FSConverter.h"
 #import "FSVenue.h"
 #import <Reachability.h>
@@ -38,7 +38,7 @@
     UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Add Menu" style:UIBarButtonItemStylePlain target:self action:@selector(addMenu)];
     self.navigationItem.rightBarButtonItem = anotherButton;
     
-    NSLog(@"venue id = %@",_venueID);
+    //NSLog(@"venue id = %@",_venueID);
     _menuTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height)];
     _menuTableView.delegate = self;
     _menuTableView.dataSource = self;
@@ -99,7 +99,7 @@
             _menuObjects = [NSMutableArray new];
         }
         NSString *entered = [alertView textFieldAtIndex:0].text;
-        NSLog(@"entered = %@",entered);
+        //NSLog(@"entered = %@",entered);
         [self.menuObjects insertObject:entered atIndex:0];
         [self.menuTableView reloadData];
     }
@@ -109,7 +109,7 @@
 {
     [super viewWillAppear:animated];
     [self.navigationItem setTitle:_venueSelected];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -227,11 +227,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        NSLog(@"did select row 2");
+        //NSLog(@"did select row 2");
         
         // keep track of the last selected cell
         self.lastSelected = indexPath;
-        NSLog(@"index 1 %@", indexPath);
+        //NSLog(@"index 1 %@", indexPath);
         _menuSelected = self.filteredArray[indexPath.row];
         
     }else{
@@ -240,20 +240,21 @@
         
         // keep track of the last selected cell
         self.lastSelected = indexPath;
-        NSLog(@"index 1 %@", indexPath);
+        //NSLog(@"index 1 %@", indexPath);
         _menuSelected = self.menuObjects[indexPath.row];
+        
     }
+    
     if ([_menuSelected isEqualToString:@"No menu items found. Add one."]) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please add a menu item", @"title")
                                                         message:nil
-                                                       delegate:nil
+                                                       delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"OK!", @"OK!")
                                               otherButtonTitles:nil];
         alert.tag=0;
         [alert show];
     }else{
         [self userDidSelectVenue];
-        
     }
     
 }
@@ -270,7 +271,7 @@
                                   callback:^(BOOL success, id result){
                                       if (success) {
                                           NSDictionary *dic = result;
-                                          NSLog(@"dic = %@",dic);
+                                          //NSLog(@"dic = %@",dic);
                                           NSArray *venues = [dic valueForKeyPath:@"response.venues"];
                                           FSConverter *converter = [[FSConverter alloc]init];
                                           self.menu = [converter convertToObjects:venues];
@@ -282,20 +283,20 @@
 }
 
 - (void)getMenuForVenue {
-    [Foursquare2 venueGetMenus:_venueID
+    [Foursquare2 venueGetMenu:_venueID
                       callback:^(BOOL success, id result){
                           if (success) {
                               NSDictionary *dic = result;
-                              NSLog(@"menu data 1 = %@",dic);
+                              //NSLog(@"menu data 1 = %@",dic);
                               NSString *menus = [dic valueForKeyPath:@"response.menu.menus.count"];
-                              NSLog(@"menu data 2 = %@",menus);
+                              //NSLog(@"menu data 2 = %@",menus);
                               
                               if (!([menus isEqual:0])) {
                                   
                                   NSString *menu1 = [result valueForKeyPath:@"response.menu.menus.items.entries.items.entries.items.name"];
                                   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:menu1 options:NSJSONWritingPrettyPrinted error:nil];
                                   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                                  NSLog(@"menu 1 = %@",jsonString);
+                                  //NSLog(@"menu 1 = %@",jsonString);
                                   
                                   _menuObjects = [NSMutableArray array];
                                   NSScanner *scanner = [NSScanner scannerWithString:jsonString];

@@ -234,8 +234,6 @@
         /*Do iPad stuff here.*/
     }
     
-
-
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -249,6 +247,16 @@
         
     }
     
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return (UIInterfaceOrientationMaskPortrait);
 }
 
 - (void)resetPassword:(id)sender {
@@ -290,10 +298,10 @@
     [sender resignFirstResponder];
     
     NSString *username = _username.text;
-    NSLog(@"username = %@",username);
+//    NSLog(@"username = %@",username);
     NSString *yookaUsername = [username lowercaseString];
     
-    NSString *yookaPassword = [_password.text lowercaseString];
+    NSString *yookaPassword = _password.text;
     
     if ([_username.text  isEqual: @""] || _username.text ==nil) {
         

@@ -67,12 +67,37 @@
              @"HuntLogoUrl" : @"HuntLogoUrl",
              @"likers" : @"likers",
              @"postVote" : @"postVote",
+             @"tag" : @"tag",
+             @"huntPicsUrl" : @"huntPicsUrl",
+             @"huntLocations" : @"huntLocations",
+             @"huntPicUrl" : @"huntPicUrl",
+             @"Category" : @"Category",
+             @"SubcatCount" : @"SubcatCount",
+             @"subcatName" : @"subcatName",
+             @"subcatDescription" : @"subcatDescription",
+             @"subcatPicUrl" : @"subcatPicUrl",
+             @"subcatHuntNames" : @"subcatHuntNames",
+             @"postType" : @"postType",
+             @"postCaption" : @"postCaption",
+             @"myHuntCount" : @"myHuntCount",
+             @"totalHuntCount" : @"totalHuntCount",
+             @"teampic" :@"teampic",
+             @"popuppic" : @"popuppic",
+             @"Hood" : @"Hood",
+             @"category_hunts" : @"category_hunts",
+             @"sponsored_hunts" : @"sponsored_hunts",
+             @"menu_list" : @"menu_list",
+             @"yay_list" : @"yay_list",
+             @"nay_list" : @"nay_list",
+             @"secret" : @"secret",
+             @"yooka_private" : @"yooka_private",
+             @"deleted" : @"deleted",
+             @"public_hunts" : @"public_hunts",
              @"meta"       : KCSEntityKeyMetadata,
              @"kinveyId"   : KCSEntityKeyId,
              @"location"   : KCSEntityKeyGeolocation,
              };
 }
-
 
 + (NSDictionary *)kinveyPropertyToCollectionMapping
 {

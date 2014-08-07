@@ -302,13 +302,13 @@
                     YookaBackend *backendObject = objectsOrNil[0];
                     _following_users = [NSMutableArray arrayWithArray:backendObject.following_users];
                     
-                    NSLog(@"successful reload: %@", backendObject.following_users); // event updated
+                    //NSLog(@"successful reload: %@", backendObject.following_users); // event updated
                 }else{
                     [self showFollowBtn];
                 }
                 
             } else {
-                NSLog(@"error occurred: %@", errorOrNil);
+                //NSLog(@"error occurred: %@", errorOrNil);
                 [self showFollowBtn];
             }
         } withProgressBlock:nil];
@@ -331,13 +331,13 @@
                     _followers = [NSMutableArray arrayWithArray:backendObject.followers];
                     [self checkUserInMyArray];
 
-                    NSLog(@"successful reload: %@", backendObject.followers); // event updated
+                    //NSLog(@"successful reload: %@", backendObject.followers); // event updated
                 }else{
                     [self showFollowBtn];
                 }
                 
             } else {
-                NSLog(@"error occurred: %@", errorOrNil);
+                //NSLog(@"error occurred: %@", errorOrNil);
                 [self showFollowBtn];
             }
         } withProgressBlock:nil];
@@ -375,7 +375,7 @@
 
 - (void)followBtnTouched:(id)sender
 {
-    NSLog(@"Follow button pressed");
+    //NSLog(@"Follow button pressed");
           
     [self.followBtn setHidden:YES];
     [self.unFollowBtn setEnabled:NO];
@@ -446,14 +446,14 @@
                 }
                 [self savefollowingUsers];
                 
-                NSLog(@"successful reload: %@", backendObject.followers); // event updated
+                //NSLog(@"successful reload: %@", backendObject.followers); // event updated
             }else{
                 [_following_users addObject:_userEmail];
                 [self savefollowingUsers];
             }
             
         } else {
-            NSLog(@"error occurred: %@", errorOrNil);
+            //NSLog(@"error occurred: %@", errorOrNil);
             [_following_users addObject:_userEmail];
             [self savefollowingUsers];
             
@@ -473,12 +473,12 @@
     [store saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil != nil) {
             //save failed, show an error alert
-            NSLog(@"Not saved event (error= %@).",errorOrNil);
+            //NSLog(@"Not saved event (error= %@).",errorOrNil);
             [self.unFollowBtn setEnabled:YES];
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+                //NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
             [self.unFollowBtn setEnabled:YES];
 
             }
@@ -498,12 +498,12 @@
     [store saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil != nil) {
             //save failed, show an error alert
-            NSLog(@"Not saved event (error= %@).",errorOrNil);
+            //NSLog(@"Not saved event (error= %@).",errorOrNil);
             
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+               // NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
             }
         }
     } withProgressBlock:nil];
@@ -521,13 +521,13 @@
     [store saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil != nil) {
             //save failed, show an error alert
-            NSLog(@"Not saved event (error= %@).",errorOrNil);
+            //NSLog(@"Not saved event (error= %@).",errorOrNil);
             [self.unFollowBtn setEnabled:YES];
 
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+                //NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
                 [self.unFollowBtn setEnabled:YES];
             }
         }
@@ -547,13 +547,13 @@
     [store saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil != nil) {
             //save failed, show an error alert
-            NSLog(@"Not saved event (error= %@).",errorOrNil);
+            //NSLog(@"Not saved event (error= %@).",errorOrNil);
             [self.followBtn setEnabled:YES];
 
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+                //NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
             }
             [self.followBtn setEnabled:YES];
 
@@ -581,7 +581,7 @@
 
 - (void)unFollowBtnTouched:(id)sender
 {
-    NSLog(@"UnFollow button pressed");
+   // NSLog(@"UnFollow button pressed");
     [self.unFollowBtn setHidden:YES];
     [self showFollowBtn];
     [self.followBtn setEnabled:NO];
@@ -652,11 +652,11 @@
 
                 }
 
-                NSLog(@"successful reload: %@", backendObject.followers); // event updated
+                //NSLog(@"successful reload: %@", backendObject.followers); // event updated
             }
             
         } else {
-            NSLog(@"error occurred: %@", errorOrNil);
+            //NSLog(@"error occurred: %@", errorOrNil);
             [self showFollowBtn];
         }
     } withProgressBlock:nil];
@@ -665,7 +665,7 @@
 
 - (void)userFollowing:(id)sender
 {
-    NSLog(@"Following Button pressed");
+    //NSLog(@"Following Button pressed");
     UserFollowingViewController *media = [[UserFollowingViewController alloc]init];
     //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     //    self.navigationItem.backBarButtonItem = backBtn;
@@ -677,7 +677,7 @@
 
 - (void)userFollowers:(id)sender
 {
-    NSLog(@"Followers Button pressed");
+    //NSLog(@"Followers Button pressed");
     UserFollowersViewController *media = [[UserFollowersViewController alloc]init];
     //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     //    self.navigationItem.backBarButtonItem = backBtn;

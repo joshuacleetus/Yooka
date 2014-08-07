@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4200F86844F547EDBCA50C37"
+               BlueprintIdentifier = "FCE0CEACA9224226B19191D1"
                BuildableName = "libPods-DMActivityInstagram.a"
                BlueprintName = "Pods-DMActivityInstagram"
                ReferencedContainer = "container:Pods.xcodeproj">

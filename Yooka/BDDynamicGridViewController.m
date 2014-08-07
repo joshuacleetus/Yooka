@@ -116,12 +116,19 @@
     _profile_bg1.image = [UIImage imageNamed:@"profile_icons.png"];
     [_headerView addSubview:_profile_bg1];
     
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSData* imageData = [ud objectForKey:@"MyProfilePic"];
+    UIImage *image = [UIImage imageWithData:imageData];
+    
     _userView = [[UIImageView alloc]initWithFrame:CGRectMake(115, 29, 90, 90)];
     self.userView.layer.cornerRadius = self.userView.frame.size.height / 2;
     [self.userView.layer setBorderWidth:4.0];
     [self.userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
     [self.userView setContentMode:UIViewContentModeScaleAspectFill];
     [self.userView setClipsToBounds:YES];
+    if (image) {
+        [self.userView setImage:image];
+    }
     [_headerView addSubview:_userView];
     
     self.circle_one = [[UIView alloc]initWithFrame:CGRectMake(105, 19, 110, 110)];
@@ -143,9 +150,19 @@
     _usernameLbl.textAlignment = NSTextAlignmentCenter;
     [_headerView addSubview:_usernameLbl];
     
+    _cacheFollowingUsers = [NSMutableArray new];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _cacheFollowingUsers = [[defaults objectForKey:@"followingUserNames"]mutableCopy];
+    
     _userFollowingLbl = [[UILabel alloc]initWithFrame:CGRectMake(26, 183, 85, 17)];
     _userFollowingLbl.textColor = [UIColor whiteColor];
-    _userFollowingLbl.text = @"0 Following";
+    if (_cacheFollowingUsers.count>0) {
+        NSString *following_count = [NSString stringWithFormat:@"%lu Following",(unsigned long)_cacheFollowingUsers.count];
+        _userFollowingLbl.text = following_count;
+        [self findFollowingUsers];
+    }else{
+        _userFollowingLbl.text = @"0 Following";
+    }
     _userFollowingLbl.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.0];
     _userFollowingLbl.textAlignment = NSTextAlignmentLeft;
     [_headerView addSubview:_userFollowingLbl];
@@ -157,9 +174,17 @@
     _userpicturesLbl.textAlignment = NSTextAlignmentLeft;
     [_headerView addSubview:_userpicturesLbl];
     
+    _cacheFollowers = [NSMutableArray new];
+    _cacheFollowers = [[defaults objectForKey:@"followers"]mutableCopy];
+    
     _userFollowersLbl = [[UILabel alloc]initWithFrame:CGRectMake(245, 183, 85, 17)];
     _userFollowersLbl.textColor = [UIColor whiteColor];
-    _userFollowersLbl.text = @"0 Followers";
+    if (_cacheFollowers.count>0) {
+        NSString *followers_count = [NSString stringWithFormat:@"%lu Followers",(unsigned long)_cacheFollowers.count];
+        _userFollowersLbl.text = followers_count;
+    }else{
+        _userFollowersLbl.text = @"0 Followers";
+    }
     _userFollowersLbl.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.0];
     _userFollowersLbl.textAlignment = NSTextAlignmentLeft;
     [_headerView addSubview:_userFollowersLbl];
@@ -224,8 +249,9 @@
                              // do something with image
                             _userImage = image;
                             _userView.image = image;
-                            //                        [self.userView.layer setCornerRadius:self.userView.frame.size.width/2];
-                            //                        [self.userView setClipsToBounds:YES];
+                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                             [defaults setObject:UIImagePNGRepresentation(image) forKey:@"MyProfilePic"];
+                             [defaults synchronize];
                             [_headerView addSubview:_userView];
                             //                            NSLog(@"profile image");
                             
@@ -249,8 +275,9 @@
                              // do something with image
                             _userImage = image;
                             _userView.image = image;
-                            //                        [self.userView.layer setCornerRadius:self.userView.frame.size.width/2];
-                            //                        [self.userView setClipsToBounds:YES];
+                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                             [defaults setObject:UIImagePNGRepresentation(image) forKey:@"MyProfilePic"];
+                             [defaults synchronize];
                             [_headerView addSubview:_userView];
                             //                            NSLog(@"profile image");
                             
@@ -276,8 +303,9 @@
                          // do something with image
                         _userImage = image;
                         _userView.image = image;
-                        //                        [self.userView.layer setCornerRadius:self.userView.frame.size.width/2];
-                        //                        [self.userView setClipsToBounds:YES];
+                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                         [defaults setObject:UIImagePNGRepresentation(image) forKey:@"MyProfilePic"];
+                         [defaults synchronize];
                         [_headerView addSubview:_userView];
                         //                            NSLog(@"profile image");
                         
@@ -318,6 +346,10 @@
         _userImage = image;
         _userView.image = image;
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:UIImagePNGRepresentation(image) forKey:@"MyProfilePic"];
+        [defaults synchronize];
+        
         //        [self.userView.layer setCornerRadius:self.userView.frame.size.width/2];
         //        [self.userView setClipsToBounds:YES];
         [self.gridScrollView addSubview:_userView];
@@ -331,7 +363,7 @@
 - (void)saveUserImage
 {
     
-    NSLog(@"profile image");
+    //NSLog(@"profile image");
     YookaBackend *yookaObject = [[YookaBackend alloc]init];
     yookaObject.kinveyId = _userEmail;
     if (_userImage) {
@@ -345,9 +377,9 @@
     //Kinvey use code: add a new update to the updates collection
     [self.updateStore saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil == nil) {
-            NSLog(@"saved successfully");
+            //NSLog(@"saved successfully");
         } else {
-            NSLog(@"save failed %@",errorOrNil);
+            //NSLog(@"save failed %@",errorOrNil);
         }
     } withProgressBlock:nil];
     
@@ -356,7 +388,7 @@
 
 - (void)userFollowing:(id)sender
 {
-    NSLog(@"Following Button pressed");
+    //NSLog(@"Following Button pressed");
     UserFollowingViewController *media = [[UserFollowingViewController alloc]init];
     //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     //    self.navigationItem.backBarButtonItem = backBtn;
@@ -368,7 +400,7 @@
 
 - (void)userFollowers:(id)sender
 {
-    NSLog(@"Followers Button pressed");
+    //NSLog(@"Followers Button pressed");
     UserFollowersViewController *media = [[UserFollowersViewController alloc]init];
     //    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     //    self.navigationItem.backBarButtonItem = backBtn;
@@ -399,9 +431,12 @@
                 YookaBackend *yooka = objectsOrNil[0];
                 
                 _followingUsers = [NSMutableArray arrayWithArray:yooka.following_users];
-                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject:_followingUsers forKey:@"followingUserNames"];
+                [defaults synchronize];
                 [_userFollowingLbl removeFromSuperview];
-                
+                _cacheFollowingUsers = _followingUsers;
+                l=0;
                 _userFollowingLbl = [[UILabel alloc]initWithFrame:CGRectMake(26, 183, 85, 17)];
                 _userFollowingLbl.textColor = [UIColor whiteColor];
                 NSString *followingCount = [NSString stringWithFormat:@"%lu Following",(unsigned long)_followingUsers.count];
@@ -436,7 +471,10 @@
                 YookaBackend *yooka = objectsOrNil[0];
                 
                 _followerUsers = [NSMutableArray arrayWithArray:yooka.followers];
-                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject:_followerUsers forKey:@"followers"];
+                [defaults synchronize];
+                _cacheFollowers = _followerUsers;
                 [_userFollowersLbl removeFromSuperview];
                 
                 _userFollowersLbl = [[UILabel alloc]initWithFrame:CGRectMake(245, 183, 85, 17)];
@@ -479,7 +517,76 @@
     }];
 }
 
+- (void)findFollowingUsers{
+    
+    if (l<_cacheFollowingUsers.count) {
+        
+        NSString *followingUserEmail = _cacheFollowingUsers[j];
+        NSString *collection_name = @"userPicture";
+        NSString *custom_endpoint = @"NewsFeed";
+        NSDictionary *_dict = [[NSDictionary alloc]initWithObjectsAndKeys:followingUserEmail,@"userEmail",collection_name,@"collectionName",_fieldName1,@"fieldName", nil];
+        
+        [KCSCustomEndpoints callEndpoint:custom_endpoint params:_dict completionBlock:^(id results, NSError *error){
+            if ([results isKindOfClass:[NSArray class]]) {
+                //NSLog(@"Results = \n %@",results);
+                NSMutableArray *results_array = [NSMutableArray arrayWithArray:results];
+                if (results_array && results_array.count) {
+                    NSString *user_full_name = [results[0] objectForKey:@"userFullName"];
+                    NSString *user_pic_url = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
+                    
+                    [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:user_pic_url]
+                                                                        options:0
+                                                                       progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                     {
+                         // progression tracking code
+                     }
+                                                                      completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                     {
+                         if (image && finished)
+                         {
+                             // do something with image
+                             NSLog(@"yes.... image....");
+                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                             [defaults setObject:user_full_name forKey:_cacheFollowingUsers[l]];
+                             NSString *userId3 = [NSString stringWithFormat:@"%@%@%@",_cacheFollowingUsers[l],_cacheFollowingUsers[l],_cacheFollowingUsers[l]];
+                             [defaults setObject:UIImagePNGRepresentation(image) forKey:userId3];
+                             [defaults synchronize];
+                             
+                             l++;
+                             [self findFollowingUsers];
+                             
+                         }else{
+                             l++;
+                             [self findFollowingUsers];
+                         }
+                     }];
+                    
 
+                    
+                }else{
+                    
+                    l++;
+                    [self findFollowingUsers];
+                    
+                }
+                
+            }else{
+                
+                l++;
+                [self findFollowingUsers];
+                
+            }
+        }];
+        
+    }
+    
+    if (j==_followingUsers.count) {
+        
+
+        
+    }
+    
+}
 
 - (BOOL)shouldAutorotate
 {
@@ -546,7 +653,6 @@
 //{
 //    return 213;
 //}
-
 
 - (NSArray *)rowInfos
 {

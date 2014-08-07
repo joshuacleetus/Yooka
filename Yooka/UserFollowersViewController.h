@@ -21,9 +21,10 @@
 @property (nonatomic, strong) NSString *followerEmail;
 @property (nonatomic, strong) NSString *followerPicUrl;
 @property (nonatomic, strong) NSString *followerFullName;
+@property (nonatomic, strong) NSString *myEmail;
 
 @property (nonatomic, strong) NSMutableArray *results;
-@property (nonatomic, strong) NSMutableArray *userFollowing;
+@property (nonatomic, strong) NSMutableArray *userFollower;
 @property (nonatomic, strong) NSMutableArray *userFollowingEmail;
 @property (nonatomic, strong) NSMutableArray *userFollowingFullName;
 @property (nonatomic, strong) IBOutlet UITableView *followerTableView;
@@ -49,5 +50,11 @@
 @property (nonatomic, strong) NSString *userEmailSelected;
 @property (nonatomic, strong) NSString *userFullNameSelected;
 @property (nonatomic, strong) NSString *userPicUrlSelected;
+
+@property (strong, nonatomic) UIButton *backBtn;
+@property (strong, nonatomic) IBOutlet UIImageView* backBtnImage;
+
+@property (nonatomic, strong) UILabel *titleLabel;
+
 
 @end

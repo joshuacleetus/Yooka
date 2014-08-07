@@ -11,13 +11,25 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import <FUIButton.h>
+#import "PanelDelegate.h"
+
+@protocol senddata2Protocol <NSObject>
+
+-(void)sendDataToA:(NSString *)huntName2; //I am thinking my data is NSArray , you can use another object for store your information.
+
+@end
 
 @interface YookaHuntVenuesViewController : UIViewController<UIAlertViewDelegate,UIScrollViewAccessibilityDelegate,UIScrollViewDelegate,CLLocationManagerDelegate, MKMapViewDelegate,UITableViewDelegate, UITableViewDataSource,UIDocumentInteractionControllerDelegate,UINavigationControllerDelegate,UIGestureRecognizerDelegate> {
     int k;
+    int p;
     int count,size,count2,size2;
     int i, y,y2;
+    int b1;
     CGRect new_dish_frame;
     CGRect new_dish_frame2;
+    int contentSize;
+    UIView * expandiView;
+    BOOL viewExpanded;
 
 }
 
@@ -64,9 +76,12 @@
 @property (nonatomic, retain) CLLocation* oldLocation;
 @property (nonatomic, strong) CLLocation* currentLocation;
 @property (nonatomic, strong) IBOutlet MKMapView *mapView;
+@property (nonatomic, strong) IBOutlet MKMapView *mapView2;
+
 @property (nonatomic, strong) NSString* longitude;
 @property (nonatomic, strong) NSString* latitude;
 @property (nonatomic, strong) NSMutableArray *mapAnnotations;
+@property (nonatomic, strong) NSMutableArray *mapAnnotations2;
 
 @property (nonatomic, strong) UIColor *yookaGreen;
 @property (nonatomic, strong) UIColor *yookaGreen2;
@@ -80,15 +95,21 @@
 @property (nonatomic, strong) IBOutlet UIView *modalView2;
 
 @property (nonatomic, strong) IBOutlet UILabel *huntTitleLabel;
+@property (nonatomic, strong) IBOutlet UILabel *huntTitleLabel2;
+
+@property (nonatomic, strong) IBOutlet UILabel *huntCountLabel;
+@property (nonatomic, strong) IBOutlet UILabel *huntCountLabel2;
 
 @property (nonatomic, strong) IBOutlet UIImageView *badgeImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *badgeDishImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *yookaImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImageView2;
 
 @property (nonatomic, strong) IBOutlet UILabel *restaurantTitleLabel;
 @property (nonatomic, strong) IBOutlet UIButton *restaurantTitleButton2;
 
-@property (nonatomic, strong) IBOutlet FUIButton *restaurantTitleButton;
+@property (nonatomic, strong) IBOutlet UIButton *restaurantTitleButton;
 @property (nonatomic, strong) IBOutlet UILabel *restaurantDescriptionLabel;
 @property (nonatomic, strong) IBOutlet UILabel *youMight;
 @property (nonatomic, strong) IBOutlet UIButton *closeButton;
@@ -102,7 +123,7 @@
 
 @property (nonatomic, strong) NSMutableArray *selectedDishes;
 
-@property (nonatomic, strong) IBOutlet FUIButton *uploadButton;
+@property (nonatomic, strong) IBOutlet UIButton *uploadButton;
 
 - (void)buttonAction1:(id)sender;
 
@@ -155,6 +176,10 @@
 @property (nonatomic, strong) NSString *cafeorlinUrl;
 @property (nonatomic, strong) NSString *emailId;
 @property (nonatomic, strong) NSString *trickpick;
+@property (nonatomic, strong) NSString *dishTag;
+@property (nonatomic, strong) NSString *restaurant_name;
+@property (nonatomic, strong) NSString *hunt_count;
+@property (nonatomic, strong) NSString *my_hunt_count;
 
 @property (nonatomic, strong) IBOutlet UILabel *dishNumber;
 
@@ -170,7 +195,30 @@
 @property (nonatomic, strong) UIDocumentInteractionController *documentController;
 
 @property(nonatomic,retain) UIDocumentInteractionController *docFile;
+@property(nonatomic,assign)id delegate;
 
+@property (strong, nonatomic) UIButton *backBtn;
+@property (strong, nonatomic) IBOutlet UIImageView* backBtnImage;
 
+@property (nonatomic, assign) id<PanelDelegate> delegate2;
+
+@property (nonatomic, strong) IBOutlet UIButton *menuBtn;
+@property (nonatomic, strong) IBOutlet UIButton *menuBtn2;
+
+@property (nonatomic, strong) IBOutlet UIScrollView* restaurantScrollView;
+@property (nonatomic, strong) IBOutlet UIScrollView* infoScrollView;
+
+@property (nonatomic, strong) NSMutableDictionary *huntDict1;
+@property (nonatomic, strong) NSMutableDictionary *locationNameDict;
+
+@property (nonatomic, strong) NSMutableDictionary *restDict;
+@property (nonatomic, strong) NSMutableDictionary *dishUrlDict;
+
+@property (nonatomic, strong) NSMutableArray *subscribedHunts;
+@property (nonatomic, strong) NSMutableArray *unsubscribedHunts;
+@property (nonatomic, strong) NSMutableArray *finishedHuntVenues;
+-(void)needIos6Landscape;
+
+@property (nonatomic, strong) NSString *popuppic;
 
 @end

@@ -44,6 +44,7 @@
 @interface BDDynamicGridViewController : UIViewController {
     int j;
     int k;
+    int l;
 }
 
 /**
@@ -192,9 +193,20 @@
 @property (nonatomic, strong) NSString *postId;
 @property (nonatomic, strong) NSString *postLikes;
 @property (nonatomic, strong) NSString *likeStatus;
+@property (nonatomic, strong) NSMutableArray *cacheFollowingUsers;
+@property (nonatomic, strong) NSMutableArray *cacheFollowers;
+@property (nonatomic, strong) NSMutableArray *myPicIds;
+@property (nonatomic, strong) NSMutableArray *cacheMyPicIds;
+@property (nonatomic, strong) NSMutableArray *myDishNames;
+@property (nonatomic, strong) NSMutableArray *cacheMyDishNames;
+@property (nonatomic, strong) NSMutableArray *myLikers;
+@property (nonatomic, strong) NSMutableArray *cacheMyLikers;
+@property (nonatomic, strong) NSMutableArray *myLikes;
+@property (nonatomic, strong) NSMutableArray *cacheMyLikes;
 
 @property (nonatomic, retain) id<KCSStore> updateStore;
 
+@property (nonatomic, assign) BOOL loop;
 
 - (UIImage*) blur:(UIImage*)theImage;
 

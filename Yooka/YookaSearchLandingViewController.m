@@ -36,9 +36,9 @@
     
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     _searchTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height)];
@@ -51,7 +51,6 @@
     
     _searchContent = [NSMutableArray new];
     _searchContent = [NSMutableArray arrayWithArray:@[@"Restaurants",@"Users"]];
-    
     
 }
 
@@ -81,38 +80,12 @@
     
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
-    // create a custom label:                                        x    y   width  height
-//    _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, 0.0, 240.0, 40.0)];
-//    [_descriptionLabel setTag:1];
-//    [_descriptionLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
-//    _descriptionLabel.textColor = [UIColor grayColor];
-//    _descriptionLabel.textAlignment = NSTextAlignmentLeft;
-//    [_descriptionLabel setFont:[UIFont systemFontOfSize:16.0]];
-//    // custom views should be added as subviews of the cell's contentView:
-//    [cell.contentView addSubview:_descriptionLabel];
-//    
-//    [(UILabel *)[cell.contentView viewWithTag:1] setText:self.searchContent[indexPath.row]];
-    
     cell.textLabel.text = self.searchContent[indexPath.row];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    //    if (self.lastSelected==indexPath) return; // nothing to do
-    //
-    //    // deselect old
-    //    UITableViewCell *old = [locationTableView cellForRowAtIndexPath:self.lastSelected];
-    //    old.accessoryType = UITableViewCellAccessoryNone;
-    //    old.backgroundColor = [UIColor blackColor];
-    //    [old setSelected:FALSE animated:TRUE];
-    //
-    //    // select new
-    //    UITableViewCell *cell = [locationTableView cellForRowAtIndexPath:indexPath];
-    //    cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    //    cell.backgroundColor = [UIColor purpleColor];
-    //    [cell setSelected:TRUE animated:TRUE];
     
     // keep track of the last selected cell
     self.lastSelected = indexPath;
@@ -128,8 +101,6 @@
     [_searchTableView reloadData];
     
 }
-
-
 
 - (void)userDidSelectUser
 {

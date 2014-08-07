@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-AFNetworking.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-AsyncImageDownloader.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -24,11 +19,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-FSOAuth.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Facebook-iOS-SDK.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -39,27 +29,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Foursquare-API-v2.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-Foursquare-iOS-API.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-LRImageManager.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-MACachedImageView.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Pods-MACircleProgressIndicator.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -69,12 +39,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-TMCache.xcscheme</key>
+		<key>Pods-TTTAttributedLabel.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-TTTAttributedLabel.xcscheme</key>
+		<key>Pods-UIImage-Helpers.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -87,82 +57,52 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>13DD0E20BD2C4E588B2AA62C</key>
+		<key>3C081F93AE7F405989891883</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>23319AD2E8C742A384094A19</key>
+		<key>4436F041018048979FE02A3B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>233D6FB560AD46FC9D25B26E</key>
+		<key>44A9ADC13E6E456EB0BC3B1B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>28DEB61E6C8448AC82E49290</key>
+		<key>81DC58391EF348228D876213</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2B28B320BD084464A84AF5D3</key>
+		<key>B616ADD96ADD4CF8AFB6E5A7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4200F86844F547EDBCA50C37</key>
+		<key>C7C77486615444A1B596B2DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6685BB947249401883B7CBF7</key>
+		<key>D7AC518CBB0D4A95A9DF34E9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>74BBD68169484A268559D574</key>
+		<key>DFB142B457024C8AB50D71F2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B3C9D8F71584B1FAFD81F90</key>
+		<key>F0A912B3859C470BAB4AB2E2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ABCC5EC950EC4710B4F16164</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C06D9E82782F4018ADB4C5E4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D4F9F7D8788241F5982D6F38</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D8C98D2942784998837332D5</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E1247C5358184DBD9322BB1A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EBEEDFB7213F4E97B5D3B0E2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F3DF565430434110AF9B774F</key>
+		<key>FCE0CEACA9224226B19191D1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

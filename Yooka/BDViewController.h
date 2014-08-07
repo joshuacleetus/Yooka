@@ -15,5 +15,6 @@
     NSArray * _items;
 }
 - (void)animateReload;
+- (void)animateReload2;
 
 @end

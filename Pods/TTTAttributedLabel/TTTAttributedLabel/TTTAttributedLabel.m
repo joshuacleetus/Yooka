@@ -104,7 +104,7 @@ static inline CTLineBreakMode CTLineBreakModeFromTTTLineBreakMode(TTTLineBreakMo
 #endif
 }
 
-static inline CTLineBreakMode CTLineBreakModeFromNSLineBreakMode(NSLineBreakMode lineBreakMode) {
+static inline CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBreakMode) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   switch (lineBreakMode) {
@@ -1396,7 +1396,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
     }
 
     if ([coder containsValueForKey:NSStringFromSelector(@selector(verticalAlignment))]) {
-        self.verticalAlignment = (int)[coder decodeIntegerForKey:NSStringFromSelector(@selector(verticalAlignment))];
+        self.verticalAlignment = [coder decodeIntegerForKey:NSStringFromSelector(@selector(verticalAlignment))];
     }
 
     if ([coder containsValueForKey:NSStringFromSelector(@selector(truncationTokenString))]) {

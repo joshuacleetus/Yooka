@@ -1,1 +1,0 @@
-../../LRImageManager/LRImageManager/LRImagePresenter.h

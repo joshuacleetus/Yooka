@@ -383,6 +383,16 @@
                                                   object:nil];
 }
 
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return (UIInterfaceOrientationMaskPortrait);
+}
+
 -(void)keyboardWillShow {
     
     // Animate the current view out of the way
@@ -636,7 +646,7 @@
             _userEmail = lowercase;
             _userFullName = [NSString stringWithFormat:@"%@ %@",_firstName.text,_lastName.text];
 //
-            NSLog(@"email = %@",lowercase);
+//            NSLog(@"email = %@",lowercase);
         
         // Create a new user with the username 'kinvey' and the password '12345'
         [KCSUser userWithUsername:_userEmail password:_password.text fieldsAndValues:@{KCSUserAttributeEmail : _userEmail, KCSUserAttributeGivenname : _firstName.text, KCSUserAttributeSurname : _lastName.text} withCompletionBlock:^(KCSUser *user, NSError *errorOrNil, KCSUserActionResult result) {
@@ -645,7 +655,7 @@
                     if (self.profileImage) {
                         [self saveUserImage];
                     }else{
-                        self.profileImage = [UIImage imageNamed:@"yooka_avatar.png"];
+                        self.profileImage = [UIImage imageNamed:@"minion.jpg"];
                         [self saveUserImage];
                     }
                     
@@ -788,11 +798,13 @@
 - (void)saveUserImage
 {
     
-        NSLog(@"profile image");
+//        NSLog(@"profile image");
         YookaBackend *yookaObject = [[YookaBackend alloc]init];
         yookaObject.kinveyId = _userEmail;
         if (_profileImage) {
             yookaObject.userImage = _profileImage;
+        }else{
+            yookaObject.userImage = [UIImage imageNamed:@"minion.jpg"];
         }
         yookaObject.userFullName = _userFullName;
         yookaObject.userEmail = _userEmail;
@@ -800,11 +812,11 @@
         //Kinvey use code: add a new update to the updates collection
         [self.updateStore saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
             if (errorOrNil == nil) {
-                NSLog(@"saved successfully");
+//                NSLog(@"saved successfully");
                 YookaAppDelegate* appDelegate = (id)[UIApplication sharedApplication].delegate;
                 [appDelegate userLoggedIn];
             } else {
-                NSLog(@"save failed %@",errorOrNil);
+//                NSLog(@"save failed %@",errorOrNil);
             }
         } withProgressBlock:nil];
 

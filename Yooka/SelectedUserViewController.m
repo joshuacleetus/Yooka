@@ -71,7 +71,7 @@ const NSInteger yookaThumbnailSpace2 = 0;
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
     [self.navigationItem setTitle:_userFullName];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
     _userView = [[UIImageView alloc]initWithFrame:CGRectMake(115, 29, 90, 90)];

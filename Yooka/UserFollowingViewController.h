@@ -23,6 +23,10 @@
 @property (nonatomic, strong) NSString *followingUserEmail;
 @property (nonatomic, strong) NSString *followingUserPicUrl;
 @property (nonatomic, strong) NSString *followingUserFullName;
+@property (nonatomic, strong) NSString *myEmail;
+
+@property (nonatomic, strong) NSString *user_full_name;
+@property (nonatomic, strong) NSString *user_pic_url;
 
 @property (nonatomic, strong) NSMutableArray *results;
 @property (nonatomic, strong) NSMutableArray *userFollowing;
@@ -45,11 +49,17 @@
 
 @property (nonatomic, strong) UIImage* userImage;
 @property (nonatomic, strong) UILabel *descriptionLabel;
+@property (nonatomic, strong) UILabel *titleLabel;
 
 @property (retain) NSIndexPath *lastSelected;
 
 @property (nonatomic, strong) NSString *userEmailSelected;
 @property (nonatomic, strong) NSString *userFullNameSelected;
 @property (nonatomic, strong) NSString *userPicUrlSelected;
+
+@property (nonatomic, strong) NSMutableArray *cacheFollowingUsers;
+
+@property (strong, nonatomic) UIButton *backBtn;
+@property (strong, nonatomic) IBOutlet UIImageView* backBtnImage;
 
 @end

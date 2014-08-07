@@ -13,14 +13,9 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import <AsyncImageDownloader.h>
     #import <DMActivityInstagram.h>
     #import <TTTAttributedLabel.h>
     #import <KinveyKit/KinveyKit.h>
-    #import <Foursquare-API-v2/Foursquare2.h>
-    #import <Foursquare-API-v2/FSRequester.h>
-    #import <Foursquare-API-v2/FSWebLogin.h>
-    #import <Foursquare-API-v2/FSTargetCallback.h>
     #import <Foursquare-iOS-API/BZFoursquare.h>
     #import <Foursquare-iOS-API/BZFoursquareRequest.h>
     #import <DYRateView.h>
@@ -30,3 +25,4 @@
 #define INTERFACE_IS_PHONE   ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 #define IS_RETINA ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))
 #define isiPhone5  ([[UIScreen mainScreen] bounds].size.height == 568)?TRUE:FALSE
+#define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )

@@ -97,6 +97,16 @@
     
 }
 
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return (UIInterfaceOrientationMaskPortrait);
+}
+
 - (void)dismissTerms:(id)sender{
     [self dismissViewControllerAnimated:YES completion:nil];
 }

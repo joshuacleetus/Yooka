@@ -9,28 +9,44 @@
 #import "YookaAppDelegate.h"
 #import "YookaNewsFeedViewController.h"
 #import "YookaHuntsViewController.h"
+#import "YookaHunts2ViewController.h"
 #import "YookaSearchViewController.h"
 #import "YookaPostViewController.h"
 #import "YookaProfileViewController.h"
-#import <Foursquare2.h>
+#import "Foursquare2.h"
 #import "YookaBackend.h"
 #import <AsyncImageDownloader.h>
 #import <Reachability.h>
 #import "BDViewController.h"
 #import "YookaSearchLandingViewController.h"
 #import "UIImageView+WebCache.h"
+#import "Flurry.h"
+#import "MainViewController.h"
 
 @implementation YookaAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    
+//    _imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+//    _imageView.image = [UIImage imageNamed:@"1splash.png"];
+//    [self.window addSubview:_imageView];
+//    [_window makeKeyAndVisible];
+//    [self popupImage];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    KCSCollection* collection = [KCSCollection collectionFromString:@"userPicture" ofClass:[YookaBackend class]];
+    self.updateStore = [KCSLinkedAppdataStore storeWithOptions:@{ KCSStoreKeyResource : collection, KCSStoreKeyCachePolicy : @(KCSCachePolicyBoth), KCSStoreKeyOfflineUpdateEnabled : @YES }];
+    
+    self.updateStore2 = [KCSLinkedAppdataStore storeWithOptions:@{
+                                                                 KCSStoreKeyCollectionName : @"userData",
+                                                                 KCSStoreKeyCollectionTemplateClass : [YookaBackend class]}];
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
 
@@ -48,32 +64,90 @@
     
     [KCSPing pingKinveyWithBlock:^(KCSPingResult *result) {
         if (result.pingWasSuccessful == YES){
-            NSLog(@"Kinvey Ping Success");
-            self.updateStore = [KCSLinkedAppdataStore storeWithOptions:@{
-                                                                         KCSStoreKeyCollectionName : @"userPicture",
-                                                                         KCSStoreKeyCollectionTemplateClass : [YookaBackend class]}];
+            //NSLog(@"Kinvey Ping Success");
 
         } else {
             
-            NSLog(@"Kinvey Ping Failed");
+            //NSLog(@"Kinvey Ping Failed");
         }
     }];
+        
+        //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
+        [Flurry setCrashReportingEnabled:NO];
+        
+        // Replace YOUR_API_KEY with the api key in the downloaded package
+        [Flurry startSession:@"GW57CSKCPB35KJ3ZM7XS"];
     
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    _userEmail = [ud objectForKey:@"user_email"];
+//    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+//    _userEmail = [ud objectForKey:@"user_email"];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LaunchedOnce"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Whenever a person opens the app, check for a cached session
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
         NSLog(@"Found a cached session");
         // If there's one, just open the session silently, without showing the user the login UI
-        [FBSession openActiveSessionWithReadPermissions:@[@"basic_info",@"email",@"read_friendlists",@"user_location",@"user_birthday"]
-                                           allowLoginUI:NO
-                                      completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                          // Handler for session state changes
-                                          // This method will be called EACH time the session state changes,
-                                          // also for intermediate states and NOT just when the session open
-                                          [self sessionStateChanged:session state:state error:error];
-                                      }];
+        
+        if (![KCSUser activeUser]) {
+            
+            YookaViewController* media = [[YookaViewController alloc] init];
+            UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:media];
+            self.window.rootViewController = navigation;
+            self.window.backgroundColor = [UIColor whiteColor];
+            [self.window makeKeyAndVisible];
+            
+        }else{
+
+            
+            //        return YES;
+//            self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//            
+//            UIViewController *viewController1 = [[YookaHunts2ViewController alloc] initWithNibName:nil bundle:nil];
+//            UINavigationController *navController1 = [[UINavigationController alloc]initWithRootViewController:viewController1];
+//            UIViewController *viewController2 = [[YookaNewsFeedViewController alloc] initWithNibName:nil bundle:nil];
+//            UINavigationController *navController2 = [[UINavigationController alloc]initWithRootViewController:viewController2];
+//            UIViewController *viewController3 = [[YookaPostViewController alloc] initWithNibName:nil bundle:nil];
+//            UINavigationController *navController3 = [[UINavigationController alloc]initWithRootViewController:viewController3];
+//            UIViewController *viewController4 = [[YookaSearchLandingViewController alloc] initWithNibName:nil bundle:nil];
+//            UINavigationController *navController4 = [[UINavigationController alloc]initWithRootViewController:viewController4];
+//            UIViewController *viewController5 = [[BDViewController alloc] initWithNibName:nil bundle:nil];
+//            UINavigationController *navController5 = [[UINavigationController alloc]initWithRootViewController:viewController5];
+//            
+//            // set the titles for the view controllers:
+//            viewController1.title = @"Hunts";
+//            viewController2.title = @"News Feed";
+//            viewController3.title = @"Upload Picture";
+//            viewController4.title = @"Search";
+//            viewController5.title = @"Profile";
+//            
+//            // set the images to appear in the tab bar:
+//            viewController1.tabBarItem.image = [UIImage imageNamed:@"hunt30x30.png"];
+//            viewController2.tabBarItem.image = [UIImage imageNamed:@"coin30x30.png"];
+//            viewController3.tabBarItem.image = [UIImage imageNamed:@"camera.png"];
+//            viewController4.tabBarItem.image = [UIImage imageNamed:@"search.png"];
+//            viewController5.tabBarItem.image = [UIImage imageNamed:@"user.png"];
+//            
+//            self.yookaTabBar = [[UITabBarController alloc] init];
+//            self.yookaTabBar.viewControllers = [NSArray arrayWithObjects:navController1,navController2,navController3,navController4,navController5, nil];
+//            [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+//            //    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+//            [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+//            //        [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor orangeColor], UITextAttributeTextColor, nil]
+//            //                                                 forState:UIControlStateNormal];
+//            self.window.rootViewController = self.yookaTabBar;
+//            self.window.backgroundColor = [UIColor whiteColor];
+//            [self.window makeKeyAndVisible];
+//            return YES;
+            
+            MainViewController* media = [[MainViewController alloc] init];
+            UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:media];
+            self.window.rootViewController = navigation;
+            self.window.backgroundColor = [UIColor whiteColor];
+            [self.window makeKeyAndVisible];
+
+            
+        }
         
         // If there's no cached session, we will show a login button
     } else {
@@ -81,16 +155,18 @@
         //        UIButton *fbloginButton = [self.yookaViewController fbBtn];
         //        [fbloginButton setTitle:@"Facebook" forState:UIControlStateNormal];
         
-        if (_userEmail) {
-            [self userLoggedIn];
-        }else{
-            
+        if (![KCSUser activeUser]) {
+        
             YookaViewController* media = [[YookaViewController alloc] init];
             UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:media];
             self.window.rootViewController = navigation;
             self.window.backgroundColor = [UIColor whiteColor];
             [self.window makeKeyAndVisible];
+            
+        }else{
+            
             //        return YES;
+            [self userLoggedIn];
             
         }
         
@@ -110,6 +186,20 @@
 
 }
 
+-(IBAction)popupImage
+{
+    _imageView.hidden = NO;
+    _imageView.alpha = 1.0f;
+    // Then fades it away after 2 seconds (the cross-fade animation will take 0.5s)
+    [UIView animateWithDuration:1.0 delay:0.0 options:0 animations:^{
+        // Animate the alpha value of your imageView from 1.0 to 0.0 here
+        _imageView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        // Once the animation is completed and the alpha has gone to 0.0, hide the view for good
+        _imageView.hidden = YES;
+    }];
+}
+
 // This method will handle ALL the session state changes in the app
 - (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error
 {
@@ -124,17 +214,20 @@
         [[FBRequest requestForMe] startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
-                 NSLog(@"username = %@",user.username);
+                 
+                 NSLog(@"username = %@",user);
                  NSLog(@"user email = %@",[user objectForKey:@"email"]);
                  _userName = user.username;
                  _userPicUrl = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", _userName];
-                 NSLog(@"user email = %@",_userPicUrl);
+                 NSLog(@"user pic url = %@",_userPicUrl);
 
                  NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                  [ud setObject:_userPicUrl forKey:@"user_pic_url"];
                  _userFullName = user.name;
                  _userEmail = [user objectForKey:@"email"];
                  _fbuserName = user.username;
+                 
+                 if (![KCSUser activeUser]) {
                  
                  [KCSUser loginWithSocialIdentity:KCSSocialIDFacebook
                                  accessDictionary:@{KCSUserAccessTokenKey : _accessToken}
@@ -167,14 +260,37 @@
                                       
                                       [user saveWithCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil){
                                           if (errorOrNil) {
-//                                              NSLog(@"error = %@",errorOrNil);
+                                              NSLog(@"error = %@",errorOrNil);
+                                              BOOL wasUserError = [[errorOrNil domain] isEqual:KCSUserErrorDomain];
+                                              NSString* title = wasUserError ? NSLocalizedString(@"Invalid Credentials", @"credentials error title") : NSLocalizedString(@"An error occurred.", @"Generic error message");
+                                              NSString* message = wasUserError ? NSLocalizedString(@"Wrong username or password. Please check and try again.", @"credentials error message") : [errorOrNil localizedDescription];
+                                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:title
+                                                                                              message:message
+                                                                                             delegate:self
+                                                                                    cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                                                                    otherButtonTitles:nil];
+                                              [alert show];
+                                              [self userLoggedOut];
 
                                           } else {
+                                              
+                                              if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ThisUserHasLaunchedOnce"])
+                                              {
+                                                  // app already launched
+                                              }
+                                              else
+                                              {
+                                                  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ThisUserHasLaunchedOnce"];
+                                                  [[NSUserDefaults standardUserDefaults] synchronize];
+                                                  // This is the first launch ever
+                                                  [self saveUserDetails];
+                                              }
                                               
                                               NSLog(@"logged in");
                                               NSLog(@"kcsuser = %@",[KCSUser activeUser].username);
                                               [self saveUserImage];
                                               [self userLoggedIn];
+                                              return ;
 
                                           }
                                           
@@ -182,6 +298,12 @@
 
                                   }
                               }];
+                     
+                 }else{
+                     
+                     [self userLoggedIn];
+                     
+                 }
              }
          }];
         
@@ -193,6 +315,7 @@
 //        NSLog(@"Session closed");
         // Show the user the logged-out UI
         [self userLoggedOut];
+        return;
     }
     
     // Handle errors
@@ -237,6 +360,7 @@
         self.window.rootViewController = navigation;
         self.window.backgroundColor = [UIColor whiteColor];
         [self.window makeKeyAndVisible];
+        return;
     }
 }
 
@@ -272,46 +396,53 @@
 //    [self.window makeKeyAndVisible];
 //    return YES;
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    UIViewController *viewController1 = [[YookaHuntsViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navController1 = [[UINavigationController alloc]initWithRootViewController:viewController1];
-    UIViewController *viewController2 = [[YookaNewsFeedViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navController2 = [[UINavigationController alloc]initWithRootViewController:viewController2];
-    UIViewController *viewController3 = [[YookaPostViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navController3 = [[UINavigationController alloc]initWithRootViewController:viewController3];
-    UIViewController *viewController4 = [[YookaSearchLandingViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navController4 = [[UINavigationController alloc]initWithRootViewController:viewController4];
-    UIViewController *viewController5 = [[BDViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navController5 = [[UINavigationController alloc]initWithRootViewController:viewController5];
-
-    // set the titles for the view controllers:
-    viewController1.title = @"Hunts";
-    viewController2.title = @"News Feed";
-    viewController3.title = @"Upload Picture";
-    viewController4.title = @"Search";
-    viewController5.title = @"Profile";
-    
-    // set the images to appear in the tab bar:
-    viewController1.tabBarItem.image = [UIImage imageNamed:@"hunt30x30.png"];
-    viewController2.tabBarItem.image = [UIImage imageNamed:@"coin30x30.png"];
-    viewController3.tabBarItem.image = [UIImage imageNamed:@"camera.png"];
-    viewController4.tabBarItem.image = [UIImage imageNamed:@"search.png"];
-    viewController5.tabBarItem.image = [UIImage imageNamed:@"user.png"];
-    
-    self.yookaTabBar = [[UITabBarController alloc] init];
-    self.yookaTabBar.viewControllers = [NSArray arrayWithObjects:navController1,navController2,navController3,navController4,navController5, nil];
-    [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
-//    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-    [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
-    //        [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor orangeColor], UITextAttributeTextColor, nil]
-    //                                                 forState:UIControlStateNormal];
-    self.window.rootViewController = self.yookaTabBar;
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    
+//    UIViewController *viewController1 = [[YookaHunts2ViewController alloc] initWithNibName:nil bundle:nil];
+//    UINavigationController *navController1 = [[UINavigationController alloc]initWithRootViewController:viewController1];
+//    UIViewController *viewController2 = [[YookaNewsFeedViewController alloc] initWithNibName:nil bundle:nil];
+//    UINavigationController *navController2 = [[UINavigationController alloc]initWithRootViewController:viewController2];
+//    UIViewController *viewController3 = [[YookaPostViewController alloc] initWithNibName:nil bundle:nil];
+//    UINavigationController *navController3 = [[UINavigationController alloc]initWithRootViewController:viewController3];
+//    UIViewController *viewController4 = [[YookaSearchLandingViewController alloc] initWithNibName:nil bundle:nil];
+//    UINavigationController *navController4 = [[UINavigationController alloc]initWithRootViewController:viewController4];
+//    UIViewController *viewController5 = [[BDViewController alloc] initWithNibName:nil bundle:nil];
+//    UINavigationController *navController5 = [[UINavigationController alloc]initWithRootViewController:viewController5];
+//
+//    // set the titles for the view controllers:
+//    viewController1.title = @"Hunts";
+//    viewController2.title = @"News Feed";
+//    viewController3.title = @"Upload Picture";
+//    viewController4.title = @"Search";
+//    viewController5.title = @"Profile";
+//    
+//    // set the images to appear in the tab bar:
+//    viewController1.tabBarItem.image = [UIImage imageNamed:@"hunt30x30.png"];
+//    viewController2.tabBarItem.image = [UIImage imageNamed:@"coin30x30.png"];
+//    viewController3.tabBarItem.image = [UIImage imageNamed:@"camera.png"];
+//    viewController4.tabBarItem.image = [UIImage imageNamed:@"search.png"];
+//    viewController5.tabBarItem.image = [UIImage imageNamed:@"user.png"];
+//    
+//    self.yookaTabBar = [[UITabBarController alloc] init];
+//    self.yookaTabBar.viewControllers = [NSArray arrayWithObjects:navController1,navController2,navController3,navController4,navController5, nil];
+//    [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+////    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+//    [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+//    //        [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor orangeColor], UITextAttributeTextColor, nil]
+//    //                                                 forState:UIControlStateNormal];
+//    self.window.rootViewController = self.yookaTabBar;
+//    self.window.backgroundColor = [UIColor whiteColor];
+//    [self.window makeKeyAndVisible];
     
     // Welcome message
 //    [self showMessage:@"WOO... You're now successfully logged in to Yooka" withTitle:@"Welcome!"];
+    
+    MainViewController* media = [[MainViewController alloc] init];
+    UINavigationController* navigation = [[UINavigationController alloc] initWithRootViewController:media];
+    self.window.rootViewController = navigation;
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+//    return YES;
     
 }
 
@@ -338,7 +469,7 @@
 
 - (void)saveUserImage
 {
-
+    NSLog(@"saving");
     [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
                                                         options:0
                                                        progress:^(NSInteger receivedSize, NSInteger expectedSize)
@@ -361,7 +492,7 @@
 - (void)saveUserImage2
 {
     
-        NSLog(@"save image");
+       NSLog(@"save image");
         YookaBackend *yookaObject = [[YookaBackend alloc]init];
         yookaObject.kinveyId = _userEmail;
         if (_userImage) {
@@ -371,8 +502,8 @@
         }
         yookaObject.userFullName = _userFullName;
         yookaObject.userEmail = _userEmail;
-    NSLog(@"user full name = %@",_userFullName);
-    NSLog(@"user email = %@",_userEmail);
+    //NSLog(@"user full name = %@",_userFullName);
+    //NSLog(@"user email = %@",_userEmail);
     
     [yookaObject.meta setGloballyReadable:YES];
     [yookaObject.meta setGloballyWritable:YES];
@@ -390,7 +521,36 @@
     
 }
 
+- (void)saveUserDetails
+{
+    
+    NSLog(@"save user");
+    YookaBackend *yookaObject = [[YookaBackend alloc]init];
+    yookaObject.kinveyId = _userEmail;
+    yookaObject.userFullName = _userFullName;
+    yookaObject.userEmail = _userEmail;
+    yookaObject.postDate = [NSDate date];
+    
+    [yookaObject.meta setGloballyReadable:YES];
+    [yookaObject.meta setGloballyWritable:YES];
+    
+    //Kinvey use code: add a new update to the updates collection
+    [self.updateStore2 saveObject:yookaObject withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        if (errorOrNil == nil) {
+            NSLog(@"saved 2 successfully");
+            //                YookaAppDelegate* appDelegate = (id)[UIApplication sharedApplication].delegate;
+            //                [appDelegate userLoggedIn];
+        } else {
+            NSLog(@"save failed %@",errorOrNil);
+        }
+    } withProgressBlock:nil];
+    
+}
 
+//- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+//{
+//    return (UIInterfaceOrientationMaskPortrait);
+//}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

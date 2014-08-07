@@ -54,6 +54,8 @@
 @property (nonatomic, strong) NSString *pinTitle;
 @property (nonatomic, strong) NSString *subTitle;
 @property (nonatomic, strong) NSString *tag;
+@property (nonatomic, strong) NSString *secondtag;
+
 
 @end
 

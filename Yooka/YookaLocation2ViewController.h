@@ -34,4 +34,6 @@
 @property(nonatomic,assign)id delegate;
 @property (strong, nonatomic) IBOutlet UISearchBar *locationSearch;
 
+
+
 @end

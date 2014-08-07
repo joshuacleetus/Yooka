@@ -1,1 +1,0 @@
-../../LRImageManager/LRImageManager/UIImage+LRImageManagerAdditions.h

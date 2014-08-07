@@ -11,6 +11,7 @@
 #import "FSQView/FSVenue.h"
 #import "FSQView/FSConverter.h"
 #import <Reachability.h>
+#import "Foursquare2.h"
 
 @interface YookaLocationViewController ()
 
@@ -32,29 +33,60 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    [[UIApplication sharedApplication] setStatusBarHidden:YES
+                                            withAnimation:UIStatusBarAnimationFade];
+
+    
     _nearbyVenues = [NSMutableArray new];
     _filteredArray = [NSMutableArray new];
     _locationObjects = [NSMutableArray new];
     
-    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-    [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationItem setTitle:@"Restaurant"];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.toolbar.translucent = NO;
+//    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+//    [self.navigationController.navigationBar setBarTintColor:color];
+//    [self.navigationItem setTitle:@"Restaurant"];
+//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    self.navigationController.toolbar.translucent = NO;
 
 
 //    http://api.locu.com/v1_0/venue/insight/?api_key=1b9372a2c73e41794633a4a59e77c8716e8cec81&dimension=new+york+city
 //    http://api.locu.com/v1_0/venue/search/?api_key=1b9372a2c73e41794633a4a59e77c8716e8cec81&street_address=prince+street
     
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 70, 300, 30)];
-    _textField.borderStyle = UITextBorderStyleRoundedRect;
-    _textField.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
-    _textField.textColor = [UIColor darkGrayColor];
-    UIColor *color1 = [UIColor grayColor];
-    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"             🔍 Find a restaurant" attributes:@{NSForegroundColorAttributeName: color1}];
-    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
-    _textField.backgroundColor = color3;
+    UIImageView *whitebg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
+    whitebg.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:whitebg];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+    titleLabel.textColor = [UIColor grayColor];
+    titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
+    //titleLabel.text = @"LOCATION";
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:titleLabel];
+    
+    self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cancelBtn setFrame:CGRectMake(0, 0, 40, 40)];
+
+    self.cancelBtn.backgroundColor= [UIColor whiteColor];
+    //[self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [self.cancelBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    //            [editProfileBtn setBackgroundImage:[[UIImage imageNamed:@"logoutbtn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [self.cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.cancelBtn];
+    
+    UIImageView *cancel_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 30, 30)];
+    cancel_icon.image = [UIImage imageNamed:@"x_close"];
+    [self.view addSubview:cancel_icon];
+    
+
+    
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 240, 40)];
+    _textField.borderStyle = UITextBorderStyleNone;
+    _textField.font = [UIFont fontWithName:@"OpenSans-Regular" size:16];
+    _textField.textColor = [UIColor lightGrayColor];
+    UIColor *color1 = [UIColor lightGrayColor];
+    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"  SEARCH" attributes:@{NSForegroundColorAttributeName: color1}];
+//    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+    _textField.backgroundColor = [UIColor whiteColor];
     _textField.autocorrectionType = UITextAutocorrectionTypeNo;
     _textField.keyboardType = UIKeyboardTypeDefault;
     _textField.returnKeyType = UIReturnKeySearch;
@@ -65,7 +97,27 @@
          forControlEvents:UIControlEventEditingDidEndOnExit];
     [self.view addSubview:_textField];
     
-    _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 110.f, 320.f, self.view.bounds.size.height - 160.0)];
+    UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 40, 40)];
+    gps_icon.image = [UIImage imageNamed:@"search_button_blue.png"];
+    [self.view addSubview:gps_icon];
+    
+    UIImageView *ver_line = [[UIImageView alloc]initWithFrame:CGRectMake(35, 0, 10, 40)];
+    ver_line.image = [UIImage imageNamed:@"horizontal_line.png"];
+    [self.view addSubview:ver_line];
+    
+    UIView *whiteline =[[UIView alloc]initWithFrame:CGRectMake(20, 39, 30, 1)];
+    whiteline.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:whiteline];
+    
+    UIImageView *horz_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 27, 320, 20)];
+    horz_line.image = [UIImage imageNamed:@"lines.png"];
+    [self.view addSubview:horz_line];
+    
+    UIImageView *horz_line2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, -25, 320, 41)];
+    horz_line2.image = [UIImage imageNamed:@"lines.png"];
+    [self.view addSubview:horz_line2];
+    
+    _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(-20.f, 45.f, 340.f, self.view.frame.size.height-50)];
 //    _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height)];
     _locationTableView.delegate = self;
     _locationTableView.dataSource = self;
@@ -73,6 +125,8 @@
 //    _locationTableView.backgroundColor = [UIColor blackColor];
 //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
     [self.view addSubview:_locationTableView];
+    
+    
     
 //    self.locationSearch = [[UISearchBar alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, 44.f)];
 //    self.locationSearch.showsCancelButton = NO;
@@ -92,10 +146,23 @@
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
     
-    self.locationManager = [[CLLocationManager alloc]init];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.locationManager.delegate = self;
-    [self.locationManager startUpdatingLocation];
+        
+        if ([CLLocationManager locationServicesEnabled] == YES) {
+            
+            self.locationManager = [[CLLocationManager alloc]init];
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+            self.locationManager.delegate = self;
+            [self.locationManager startUpdatingLocation];
+            
+            CLLocationManager* manager = [[CLLocationManager alloc] init];
+            //... set up CLLocationManager and start updates
+            _currentLocation = manager.location;
+            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+        }else{
+            
+            [self showLocationAlert];
+            
+        }
         
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
@@ -107,6 +174,41 @@
         [alert show];
     }
     
+}
+
+-(BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+- (void) showLocationAlert {
+    
+    if ([CLLocationManager authorizationStatus] != kCLAuthorizationStatusAuthorized) {
+        
+        //Check whether Settings page is openable (iOS 5.1 not allows Settings page to be opened via openURL:)
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]]) {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"You must enable location service,Turn on location service to allow \"YourApp\" to determine your location" delegate:self cancelButtonTitle:@"Settings" otherButtonTitles:@"Cancel", nil];
+            [alert show];
+            
+        }
+        else {
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"You must enable location service" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+            [alert show];
+        }
+    }
+}
+
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex  {
+    if (buttonIndex == 0) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+    }
+    
+}
+
+- (void)cancelBtnClicked:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)textFieldDone:(UITextField *)sender
@@ -139,7 +241,7 @@
                                           NSArray *venues = [dic valueForKeyPath:@"response.venues"];
                                           FSConverter *converter = [[FSConverter alloc]init];
                                           self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
-//                                          NSLog(@"%@",self.nearbyVenues);
+                                          NSLog(@"%@",self.nearbyVenues);
                                           [_locationTableView reloadData];
                                           
                                       }
@@ -159,7 +261,51 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    _locationSelected = [NSArray arrayWithObjects:self.selected.venueId,self.venueSelected,self.venueAddress,self.venueCc,self.venueCity,self.venueState,self.venueCountry,self.venuePostalCode, nil];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    
+    _locationSelected = [NSMutableArray new];
+//    _locationSelected = [NSArray arrayWithObjects:self.selected.venueId,self.venueSelected,self.venueAddress,self.venueCc,self.venueCity,self.venueState,self.venueCountry,self.venuePostalCode, nil];
+    if (self.selected.venueId) {
+        [_locationSelected addObject:self.selected.venueId];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueSelected) {
+        [_locationSelected addObject:self.venueSelected];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueAddress) {
+        [_locationSelected addObject:self.venueAddress];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueCc) {
+        [_locationSelected addObject:self.venueCc];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueCity) {
+        [_locationSelected addObject:self.venueCity];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueState) {
+        [_locationSelected addObject:self.venueState];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venueCountry) {
+        [_locationSelected addObject:self.venueCountry];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
+    if (self.venuePostalCode) {
+        [_locationSelected addObject:self.venuePostalCode];
+    }else{
+        [_locationSelected addObject:[NSNull null]];
+    }
     [_delegate sendLocationDataToA:_locationSelected];
 }
 
@@ -174,7 +320,6 @@
            fromLocation:(CLLocation *)oldLocation {
     [self.locationManager stopUpdatingLocation];
     [self getVenuesForLocation:newLocation];
-//    [self setupMapForLocatoion:newLocation];
 }
 
 
@@ -206,7 +351,7 @@
         cell.backgroundColor = [UIColor whiteColor];
         
         // create a custom label:                                        x    y   width  height
-        _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 0.0, 240.0, 40.0)];
+        _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(40.0, -7.0, 240.0, 40.0)];
         [_descriptionLabel setTag:1];
         [_descriptionLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
         _descriptionLabel.textColor = [UIColor grayColor];
@@ -215,6 +360,29 @@
         // custom views should be added as subviews of the cell's contentView:
         [cell.contentView addSubview:_descriptionLabel];
         
+        self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(40.0, 26, 270.0, 10.0)];
+        [self.detailLabel setTag:2];
+        [self.detailLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
+        self.detailLabel.textColor = [UIColor lightGrayColor];
+        self.detailLabel.textAlignment = NSTextAlignmentLeft;
+        [self.detailLabel setFont:[UIFont systemFontOfSize:10.0]];
+        //            [_descriptionLabel setFont:[UIFont fontWithName:@"UbuntuTitling-Bold" size:23]];
+        // custom views should be added as subviews of the cell's contentView:
+        [cell.contentView addSubview:self.detailLabel];
+        
+        FSVenue *venue = self.nearbyVenues[indexPath.row];
+        if (venue.location.address) {
+            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@, %@ m",
+                                                                  venue.location.address,
+                                                                  venue.location.distance]];
+            
+            
+        } else {
+            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@ m",
+                                                                  venue.location.distance]];
+        }
+        
+
     }
     
     //    cell.textLabel.text = [self.nearbyVenues[indexPath.row] name];
@@ -257,7 +425,7 @@
 
 - (void)userDidSelectVenue {
     
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 
@@ -272,12 +440,22 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.selected = self.nearbyVenues[indexPath.row];
     _venueSelected = [self.nearbyVenues[indexPath.row]name];
+    NSLog(@"%@",_venueSelected);
     _venueAddress = self.selected.location.address;
+    NSLog(@"%@",_venueAddress);
     _venueCc = self.selected.location.cc;
+    NSLog(@"%@",_venueCc);
     _venueCity = self.selected.location.city;
+    NSLog(@"%@",_venueCity);
     _venueState = self.selected.location.state;
+    NSLog(@"%@",_venueState);
     _venueCountry = self.selected.location.country;
-    _venuePostalCode = [NSString stringWithFormat:@"%@",self.selected.location.postalCode];
+    NSLog(@"%@",_venueCountry);
+    if (self.selected.location.postalCode) {
+        _venuePostalCode = [NSString stringWithFormat:@"%@",self.selected.location.postalCode];
+//        NSLog(@"%lu",(unsigned long)[_venuePostalCode length]);
+    }
+
 
     [self userDidSelectVenue];
     
@@ -291,9 +469,9 @@
     [Foursquare2 venueSearchNearByLatitude:@(location.coordinate.latitude)
                                  longitude:@(location.coordinate.longitude)
                                      query:nil
-                                     limit:@(100)
-                                    intent:intentBrowse
-                                    radius:@(5000)
+                                     limit:nil
+                                    intent:intentCheckin
+                                    radius:@(1000)
                                 categoryId:nil
                                   callback:^(BOOL success, id result){
                                       if (success) {
@@ -301,8 +479,7 @@
                                           NSArray *venues = [dic valueForKeyPath:@"response.venues"];
                                           FSConverter *converter = [[FSConverter alloc]init];
                                           self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
-                                          NSLog(@"%@",self.nearbyVenues);
-                                          [_locationTableView reloadData];
+                                          [self.locationTableView reloadData];
                                           
                                       }
                                   }];
@@ -310,7 +487,7 @@
 
 
 - (void)backAction {
-    NSLog(@"back action");
+    //NSLog(@"back action");
 }
 
 

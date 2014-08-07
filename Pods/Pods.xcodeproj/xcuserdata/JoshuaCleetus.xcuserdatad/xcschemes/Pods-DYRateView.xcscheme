@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6685BB947249401883B7CBF7"
+               BlueprintIdentifier = "DFB142B457024C8AB50D71F2"
                BuildableName = "libPods-DYRateView.a"
                BlueprintName = "Pods-DYRateView"
                ReferencedContainer = "container:Pods.xcodeproj">

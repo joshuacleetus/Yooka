@@ -11,6 +11,8 @@
 #import <AsyncImageDownloader.h>
 #import <Reachability.h>
 #import "UIImageView+WebCache.h"
+#import "YookaClickProfileViewController.h"
+#import "YookaProfileNewViewController.h"
 
 @interface UserFollowingViewController ()
 
@@ -33,33 +35,33 @@
     // Do any additional setup after loading the view.
     j=0;
     [self.navigationItem setTitle:@"FOLLOWING"];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 220, 40)];
+    self.titleLabel.textColor = [UIColor grayColor];
+    self.titleLabel.font = [UIFont fontWithName:@"Montserrat-Regular" size:20.0];
+    self.titleLabel.text = @"FOLLOWING";
+    self.titleLabel.textAlignment = NSTextAlignmentLeft;
+    [self.view addSubview:self.titleLabel];
     
     _followingUsersPicUrls = [NSMutableArray new];
     _followingUsersFullNames = [NSMutableArray new];
     _followingUsersData = [NSMutableArray new];
     
-//    NSLog(@"%@",_followingUsers);
+    _backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 20, 25, 25)];
+    _backBtnImage.image = [UIImage imageNamed:@"back_artisse_3.png"];
+    [self.view addSubview:_backBtnImage];
     
-//    _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 65, 280, 45)];
-//    _textField.borderStyle = UITextBorderStyleRoundedRect;
-//    _textField.font = [UIFont fontWithName:@"UbuntuTitling-Bold" size:23];
-//    _textField.textColor = [UIColor lightGrayColor];
-//    UIColor *color = [UIColor lightGrayColor];
-//    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"             🔍 Find a user" attributes:@{NSForegroundColorAttributeName: color}];
-//    _textField.backgroundColor = [UIColor whiteColor];
-//    _textField.autocorrectionType = UITextAutocorrectionTypeNo;
-//    _textField.keyboardType = UIKeyboardTypeDefault;
-//    _textField.returnKeyType = UIReturnKeySearch;
-//    _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-//    _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-//    [_textField addTarget:self
-//                   action:@selector(textFieldDone:)
-//         forControlEvents:UIControlEventEditingDidEndOnExit];
-//    [self.view addSubview:_textField];
+    _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_backBtn setFrame:CGRectMake(10, 20, 40, 40)];
+    [_backBtn setTitle:@"" forState:UIControlStateNormal];
+    [_backBtn setBackgroundColor:[UIColor clearColor]];
+    //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [_backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_backBtn];
     
-    self.followingTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height)];
+    self.followingTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 60.f, 320.f, self.view.frame.size.height-60)];
     self.followingTableView.delegate = self;
     self.followingTableView.dataSource = self;
     [self.followingTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
@@ -84,8 +86,8 @@
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
-    
-    [self findFollowingUsers];
+        
+            [self findFollowingUsers];
         
     }else{
         
@@ -100,47 +102,100 @@
     
 }
 
+- (void)back
+{
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.35;
+    transition.timingFunction =
+    [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromLeft;
+    
+    // NSLog(@"%s: controller.view.window=%@", _func_, controller.view.window);
+    UIView *containerView = self.view.window;
+    [containerView.layer addAnimation:transition forKey:nil];
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 - (void)findFollowingUsers{
     
+    self.userFollowing = [NSMutableArray new];
+    
+        _collectionName1 = @"userPicture";
+        _customEndpoint1 = @"NewsFeed";
+        _fieldName1 = nil;
+        self.userEmail = [KCSUser activeUser].email;
+
+        _dict = [[NSDictionary alloc]initWithObjectsAndKeys:_userEmail,@"userEmail",self.followingUsers,@"followingUsers",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
+    
+        [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict completionBlock:^(id results, NSError *error){
+            
+            if (results) {
+                
+                if ([results isKindOfClass:[NSArray class]]){
+                     self.userFollowing = [NSMutableArray arrayWithArray:results];
+                }
+                
+                if (self.userFollowing.count>0) {
+                    [self.followingTableView reloadData];
+                    [self.followingTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                }
+
+            }
+            
+        }];
+
+    
+}
+
+- (void)findFollowingUsers2{
+    
     if (j<_followingUsers.count) {
-        NSLog(@"j = %d",j);
+        //NSLog(@"j = %d",j);
         
         _followingUserEmail = _followingUsers[j];
-        NSLog(@"email = %@",_followingUserEmail);
+        //NSLog(@"email = %@",_followingUserEmail);
         _collectionName1 = @"userPicture";
         _customEndpoint1 = @"NewsFeed";
         _dict = [[NSDictionary alloc]initWithObjectsAndKeys:_followingUserEmail,@"userEmail",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
         
         [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict completionBlock:^(id results, NSError *error){
             if ([results isKindOfClass:[NSArray class]]) {
-                NSLog(@"Results = \n %@",results);
+                //NSLog(@"Results = \n %@",results);
                 NSMutableArray *results_array = [NSMutableArray arrayWithArray:results];
                 if (results_array && results_array.count) {
                     _followingUserFullName = [results[0] objectForKey:@"userFullName"];
                     _followingUserPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
                     [_followingUsersData addObject:results];
                     [_followingUsersFullNames addObject:_followingUserFullName];
-                    [_followingUsersPicUrls addObject:_followingUserPicUrl];
+                
+                    if (_followingUserPicUrl) {
+                        [_followingUsersPicUrls addObject:_followingUserPicUrl];
+                    }else{
+                        NSString *url = [NSString stringWithFormat:@"http://s25.postimg.org/4qq1lj6nj/minion.jpg"];
+                        [_followingUsersPicUrls addObject:url];
+                    }
                     [self.followingTableView reloadData];
                     [self.followingTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
                     j++;
-                    [self findFollowingUsers];
+                    [self findFollowingUsers2];
                 }else{
                     j++;
-                    [self findFollowingUsers];
+                    [self findFollowingUsers2];
                 }
-
+                
             }else{
                 j++;
-                [self findFollowingUsers];
+                [self findFollowingUsers2];
             }
         }];
-
+        
     }
     
     if (j==_followingUsers.count) {
         
-        NSLog(@"array = %@, array 2 = %@, array3 = %@",_followingUsersData,_followingUsersFullNames,_followingUsersPicUrls);
+        // NSLog(@"array = %@, array 2 = %@, array3 = %@",_followingUsersData,_followingUsersFullNames,_followingUsersPicUrls);
         [self.followingTableView reloadData];
         [self.followingTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
         
@@ -151,7 +206,7 @@
 - (IBAction)textFieldDone:(id)sender
 {
     NSString *s = [_textField text];
-    NSLog(@"search %@",s);
+    //NSLog(@"search %@",s);
     
     NSArray* firstLastStrings = [s componentsSeparatedByString:@" "];
     
@@ -164,14 +219,14 @@
                                             if (errorOrNil == nil) {
                                                 //array of matching KCSUser objects
                                                 if (objectsOrNil && objectsOrNil.count) {
-                                                    NSLog(@"Found %lu Joshua", (unsigned long)objectsOrNil.count);
+                                                    //NSLog(@"Found %lu Joshua", (unsigned long)objectsOrNil.count);
                                                     _userFollowing = [NSMutableArray arrayWithArray:objectsOrNil];
-                                                    KCSUser *user = _userFollowing[0];
-                                                    NSLog(@"Found users = %@ %@", user.givenName,user.surname);
+                                                    //KCSUser *user = _userFollowing[0];
+                                                   // NSLog(@"Found users = %@ %@", user.givenName,user.surname);
                                                 }
 
                                             } else {
-                                                NSLog(@"Got An error: %@", errorOrNil);
+                                                //NSLog(@"Got An error: %@", errorOrNil);
                                             }
                                         }
                                           progressBlock:nil];
@@ -185,16 +240,16 @@
                                                 
                                                 if (objectsOrNil && objectsOrNil.count) {
                                                     //array of matching KCSUser objects
-                                                    NSLog(@"Found %lu %@", (unsigned long)objectsOrNil.count,s);
+                                                    //NSLog(@"Found %lu %@", (unsigned long)objectsOrNil.count,s);
                                                     _results = [NSMutableArray arrayWithArray:objectsOrNil];
                                                     if (_results && _results.count) {
                                                         [self userSearchNames];
                                                     }
-                                                    NSLog(@"Found users = %@", _userFollowing);
+                                                    //NSLog(@"Found users = %@", _userFollowing);
                                                 }
 
                                             } else {
-                                                NSLog(@"Got An error: %@", errorOrNil);
+                                                //NSLog(@"Got An error: %@", errorOrNil);
                                             }
                                         }
                                           progressBlock:nil];
@@ -236,11 +291,10 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.followingUsersData.count) {
-        return self.followingUsersData.count;
-    }else{
-        return 0;
+    if (self.userFollowing.count>0) {
+        return self.userFollowing.count;
     }
+    return 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -254,8 +308,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [self.followingTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.backgroundColor = [UIColor whiteColor];
@@ -272,40 +328,68 @@
         
     }
     
-    [(UILabel *)[cell.contentView viewWithTag:1] setText:self.followingUsersFullNames[indexPath.row]];
-    
-    _userPicUrl = _followingUsersPicUrls[indexPath.row];
-    
-    [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
-                                                        options:0
-                                                       progress:^(NSInteger receivedSize, NSInteger expectedSize)
-     {
-         // progression tracking code
-     }
-                                                      completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-     {
-         if (image && finished)
-         {
-             // do something with image
-        CGSize size = CGSizeMake(40.0, 40.0);
-        UIGraphicsBeginImageContext( size );
-        [image drawInRect:CGRectMake(0,0,size.width,size.height)];
-        UIImage* thumb = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+    if (self.userFollowing.count>0 && (indexPath.row<self.userFollowing.count)) {
         
-        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10.0,5.0, 40.0, 40.0)];
-        imv.image=thumb;
-        [imv.layer setCornerRadius:imv.frame.size.width/2];
-        [imv setClipsToBounds:YES];
-        [imv setContentMode:UIViewContentModeCenter];
+        NSArray *array = [NSArray arrayWithArray:self.userFollowing[indexPath.row]];
+        
+        NSString *user_fullname;
+        NSString *userPicUrl;
+        
+        if (array.count) {
+            user_fullname = [array[0] objectForKey:@"userFullName"];
+            userPicUrl = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
+        }
+        
+        if (user_fullname) {
+            [(UILabel *)[cell.contentView viewWithTag:1] setText:user_fullname];
+        }
+        
+        
+        if (userPicUrl) {
+            [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:userPicUrl]
+                                                                options:0
+                                                               progress:^(NSInteger receivedSize, NSInteger expectedSize)
+             {
+                 // progression tracking code
+             }
+                                                              completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+             {
+                 if (image && finished)
+                 {
+                     // do something with image
+//                     CGSize size = CGSizeMake(35.0, 35.0);
+//                     UIGraphicsBeginImageContext( size );
+//                     [image drawInRect:CGRectMake(0,0,size.width,size.height)];
+//                     UIImage* thumb = UIGraphicsGetImageFromCurrentImageContext();
+//                     UIGraphicsEndImageContext();
+                     
+                     UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10.0,5.0, 35.0, 35.0)];
+                     imv.image=image;
+                     [imv.layer setCornerRadius:imv.frame.size.width/2];
+                     [imv setClipsToBounds:YES];
+                     [imv setContentMode:UIViewContentModeScaleAspectFill];
+                     [cell.contentView addSubview:imv];
+                     
+                 }else{
+                     UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10,5, 35, 35)];
+                     [imv.layer setCornerRadius:imv.frame.size.width/2];
+                     [imv setClipsToBounds:YES];
+                     imv.image=[UIImage imageNamed:@"minion.jpg"];
+                     [imv setContentMode:UIViewContentModeScaleAspectFill];
+                     [cell.contentView addSubview:imv];
+                 }
+             }];
+        }
+
+    }else{
+        [(UILabel *)[cell.contentView viewWithTag:1] setText:@"        No users found."];
+        
+        UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10,5, 35, 35)];
+        [imv setBackgroundColor:[UIColor whiteColor]];
         [cell.contentView addSubview:imv];
-        
-         }
-     }];
+    }
     
     return cell;
-    
-    [self.followingTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
     
 }
 
@@ -331,31 +415,58 @@
     self.lastSelected = indexPath;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    _userEmailSelected = _followingUsers[indexPath.row];
-    _userFullNameSelected = _followingUsersFullNames[indexPath.row];
-    _userPicUrlSelected = _followingUsersPicUrls[indexPath.row];
     
-    [self userDidSelectUser];
+    NSArray *array = [NSArray arrayWithArray:self.userFollowing[indexPath.row]];
     
-    [_followingTableView reloadData];
+    if (array.count) {
+        _userEmailSelected = [array[0] objectForKey:@"userEmail"];
+        _userFullNameSelected = [array[0] objectForKey:@"userFullName"];
+        _userPicUrlSelected = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
+        [self userDidSelectUser];
+    }
     
 }
 
 - (void)userDidSelectUser
 {
-    BDViewController2 *media = [[BDViewController2 alloc]init];
-    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
-    self.navigationItem.backBarButtonItem = backBtn;
-    [self.navigationItem setBackBarButtonItem: backBtn];
-    media.userFullName = _userFullNameSelected;
-    media.userEmail = _userEmailSelected;
-    media.userPicUrl = _userPicUrlSelected;
-    [self.navigationController pushViewController:media animated:YES];
+    
+    NSString *userId = _userEmailSelected;
+    NSString *userFullName = _userFullNameSelected;
+    NSString *userPicUrl = _userPicUrlSelected;
+    
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.35;
+    transition.timingFunction =
+    [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromRight;
+    // NSLog(@"%s: self.view.window=%@", _func_, self.view.window);
+    UIView *containerView = self.view.window;
+    [containerView.layer addAnimation:transition forKey:nil];
+    
+    if ([userId isEqual:[KCSUser activeUser].email]){
+        
+        YookaProfileNewViewController *media2 = [[YookaProfileNewViewController alloc]init];
+        media2.userEmail = [KCSUser activeUser].email;
+        media2.myEmail = [KCSUser activeUser].email;
+        media2.userPicUrl = userPicUrl;
+        [self presentViewController:media2 animated:NO completion:nil];
+        
+    }else{
+        
+        YookaClickProfileViewController *media = [[YookaClickProfileViewController alloc]init];
+        media.userFullName = userFullName;
+        media.myEmail = userId;
+        media.myURL =userPicUrl;
+        [self presentViewController:media animated:NO completion:nil];
+        
+    }
+    
 }
 
 - (void)backAction
 {
-    NSLog(@"BACK BUTTON");
+    //NSLog(@"BACK BUTTON");
 }
 
 

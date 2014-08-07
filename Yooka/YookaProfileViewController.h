@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <KinveyKit/KinveyKit.h>
 #import <FacebookSDK.h>
+#import "PanelDelegate.h"
 
 @interface YookaProfileViewController : UIViewController<UINavigationBarDelegate,UINavigationControllerDelegate,UIScrollViewAccessibilityDelegate,UIScrollViewDelegate>{
     int i;
@@ -56,5 +57,9 @@
 
 @property (nonatomic, retain) id<KCSStore> updateStore;
 
+@property (nonatomic, assign) id<PanelDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIButton *navButton;
+
+- (IBAction)navButtonClicked:(id)sender;
 
 @end

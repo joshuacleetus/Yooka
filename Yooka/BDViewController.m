@@ -25,49 +25,45 @@
     [super viewDidLoad];
     
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+    self.navigationController.navigationBar.backgroundColor = color;
     [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     
     if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1) {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackOpaque];
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     } else {
         self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
     }
     
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    [networkReachability startNotifier];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    
-    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+//    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+//    [networkReachability startNotifier];
+//    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+//    
+//    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
     
     [self showActivityIndicator];
     
     self.delegate = self;
     
     self.onLongPress = ^(UIView* view, NSInteger viewIndex){
-        NSLog(@"Long press on %@, at %ld", view, (long)viewIndex);
+//        NSLog(@"Long press on %@, at %ld", view, (long)viewIndex);
     };
     
     __weak BDViewController *self_ = self; // that's enough
 
     self.onDoubleTap = ^(UIView* view, NSInteger viewIndex){
-        NSLog(@"Double tap on %@, at %ld", view, (long)viewIndex);
+//        NSLog(@"Double tap on %@, at %ld", view, (long)viewIndex);
 
         [self_.view setUserInteractionEnabled:NO];
         self_.postLikers = [NSMutableArray new];
         
 //        UIButton* button = [self.thumbnails objectAtIndex:view.tag];
-        
+        if (self_.cacheMyPicIds && self_.cacheMyPicIds.count) {
+            self_.postId = self_.cacheMyPicIds[(long)viewIndex];
+        }else{
         self_.postId = [self_.myPosts[(long)viewIndex] objectForKey:@"_id"];
-        //    NSLog(@"post id = %@",_postId);
-//        _postHuntName = [_newsFeed[view.tag] objectForKey:@"HuntName"];
-        //    NSLog(@"hunt name = %@",_postHuntName);
-//        _postCaption = [_newsFeed[view.tag] objectForKey:@"caption"];
-        //    NSLog(@"caption = %@",_postCaption);
-//        _postDishImageUrl = [[_newsFeed[view.tag] objectForKey:@"dishImage"]objectForKey:@"_downloadURL"];
-        //    NSLog(@"dish image url = %@",_postDishImageUrl);
-//        _postDishName = [_newsFeed[view.tag] objectForKey:@"dishName"];
-        //    NSLog(@"dish name = %@",_postDishName);
+        }
         
         KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"LikesDB" ofClass:[YookaBackend class]];
         KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
@@ -110,9 +106,13 @@
                         }else{
                             [self_.postLikers removeObject:self_.userEmail];
                         }
-                        
-                        //        NSLog(@"likes data 2 = %@",_likesData);
-                        //        NSLog(@"likers data 2 = %@",_likersData);
+                        [self_.cacheMyLikes replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikes];
+                        [self_.cacheMyLikers replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikers];
+
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        [defaults setObject:self_.cacheMyLikers forKey:@"MyLikers"];
+                        [defaults setObject:self_.cacheMyLikes forKey:@"MyLikes"];
+                        [defaults synchronize];
                         
                         UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 115, 26, 23)];
                         likesImageView.image = [UIImage imageNamed:@"heartempty.png"];
@@ -153,8 +153,13 @@
                         self_.postLikes = [NSString stringWithFormat:@"%d",post_likes];
                         //                    [_likesData replaceObjectAtIndex:view.tag withObject:_postLikes];
                         
-                        //        NSLog(@"likes data 2 = %@",_likesData);
-                        //        NSLog(@"likers data 2 = %@",_likersData);
+                        [self_.cacheMyLikes replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikes];
+                        [self_.cacheMyLikers replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikers];
+                        
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        [defaults setObject:self_.cacheMyLikers forKey:@"MyLikers"];
+                        [defaults setObject:self_.cacheMyLikes forKey:@"MyLikes"];
+                        [defaults synchronize];
                         
                         UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 115, 26, 23)];
                         likesImageView.image = [UIImage imageNamed:@"heartfilled.png"];
@@ -191,8 +196,13 @@
                     post_likes=post_likes+1;
                     self_.postLikes = [NSString stringWithFormat:@"%d",post_likes];
                     
-                    //        NSLog(@"likes data 2 = %@",_likesData);
-                    //        NSLog(@"likers data 2 = %@",_likersData);
+                    [self_.cacheMyLikes replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikes];
+                    [self_.cacheMyLikers replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikers];
+                    
+                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                    [defaults setObject:self_.cacheMyLikers forKey:@"MyLikers"];
+                    [defaults setObject:self_.cacheMyLikes forKey:@"MyLikes"];
+                    [defaults synchronize];
                     
                     UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 115, 26, 23)];
                     likesImageView.image = [UIImage imageNamed:@"heartfilled.png"];
@@ -215,8 +225,8 @@
             }else{
                 
                 self_.postLikes = @"0";
-                
                 self_.likeStatus = @"NO";
+                
 //                NSLog(@"likes = %@",self_.postLikes);
                 NSString *myEmail = [[KCSUser activeUser] email];
 
@@ -225,9 +235,14 @@
                 int post_likes = [self_.postLikes intValue];
                 post_likes=post_likes+1;
                 self_.postLikes = [NSString stringWithFormat:@"%d",post_likes];
+
+                [self_.cacheMyLikes replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikes];
+                [self_.cacheMyLikers replaceObjectAtIndex:(long)viewIndex withObject:self_.postLikers];
                 
-                //        NSLog(@"likes data 2 = %@",_likesData);
-                //        NSLog(@"likers data 2 = %@",_likersData);
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject:self_.cacheMyLikers forKey:@"MyLikers"];
+                [defaults setObject:self_.cacheMyLikes forKey:@"MyLikes"];
+                [defaults synchronize];
                 
                 UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 115, 26, 23)];
                 likesImageView.image = [UIImage imageNamed:@"heartfilled.png"];
@@ -241,7 +256,7 @@
                 likesLabel.adjustsFontSizeToFitWidth = YES;
                 [likesImageView addSubview:likesLabel];
                 
-                //                [self saveSelectedPost];
+//              [self saveSelectedPost];
                 [self_ saveLikes];
                 self_.likeStatus = @"YES";
                 
@@ -249,19 +264,37 @@
             
         } withProgressBlock:nil];
         
-        
     };
-    [self animateReload];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    self.cacheMyPicIds = [ud objectForKey:@"MyPicIds"];
+    self.cacheMyLikers = [ud objectForKey:@"MyLikers"];
+    self.cacheMyLikes = [ud objectForKey:@"MyLikes"];
+    self.cacheMyDishNames = [ud objectForKey:@"MyDishNames"];
+        
+//    NSLog(@"cache ids = %@",self.cacheMyPicIds);
+//    NSLog(@"cache likers = %@",self.cacheMyLikers);
+//    NSLog(@"cache likes = %@",self.cacheMyLikes);
+//    NSLog(@"cache dish names = %@",self.cacheMyDishNames);
+    
+    if (self.cacheMyPicIds && self.cacheMyPicIds.count) {
+        NSLog(@"data loading 2");
+        [self _demoAsyncDataLoading2];
         
     }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        
-        [alert show];
+        NSLog(@"data loading 1");
+        [self animateReload];
     }
+
+//    }else{
+//        if (self.cacheMyPicIds && self.cacheMyPicIds.count) {
+//            NSLog(@"data loading 2");
+//            [self _demoAsyncDataLoading2];
+//        }else{
+//            NSLog(@"data loading 1");
+//            [self animateReload];
+//        }
+//    }
 //    [self buildBarButtons];
 }
 
@@ -301,6 +334,9 @@
 {
     [super viewWillAppear:animated];
 //    [self animateReload];
+    
+    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
+    [self.view setBackgroundColor:color];
 }
 
 
@@ -310,7 +346,7 @@
     [self showActivityIndicator];
     [self getFollowingUsers];
     [self getFollowerUsers];
-    _items = [NSArray new];
+    
     self.myPosts = [NSMutableArray new];
     self.yookaImages = [NSMutableArray new];
     self.likesData = [NSMutableArray new];
@@ -331,9 +367,16 @@
             self.myPosts = [NSMutableArray arrayWithArray:results];
             if (self.myPosts && self.myPosts.count) {
 //                    NSLog(@"%@",self.myPosts);
-                
-                [self _demoAsyncDataLoading];
-
+                NSString *kinveyId = [self.myPosts[0] objectForKey:@"_id"];
+                if (self.cacheMyPicIds.count && [self.cacheMyPicIds[0] isEqualToString:kinveyId]) {
+                    NSLog(@"cache my pic ids = %@",self.cacheMyPicIds);
+                    NSLog(@"same");
+                    [self stopActivityIndicator2];
+                }else{
+                    NSLog(@"different");
+                    _items = [NSArray new];
+                    [self _demoAsyncDataLoading];
+                }
                 
             }else{
                 //                NSLog(@"User Search Results = \n %@",results);
@@ -348,6 +391,47 @@
     }];
 }
 
+- (void)animateReload2
+{
+    [self showActivityIndicator];
+    k=0;
+    self.myPosts = [NSMutableArray new];
+    self.collectionName1 = @"yookaPosts2";
+    self.customEndpoint1 = @"NewsFeed";
+    self.fieldName1 = @"postDate";
+    //    NSString *huntName = @"";
+    //    NSString *venueName = @"";
+    //    huntName,@"huntName",venueName,@"venueName"
+    self.dict1 = [[NSDictionary alloc]initWithObjectsAndKeys:self.userEmail,@"userEmail",self.collectionName1,@"collectionName",self.fieldName1,@"fieldName", nil];
+    
+    [KCSCustomEndpoints callEndpoint:self.customEndpoint1 params:self.dict1 completionBlock:^(id results, NSError *error){
+        if ([results isKindOfClass:[NSArray class]]) {
+            self.myPosts = [NSMutableArray arrayWithArray:results];
+            if (self.myPosts && self.myPosts.count) {
+                //                    NSLog(@"%@",self.myPosts);
+                NSString *kinveyId = [self.myPosts[0] objectForKey:@"_id"];
+                if (self.cacheMyPicIds.count && [self.cacheMyPicIds[0] isEqualToString:kinveyId]) {
+                    NSLog(@"same");
+                    _items = [NSArray new];
+                    [self _demoAsyncDataLoading2];
+                }else{
+                    NSLog(@"different");
+                    [self _demoAsyncDataLoading];
+                }
+                
+            }else{
+                //                NSLog(@"User Search Results = \n %@",results);
+                [self stopActivityIndicator];
+                
+            }
+            
+        }else{
+            [self stopActivityIndicator];
+            
+        }
+    }];
+}
+
 - (void)loadImages
 {
     if (k<self.myPosts.count) {
@@ -358,7 +442,8 @@
         [self.postIdData addObject:kinveyId];
         
         NSString *picUrl = [[self.myPosts[k] objectForKey:@"dishImage"] objectForKey:@"_downloadURL"];
-        //        NSLog(@"hahahaha = %@",picUrl);
+
+//        NSLog(@"hahahaha = %@",picUrl);
         
 //        [[[AsyncImageDownloader alloc] initWithMediaURL:picUrl successBlock:^(UIImage *image)  {
 //            
@@ -396,19 +481,9 @@
         
     }
     
-    if (k==self.myPosts.count) {
-        
-        [self.userpicturesLbl removeFromSuperview];
-        self.userpicturesLbl = [[UILabel alloc]initWithFrame:CGRectMake(137, 183, 85, 17)];
-        self.userpicturesLbl.textColor = [UIColor whiteColor];
-        NSString *picCount = [NSString stringWithFormat:@"%lu Pictures",(unsigned long)self.myPosts.count];
-        self.userpicturesLbl.text = picCount;
-        self.userpicturesLbl.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.0];
-        self.userpicturesLbl.textAlignment = NSTextAlignmentLeft;
-        [self.headerView addSubview:self.userpicturesLbl];
-        
+    if (k==self.myPosts.count)
+    {
         [self _demoAsyncDataLoading];
-        
     }
 }
 

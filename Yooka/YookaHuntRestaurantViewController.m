@@ -15,6 +15,7 @@
 #import "CustomAnnotationView.h"
 #import "CustomMapItem.h"
 #import "BridgeAnnotation.h"
+#import "SFAnnotation.h"
 #import "YookaMenu2ViewController.h"
 #import "YookaAppDelegate.h"
 #import <AsyncImageDownloader.h>
@@ -23,7 +24,8 @@
 #import "FSQView/FSConverter.h"
 #import "YookaLocation2ViewController.h"
 #import "UIImageView+WebCache.h"
-//#import "BDViewController2.m"
+#import "BDViewController2.h"
+#import "Foursquare2.h"
 
 const NSInteger yookaThumbnailWidth4 = 320;
 const NSInteger yookaThumbnailHeight4 = 415;
@@ -55,10 +57,10 @@ const NSInteger yookaThumbnailSpace4 = 5;
     return self;
 }
 
-- (void)viewDidLoad
+- (void)loadView
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [super loadView];
+    
     _selectedHunt = [NSString new];
     _yookaObjects = [NSMutableArray new];
     _mapAnnotations = [NSMutableArray new];
@@ -68,18 +70,23 @@ const NSInteger yookaThumbnailSpace4 = 5;
     _likersData = [NSMutableArray new];
     _userEmail = [KCSUser activeUser].email;
     i=0;
-
+    
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     
-//    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yooka.png"]];
+    //    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yooka.png"]];
     
     [self.navigationItem setTitle:_selectedRestaurantName];
-//    NSLog(@"%@",_huntTitle);
+    //    NSLog(@"%@",_huntTitle);
     
-//    NSLog(@"rest name = %@",_selectedRestaurantName);
-
+    //    NSLog(@"rest name = %@",_selectedRestaurantName);
+    
+    KCSCollection* collection = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+    self.updateStore2 = [KCSLinkedAppdataStore storeWithOptions:[NSDictionary dictionaryWithObjectsAndKeys:collection, KCSStoreKeyResource, [NSNumber numberWithInt:KCSCachePolicyBoth], KCSStoreKeyCachePolicy, nil]];
+    
+    KCSCollection* collection2 = [KCSCollection collectionFromString:@"userPicture2" ofClass:[YookaBackend class]];
+    self.updateStore3 = [KCSLinkedAppdataStore storeWithOptions:[NSDictionary dictionaryWithObjectsAndKeys:collection2, KCSStoreKeyResource, [NSNumber numberWithInt:KCSCachePolicyBoth], KCSStoreKeyCachePolicy, nil]];
     
     CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
     _gridScrollView=[[UIScrollView alloc] initWithFrame:screenRect];
@@ -87,29 +94,29 @@ const NSInteger yookaThumbnailSpace4 = 5;
     _gridScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
     [self.view addSubview:_gridScrollView];
     
-//    _panelImageView = [[UIImageView alloc]initWithFrame:CGRectMake(13, 268, 295, 28)];
-//    _panelImageView.image = [UIImage imageNamed:@"restaurant_panel.png"];
-//    [self.gridScrollView addSubview:_panelImageView];
+    //    _panelImageView = [[UIImageView alloc]initWithFrame:CGRectMake(13, 268, 295, 28)];
+    //    _panelImageView.image = [UIImage imageNamed:@"restaurant_panel.png"];
+    //    [self.gridScrollView addSubview:_panelImageView];
     
-//    self.phoneCallButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.phoneCallButton  setFrame:CGRectMake(10, 267, 97, 30)];
-//    [self.phoneCallButton setBackgroundColor:[UIColor clearColor]];
-//    [self.phoneCallButton addTarget:self action:@selector(phoneCallAction) forControlEvents:UIControlEventTouchUpInside];
-//    [self.gridScrollView addSubview:self.phoneCallButton];
-//    
-//    self.hoursButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.hoursButton  setFrame:CGRectMake(177, 267, 131, 30)];
-//    [self.hoursButton setBackgroundColor:[UIColor clearColor]];
-//    [self.hoursButton addTarget:self action:@selector(hoursbuttonAction:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.gridScrollView addSubview:self.hoursButton];
+    //    self.phoneCallButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //    [self.phoneCallButton  setFrame:CGRectMake(10, 267, 97, 30)];
+    //    [self.phoneCallButton setBackgroundColor:[UIColor clearColor]];
+    //    [self.phoneCallButton addTarget:self action:@selector(phoneCallAction) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.gridScrollView addSubview:self.phoneCallButton];
+    //
+    //    self.hoursButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //    [self.hoursButton  setFrame:CGRectMake(177, 267, 131, 30)];
+    //    [self.hoursButton setBackgroundColor:[UIColor clearColor]];
+    //    [self.hoursButton addTarget:self action:@selector(hoursbuttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.gridScrollView addSubview:self.hoursButton];
     
-//    [self addAnnotation];
+    //    [self addAnnotation];
     
-//    CLLocationCoordinate2D  ctrpoint;
-//    ctrpoint.latitude = [_latitude doubleValue];
-//    ctrpoint.longitude =[_longitude doubleValue];
-//    AddressAnnotation *addAnnotation = [[AddressAnnotation alloc]initWithCoordinate:ctrpoint];
-//    [self.mapView addAnnotation:addAnnotation];
+    //    CLLocationCoordinate2D  ctrpoint;
+    //    ctrpoint.latitude = [_latitude doubleValue];
+    //    ctrpoint.longitude =[_longitude doubleValue];
+    //    AddressAnnotation *addAnnotation = [[AddressAnnotation alloc]initWithCoordinate:ctrpoint];
+    //    [self.mapView addAnnotation:addAnnotation];
     
     self.whiteBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 125, 320, 75)];
     self.whiteBg.image = [UIImage imageNamed:@"White_transulentback.png"];
@@ -136,11 +143,11 @@ const NSInteger yookaThumbnailSpace4 = 5;
     _hoursLabel.textColor = [UIColor colorFromHexCode:@"3d3d3d"];
     [self.gridScrollView addSubview:_hoursLabel];
     
-//    self.hoursButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.hoursButton  setFrame:CGRectMake(110, 265, 52, 21)];
-//    [self.hoursButton setBackgroundColor:[UIColor redColor]];
-//    [self.hoursButton addTarget:self action:@selector(hoursbuttonAction:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.gridScrollView addSubview:self.hoursButton];
+    //    self.hoursButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //    [self.hoursButton  setFrame:CGRectMake(110, 265, 52, 21)];
+    //    [self.hoursButton setBackgroundColor:[UIColor redColor]];
+    //    [self.hoursButton addTarget:self action:@selector(hoursbuttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.gridScrollView addSubview:self.hoursButton];
     
     self.restaurantNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(27, 10, 295, 15)];
     _restaurantNameLabel.font = [UIFont fontWithName:@"Montserrat-Regular" size:16.0];
@@ -150,19 +157,17 @@ const NSInteger yookaThumbnailSpace4 = 5;
     _restaurantNameLabel.adjustsFontSizeToFitWidth = YES;
     [self.whiteBg addSubview:_restaurantNameLabel];
     
-    UIImageView *restaurantImageBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 310, 320, 300)];
-    [restaurantImageBg setBackgroundColor:[UIColor darkGrayColor]];
-    [self.gridScrollView addSubview:restaurantImageBg];
+//    UIImageView *restaurantImageBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 310, 320, 300)];
+//    [restaurantImageBg setBackgroundColor:[UIColor darkGrayColor]];
+//    [self.gridScrollView addSubview:restaurantImageBg];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
-    
-    [self getRestaurantDetails];
-
-    [self setupNewsFeed];
+        
+        [self getRestaurantDetails];
         
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
@@ -173,6 +178,38 @@ const NSInteger yookaThumbnailSpace4 = 5;
         
         [alert show];
     }
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        [self setupNewsFeed];
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+    }
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.working = NO;
+    [_delegate sendrestaurantDataToA:_huntTitle];
 
 }
 
@@ -192,7 +229,36 @@ const NSInteger yookaThumbnailSpace4 = 5;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    self.working = YES;    
+}
+
+- (void)showTabBar:(UITabBarController *) tabbarcontroller
+{
+    for(UIView *view in tabbarcontroller.view.subviews)
+    {
+        if([view isKindOfClass:[UITabBar class]])
+        {
+            if([UIScreen mainScreen].bounds.size.height==568)
+            {
+                [view setFrame:CGRectMake(view.frame.origin.x, 519, view.frame.size.width, view.frame.size.height)];
+            }
+            else
+            {
+                [view setFrame:CGRectMake(view.frame.origin.x, 431, view.frame.size.width, view.frame.size.height)];
+            }
+        }
+        else
+        {
+            if([UIScreen mainScreen].bounds.size.height==568)
+            {
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 519)];
+            }
+            else
+            {
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 431)];
+            }
+        }
+    }
 }
 
 - (void)showReloadButton {
@@ -202,6 +268,75 @@ const NSInteger yookaThumbnailSpace4 = 5;
     self.navigationItem.rightBarButtonItem = reloadButton;
     
 }
+
+- (void)reloadView
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        [self showActivityIndicator];
+        
+        KCSQuery* query = [KCSQuery queryOnField:@"venueName" withExactMatchForValue:_selectedRestaurantName];
+        KCSQuerySortModifier* sortByDate = [[KCSQuerySortModifier alloc] initWithField:@"postDate" inDirection:kKCSDescending];
+        [query addSortModifier:sortByDate]; //sort the return by the date field
+        [query setLimitModifer:[[KCSQueryLimitModifier alloc] initWithLimit:15]]; //just get back 10 results
+        [self.updateStore2 queryWithQuery:query withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+            //        [self performSelector:@selector(stopLoading) withObject:nil afterDelay:1.0]; //too fast transition feels weird
+            //            [self.refreshControl endRefreshing];
+            if (objectsOrNil && objectsOrNil.count) {
+                
+                //                NSLog(@"newfeed= %@",objectsOrNil);
+                //                NSLog(@"try = %@",objectsOrNil[0]);
+                //                YookaBackend *try = objectsOrNil[1];
+                //                NSLog(@"try 2 = %@",try.dishImage);
+                _newsFeed2 = [NSMutableArray arrayWithArray:objectsOrNil];
+                YookaBackend *yooka = _newsFeed2[0];
+                NSString *kinveyId = [_newsFeed[0] objectForKey:@"_id"];
+                
+                if ([kinveyId isEqualToString:yooka.kinveyId]) {
+                    NSLog(@"same");
+                    k=0;
+                    [self loadlikes];
+                    
+                }else{
+                    NSLog(@"not same");
+                    [_gridScrollView removeFromSuperview];
+                    
+                    CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+                    _gridScrollView=[[UIScrollView alloc] initWithFrame:screenRect];
+                    _gridScrollView.contentSize= self.view.bounds.size;
+                    _gridScrollView.frame = CGRectMake(0.f, 65.f, 320.f, self.view.frame.size.height);
+                    [self.view addSubview:_gridScrollView];
+                    
+                    contentSize = 130;
+                    
+                    [self setupNewsFeed];
+                    
+                }
+                
+            }else{
+                NSLog(@"newfeed= %@",errorOrNil);
+                
+                [self stopActivityIndicator];
+            }
+        } withProgressBlock:nil];
+        
+    }else{
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    
+}
+
 
 - (void)showActivityIndicator {
     
@@ -233,7 +368,7 @@ const NSInteger yookaThumbnailSpace4 = 5;
     _collectionName1 = @"yookaPosts2";
     _customEndpoint1 = @"VenueImage";
     _fieldName1 = @"postDate";
-    NSLog(@"selected restaurant = %@",_selectedRestaurantName);
+    //NSLog(@"selected restaurant = %@",_selectedRestaurantName);
     _dict1 = [[NSDictionary alloc]initWithObjectsAndKeys:_collectionName1,@"collectionName",_fieldName1,@"fieldName",_selectedRestaurantName,@"venueName", nil];
     
     [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict1 completionBlock:^(id results, NSError *error){
@@ -316,7 +451,7 @@ const NSInteger yookaThumbnailSpace4 = 5;
 
 - (void)tapOnce:(id)sender
 {
-    NSLog(@"Tap once");
+    //NSLog(@"Tap once");
 }
 
 - (void)tapTwice:(UIGestureRecognizer *)sender
@@ -753,8 +888,13 @@ const NSInteger yookaThumbnailSpace4 = 5;
 {
     
     //    NSLog(@"load images");
-    if (i<_newsFeed.count) {
+    if (i<_newsFeed.count&& self.working==YES) {
+        //    for(i=0;i<_newsFeed.count;i++){
+        
         //        NSLog(@"hahahah");
+        
+        //        YookaBackend *yooka = _newsFeed[i];
+        
         NSString *dishPicUrl = [[_newsFeed[i] objectForKey:@"dishImage"] objectForKey:@"_downloadURL"];
         NSString *userId = [_newsFeed[i] objectForKey:@"userEmail"];
         [_userEmails addObject:userId];
@@ -764,462 +904,1121 @@ const NSInteger yookaThumbnailSpace4 = 5;
         NSString *venueAddress = [_newsFeed[i] objectForKey:@"venueAddress"];
         NSString *caption = [_newsFeed[i] objectForKey:@"caption"];
         NSString *post_vote = [_newsFeed[i] objectForKey:@"postVote"];
-        
-        //        UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapOnce:)];
-        //        UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapTwice:)];
-        //        UITapGestureRecognizer *tapTrice = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapThrice:)];
-        //
-        //        tapOnce.numberOfTapsRequired = 1;
-        //        tapTwice.numberOfTapsRequired = 2;
-        //        tapTrice.numberOfTapsRequired = 3;
-        //        //stops tapOnce from overriding tapTwice
-        //        [tapOnce requireGestureRecognizerToFail:tapTwice];
-        //        [tapTwice requireGestureRecognizerToFail:tapTrice];
-        //
-        //        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-        //                                                                      (i*yookaThumbnailHeight3),
-        //                                                                      310,
-        //                                                                      415)];
-        //        contentSize += (yookaThumbnailHeight3);
-        //
-        //        [_gridScrollView setContentSize:CGSizeMake(320, contentSize)];
-        //
-        //        button.tag = i;
-        //
-        //        button.userInteractionEnabled = YES;
-        //        //        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        //        [button addGestureRecognizer:tapOnce]; //remove the other button action which calls method `button`
-        //        [button addGestureRecognizer:tapTwice];
-        //        [button addGestureRecognizer:tapTrice];
-        //        [_gridScrollView addSubview:button];
-        //        [self.thumbnails addObject:button];
+        NSString *kinveyId = [_newsFeed[i] objectForKey:@"_id"];
         
         UIButton *button = [self.thumbnails objectAtIndex:i];
+        
+        //        if (i==1) {
+        //            [self loadImages2];
+        //        }
         
         UIImageView *buttonImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 310, 310)];
         //                [buttonImage2 setBackgroundColor:[UIColor redColor]];
         buttonImage2.image = [UIImage imageNamed:@"YookaPostsBg.png"];
         [button addSubview:buttonImage2];
         
-        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:dishPicUrl]
-                                                            options:0
-                                                           progress:^(NSInteger receivedSize, NSInteger expectedSize)
-         {
-             // progression tracking code
-         }
-                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-         {
-             if (image)
-             {
-                 // do something with image
+        UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7, 7, 304, 304)];
+        [buttonImage setBackgroundColor:[UIColor clearColor]];
+        buttonImage.contentMode = UIViewContentModeScaleAspectFill;
+        buttonImage.clipsToBounds = YES;
+        buttonImage.opaque = YES;
+        buttonImage.image = nil;
+        
+//        [[SDImageCache sharedImageCache] queryDiskCacheForKey:kinveyId done:^(UIImage *image, SDImageCacheType cacheType)
+//         {
+//             // image is not nil if image was found
+//             if (image) {
+//                 
+//                 NSLog(@"found cache");
+//                 
+//                 [buttonImage setImage:image];
+//                 [button addSubview:buttonImage];
+//                 
+//                 UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 290, 45)];
+//                 dishLabel.textColor = [UIColor whiteColor];
+//                 [dishLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:30]];
+//                 dishLabel.text = [dishName uppercaseString];
+//                 dishLabel.textAlignment = NSTextAlignmentLeft;
+//                 dishLabel.adjustsFontSizeToFitWidth = YES;
+//                 dishLabel.numberOfLines = 0;
+//                 [dishLabel sizeToFit];
+//                 dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
+//                 dishLabel.layer.shadowRadius = 1;
+//                 dishLabel.layer.shadowOpacity = 1;
+//                 dishLabel.layer.shadowOffset = CGSizeMake(2.0, 5.0);
+//                 dishLabel.layer.masksToBounds = NO;
+//                 [button addSubview:dishLabel];
+//                 
+//                 UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 315, 155, 30)];
+//                 venueLabel.textColor = [UIColor orangeColor];
+//                 [venueLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:20]];
+//                 venueLabel.text = venueName;
+//                 venueLabel.textAlignment = NSTextAlignmentCenter;
+//                 venueLabel.adjustsFontSizeToFitWidth = YES;
+//                 [button addSubview:venueLabel];
+//                 
+////                 UIButton *restaurant_button = [UIButton buttonWithType:UIButtonTypeCustom];
+////                 [restaurant_button  setFrame:CGRectMake(100, 315, 155, 30)];
+////                 [restaurant_button setBackgroundColor:[UIColor clearColor]];
+////                 restaurant_button.tag = i;
+////                 [restaurant_button addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
+////                 [button addSubview:restaurant_button];
+//                 
+//                 UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(220, 345, 90, 12)];
+//                 addressLabel.textColor = [UIColor lightGrayColor];
+//                 [addressLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+//                 addressLabel.text = venueAddress;
+//                 addressLabel.textAlignment = NSTextAlignmentRight;
+//                 addressLabel.adjustsFontSizeToFitWidth = NO;
+//                 [button addSubview:addressLabel];
+//                 
+//                 NSDate *createddate = [_newsFeed[i] objectForKey:@"postDate"];
+//                 NSDate *now = [NSDate date];
+//                 NSString *str;
+//                 NSMutableString *myString = [NSMutableString string];
+//                 
+//                 NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+//                 if (secondsBetween<60) {
+//                     int duration = secondsBetween;
+//                     str = [NSString stringWithFormat:@"%ds",duration]; //%d or %i both is ok.
+//                     [myString appendString:str];
+//                 }else if (secondsBetween<3600) {
+//                     int duration = secondsBetween / 60;
+//                     str = [NSString stringWithFormat:@"%dm",duration]; //%d or %i both is ok.
+//                     [myString appendString:str];
+//                 }else if (secondsBetween<86400){
+//                     int duration = secondsBetween / 3600;
+//                     str = [NSString stringWithFormat:@"%dh",duration]; //%d or %i both is ok.
+//                     [myString appendString:str];
+//                 }else if (secondsBetween<604800){
+//                     int duration = secondsBetween / 86400;
+//                     str = [NSString stringWithFormat:@"%dd",duration]; //%d or %i both is ok.
+//                     [myString appendString:str];
+//                 }else {
+//                     int duration = secondsBetween / 604800;
+//                     str = [NSString stringWithFormat:@"%dw",duration]; //%d or %i both is ok.
+//                     [myString appendString:str];
+//                 }
+//                 
+//                 UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(240, 330, 70, 12)];
+//                 time_label.text = [NSString stringWithFormat:@"%@",myString];
+//                 time_label.textColor = [UIColor grayColor];
+//                 [time_label setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+//                 time_label.textAlignment = NSTextAlignmentRight;
+//                 [button addSubview:time_label];
+//                 
+//                 UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 370, 310, 18)];
+//                 captionLabel.textColor = [UIColor darkGrayColor];
+//                 [captionLabel setFont:[UIFont fontWithName:@"Helvetica-LightOblique" size:15]];
+//                 captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
+//                 captionLabel.textAlignment = NSTextAlignmentCenter;
+//                 captionLabel.adjustsFontSizeToFitWidth = YES;
+//                 [button addSubview:captionLabel];
+//                 
+//                 //                                    KCSCollection *yookaObjects2 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+//                 //                                    KCSAppdataStore *store2 = [KCSAppdataStore storeWithCollection:yookaObjects2 options:nil];
+//                 //
+//                 //                                    KCSQuery* query4 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+//                 //                                    KCSQuery* query5 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YAY"];
+//                 ////                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+//                 //                                    KCSQuery* query7 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query4,query5, nil];
+//                 //
+//                 //                                    [store2 queryWithQuery:query7 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+//                 //                                        if (errorOrNil == nil) {
+//                 //
+//                 //                                            _yayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+//                 ////                                            NSLog(@"TRY 1 postVote = %@",_yayVote);
+//                 //
+//                 //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+//                 //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+//                 //
+//                 //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+//                 //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+//                 //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+//                 //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+//                 //
+//                 //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+//                 //                                                if (errorOrNil == nil) {
+//                 //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+//                 ////                                                    NSLog(@"venue name = %@",dishName);
+//                 ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+//                 ////                                                    NSLog(@"yay = %@",_yayVote);
+//                 ////                                                    NSLog(@"nay = %@",_nayVote);
+//                 //
+//                 //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+//                 ////                                                    NSLog(@"percentage = %f",percent);
+//                 //
+//                 //                                                    // Calculate this somehow
+//                 //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+//                 //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+//                 //                                                    [button addSubview:barImage];
+//                 //
+//                 //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+//                 //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+//                 //                                                    [button addSubview:barPercentage];
+//                 //
+//                 //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+//                 //                                                    voteLabel.textColor = [UIColor whiteColor];
+//                 //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+//                 //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+//                 //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+//                 //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+//                 //                                                    [button addSubview:voteLabel];
+//                 //
+//                 //                                                    [_gridScrollView addSubview:button];
+//                 //
+//                 //                                                    i++;
+//                 //                                                    [self loadImages];
+//                 //
+//                 //                                                }else{
+//                 ////                                                    NSLog(@"TRY 4 ");
+//                 //                                                    [_gridScrollView addSubview:button];
+//                 //
+//                 //                                                    i++;
+//                 //                                                    [self loadImages];
+//                 //                                                }
+//                 //
+//                 //                                            } withProgressBlock:nil];
+//                 //
+//                 //                                        }else{
+//                 //
+//                 ////                                            NSLog(@"TRY 2 ");
+//                 //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+//                 //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+//                 //
+//                 //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+//                 //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+//                 //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+//                 //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+//                 //
+//                 //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+//                 //                                                if (errorOrNil == nil) {
+//                 //
+//                 //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+//                 ////                                                    NSLog(@"venue name = %@",dishName);
+//                 ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+//                 ////                                                    NSLog(@"yay = %@",_yayVote);
+//                 ////                                                    NSLog(@"nay = %@",_nayVote);
+//                 //
+//                 //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+//                 ////                                                    NSLog(@"percentage = %f",percent);
+//                 //
+//                 //                                                    // Calculate this somehow
+//                 //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+//                 //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+//                 //                                                    [button addSubview:barImage];
+//                 //
+//                 //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+//                 //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+//                 //                                                    [button addSubview:barPercentage];
+//                 //
+//                 //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+//                 //                                                    voteLabel.textColor = [UIColor whiteColor];
+//                 //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+//                 //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+//                 //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+//                 //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+//                 //                                                    [button addSubview:voteLabel];
+//                 //
+//                 //                                                    [_gridScrollView addSubview:button];
+//                 //
+//                 //                                                    i++;
+//                 //                                                    [self loadImages];
+//                 //
+//                 //                                                }else{
+//                 ////                                                    NSLog(@"TRY 4 ");
+//                 //                                                    [_gridScrollView addSubview:button];
+//                 //
+//                 //                                                    i++;
+//                 //                                                    [self loadImages];
+//                 //                                                }
+//                 //
+//                 //                                            } withProgressBlock:nil];
+//                 //                                        }
+//                 //
+//                 //                                    } withProgressBlock:nil];
+//                 
+//                 if ([post_vote isEqualToString:@"YAY"]) {
+//                     CGFloat percent = 1.0;
+//                     // Calculate this somehow
+//                     UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+//                     barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+//                     [button addSubview:barImage];
+//                     
+//                     UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+//                     barPercentage.image = [UIImage imageNamed:@"100.png"];
+//                     [button addSubview:barPercentage];
+//                     
+//                     UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+//                     voteLabel.textColor = [UIColor whiteColor];
+//                     [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+//                     voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+//                     voteLabel.textAlignment = NSTextAlignmentCenter;
+//                     voteLabel.adjustsFontSizeToFitWidth = NO;
+//                     [button addSubview:voteLabel];
+//                 }else{
+//                     CGFloat percent = 0.0;
+//                     // Calculate this somehow
+//                     UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+//                     barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+//                     [button addSubview:barImage];
+//                     
+//                     UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+//                     barPercentage.image = [UIImage imageNamed:@"100.png"];
+//                     [button addSubview:barPercentage];
+//                     
+//                     UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+//                     voteLabel.textColor = [UIColor whiteColor];
+//                     [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+//                     voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+//                     voteLabel.textAlignment = NSTextAlignmentCenter;
+//                     voteLabel.adjustsFontSizeToFitWidth = NO;
+//                     [button addSubview:voteLabel];
+//                 }
+//                 //                                                    NSLog(@"percentage = %f",percent);
+//                 
+//                 [_gridScrollView addSubview:button];
+//                 
+//                 i++;
+//                 if (i==_newsFeed.count) {
+//                     [self loadImages2];
+//                 }
+//                 [self loadImages];
+//                 
+//             }else{
+//                 
+//                 NSLog(@"no cache");
+        
+                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:dishPicUrl]
+                                                                     options:0
+                                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                  {
+                      // progression tracking code
+                  }
+                                                                   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                  {
+                      if (image && finished)
+                      {
+                          NSLog(@"found image");
+                          [[SDImageCache sharedImageCache] storeImage:image forKey:kinveyId];
+                          NSLog(@"stored cache");
+                          
+                          
+                          buttonImage.image = image;
+                          [button addSubview:buttonImage];
+                          
+                          UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 290, 45)];
+                          dishLabel.textColor = [UIColor whiteColor];
+                          [dishLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:30]];
+                          dishLabel.text = [dishName uppercaseString];
+                          dishLabel.textAlignment = NSTextAlignmentLeft;
+                          dishLabel.adjustsFontSizeToFitWidth = YES;
+                          dishLabel.numberOfLines = 0;
+                          [dishLabel sizeToFit];
+                          dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
+                          dishLabel.layer.shadowRadius = 1;
+                          dishLabel.layer.shadowOpacity = 1;
+                          dishLabel.layer.shadowOffset = CGSizeMake(2.0, 5.0);
+                          dishLabel.layer.masksToBounds = NO;
+                          [button addSubview:dishLabel];
+                          
+                          UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 315, 155, 30)];
+                          venueLabel.textColor = [UIColor orangeColor];
+                          [venueLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:20]];
+                          venueLabel.text = venueName;
+                          venueLabel.textAlignment = NSTextAlignmentCenter;
+                          venueLabel.adjustsFontSizeToFitWidth = YES;
+                          [button addSubview:venueLabel];
+                          
+//                          UIButton *restaurant_button = [UIButton buttonWithType:UIButtonTypeCustom];
+//                          [restaurant_button  setFrame:CGRectMake(100, 315, 155, 30)];
+//                          [restaurant_button setBackgroundColor:[UIColor clearColor]];
+//                          restaurant_button.tag = i;
+//                          [restaurant_button addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
+//                          [button addSubview:restaurant_button];
+                          
+                          UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(220, 345, 90, 12)];
+                          addressLabel.textColor = [UIColor lightGrayColor];
+                          [addressLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+                          addressLabel.text = venueAddress;
+                          addressLabel.textAlignment = NSTextAlignmentRight;
+                          addressLabel.adjustsFontSizeToFitWidth = NO;
+                          [button addSubview:addressLabel];
+                          
+                          NSDate *createddate = [_newsFeed[i] objectForKey:@"postDate"];
+                          NSDate *now = [NSDate date];
+                          NSString *str;
+                          NSMutableString *myString = [NSMutableString string];
+                          
+                          NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+                          if (secondsBetween<60) {
+                              int duration = secondsBetween;
+                              str = [NSString stringWithFormat:@"%ds",duration]; //%d or %i both is ok.
+                              [myString appendString:str];
+                          }else if (secondsBetween<3600) {
+                              int duration = secondsBetween / 60;
+                              str = [NSString stringWithFormat:@"%dm",duration]; //%d or %i both is ok.
+                              [myString appendString:str];
+                          }else if (secondsBetween<86400){
+                              int duration = secondsBetween / 3600;
+                              str = [NSString stringWithFormat:@"%dh",duration]; //%d or %i both is ok.
+                              [myString appendString:str];
+                          }else if (secondsBetween<604800){
+                              int duration = secondsBetween / 86400;
+                              str = [NSString stringWithFormat:@"%dd",duration]; //%d or %i both is ok.
+                              [myString appendString:str];
+                          }else {
+                              int duration = secondsBetween / 604800;
+                              str = [NSString stringWithFormat:@"%dw",duration]; //%d or %i both is ok.
+                              [myString appendString:str];
+                          }
+                          
+                          UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(240, 330, 70, 12)];
+                          time_label.text = [NSString stringWithFormat:@"%@",myString];
+                          time_label.textColor = [UIColor grayColor];
+                          [time_label setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+                          time_label.textAlignment = NSTextAlignmentRight;
+                          [button addSubview:time_label];
+                          
+                          UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 370, 310, 18)];
+                          captionLabel.textColor = [UIColor darkGrayColor];
+                          [captionLabel setFont:[UIFont fontWithName:@"Helvetica-LightOblique" size:15]];
+                          captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
+                          captionLabel.textAlignment = NSTextAlignmentCenter;
+                          captionLabel.adjustsFontSizeToFitWidth = YES;
+                          [button addSubview:captionLabel];
+                          
+                          //                                    KCSCollection *yookaObjects2 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+                          //                                    KCSAppdataStore *store2 = [KCSAppdataStore storeWithCollection:yookaObjects2 options:nil];
+                          //
+                          //                                    KCSQuery* query4 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+                          //                                    KCSQuery* query5 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YAY"];
+                          ////                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+                          //                                    KCSQuery* query7 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query4,query5, nil];
+                          //
+                          //                                    [store2 queryWithQuery:query7 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+                          //                                        if (errorOrNil == nil) {
+                          //
+                          //                                            _yayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+                          ////                                            NSLog(@"TRY 1 postVote = %@",_yayVote);
+                          //
+                          //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+                          //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+                          //
+                          //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+                          //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+                          //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+                          //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+                          //
+                          //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+                          //                                                if (errorOrNil == nil) {
+                          //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+                          ////                                                    NSLog(@"venue name = %@",dishName);
+                          ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+                          ////                                                    NSLog(@"yay = %@",_yayVote);
+                          ////                                                    NSLog(@"nay = %@",_nayVote);
+                          //
+                          //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+                          ////                                                    NSLog(@"percentage = %f",percent);
+                          //
+                          //                                                    // Calculate this somehow
+                          //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+                          //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+                          //                                                    [button addSubview:barImage];
+                          //
+                          //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+                          //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+                          //                                                    [button addSubview:barPercentage];
+                          //
+                          //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+                          //                                                    voteLabel.textColor = [UIColor whiteColor];
+                          //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+                          //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+                          //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+                          //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+                          //                                                    [button addSubview:voteLabel];
+                          //
+                          //                                                    [_gridScrollView addSubview:button];
+                          //
+                          //                                                    i++;
+                          //                                                    [self loadImages];
+                          //
+                          //                                                }else{
+                          ////                                                    NSLog(@"TRY 4 ");
+                          //                                                    [_gridScrollView addSubview:button];
+                          //
+                          //                                                    i++;
+                          //                                                    [self loadImages];
+                          //                                                }
+                          //
+                          //                                            } withProgressBlock:nil];
+                          //
+                          //                                        }else{
+                          //
+                          ////                                            NSLog(@"TRY 2 ");
+                          //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+                          //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+                          //
+                          //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+                          //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+                          //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+                          //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+                          //
+                          //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+                          //                                                if (errorOrNil == nil) {
+                          //
+                          //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+                          ////                                                    NSLog(@"venue name = %@",dishName);
+                          ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+                          ////                                                    NSLog(@"yay = %@",_yayVote);
+                          ////                                                    NSLog(@"nay = %@",_nayVote);
+                          //
+                          //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+                          ////                                                    NSLog(@"percentage = %f",percent);
+                          //
+                          //                                                    // Calculate this somehow
+                          //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+                          //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+                          //                                                    [button addSubview:barImage];
+                          //
+                          //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+                          //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+                          //                                                    [button addSubview:barPercentage];
+                          //
+                          //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+                          //                                                    voteLabel.textColor = [UIColor whiteColor];
+                          //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+                          //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+                          //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+                          //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+                          //                                                    [button addSubview:voteLabel];
+                          //
+                          //                                                    [_gridScrollView addSubview:button];
+                          //
+                          //                                                    i++;
+                          //                                                    [self loadImages];
+                          //
+                          //                                                }else{
+                          ////                                                    NSLog(@"TRY 4 ");
+                          //                                                    [_gridScrollView addSubview:button];
+                          //
+                          //                                                    i++;
+                          //                                                    [self loadImages];
+                          //                                                }
+                          //
+                          //                                            } withProgressBlock:nil];
+                          //                                        }
+                          //
+                          //                                    } withProgressBlock:nil];
+                          
+                          if ([post_vote isEqualToString:@"YAY"]) {
+                              CGFloat percent = 1.0;
+                              // Calculate this somehow
+                              UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+                              barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+                              [button addSubview:barImage];
+                              
+                              UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+                              barPercentage.image = [UIImage imageNamed:@"100.png"];
+                              [button addSubview:barPercentage];
+                              
+                              UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+                              voteLabel.textColor = [UIColor whiteColor];
+                              [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+                              voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+                              voteLabel.textAlignment = NSTextAlignmentCenter;
+                              voteLabel.adjustsFontSizeToFitWidth = NO;
+                              [button addSubview:voteLabel];
+                          }else{
+                              CGFloat percent = 0.0;
+                              // Calculate this somehow
+                              UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+                              barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+                              [button addSubview:barImage];
+                              
+                              UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+                              barPercentage.image = [UIImage imageNamed:@"100.png"];
+                              [button addSubview:barPercentage];
+                              
+                              UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+                              voteLabel.textColor = [UIColor whiteColor];
+                              [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+                              voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+                              voteLabel.textAlignment = NSTextAlignmentCenter;
+                              voteLabel.adjustsFontSizeToFitWidth = NO;
+                              [button addSubview:voteLabel];
+                          }
+                          //                                                    NSLog(@"percentage = %f",percent);
+                          
+                          [_gridScrollView addSubview:button];
+                          
+                          i++;
+                          
+                          if (i==_newsFeed.count) {
+                              [self loadImages2];
+                          }
+                          
+                          [self loadImages];
+                      }else{
+                          i++;
+                          
+                          if (i==_newsFeed.count) {
+                              [self loadImages2];
+                          }
+                          
+                          [self loadImages];
+                      }
+                  }];
                  
-                 
-                 UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7, 7, 304, 304)];
-                 [buttonImage setBackgroundColor:[UIColor clearColor]];
-                 buttonImage.contentMode = UIViewContentModeScaleAspectFill;
-                 buttonImage.clipsToBounds = YES;
-                 [buttonImage setImage:image];
-                 [button addSubview:buttonImage];
-                 
-                 UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 20, 260, 76, 78)];
-                 buttonImage3.image = [UIImage imageNamed:@"YookaProfilePicbg.png"];
-                 [button addSubview:buttonImage3];
-                 
-                 [_gridScrollView addSubview:button];
-                 
-                 //                                    [self loadImages2];
-                 
-                 UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 290, 45)];
-                 dishLabel.textColor = [UIColor whiteColor];
-                 [dishLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:30]];
-                 dishLabel.text = [dishName uppercaseString];
-                 dishLabel.textAlignment = NSTextAlignmentLeft;
-                 dishLabel.adjustsFontSizeToFitWidth = YES;
-                 dishLabel.numberOfLines = 0;
-                 [dishLabel sizeToFit];
-                 dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-                 dishLabel.layer.shadowRadius = 1;
-                 dishLabel.layer.shadowOpacity = 1;
-                 dishLabel.layer.shadowOffset = CGSizeMake(2.0, 5.0);
-                 dishLabel.layer.masksToBounds = NO;
-                 [button addSubview:dishLabel];
-                 
-                 UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 315, 155, 30)];
-                 venueLabel.textColor = [UIColor orangeColor];
-                 [venueLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:20]];
-                 venueLabel.text = venueName;
-                 venueLabel.textAlignment = NSTextAlignmentCenter;
-                 venueLabel.adjustsFontSizeToFitWidth = YES;
-                 [button addSubview:venueLabel];
-                 
-                 UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(220, 345, 90, 12)];
-                 addressLabel.textColor = [UIColor lightGrayColor];
-                 [addressLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-                 addressLabel.text = venueAddress;
-                 addressLabel.textAlignment = NSTextAlignmentRight;
-                 addressLabel.adjustsFontSizeToFitWidth = NO;
-                 [button addSubview:addressLabel];
-                 
-                 NSDate *createddate = [_newsFeed[i] objectForKey:@"postDate"];
-                 NSDate *now = [NSDate date];
-                 NSString *str;
-                 NSMutableString *myString = [NSMutableString string];
-                 
-                 NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
-                 if (secondsBetween<60) {
-                     int duration = secondsBetween;
-                     str = [NSString stringWithFormat:@"%ds",duration]; //%d or %i both is ok.
-                     [myString appendString:str];
-                 }else if (secondsBetween<3600) {
-                     int duration = secondsBetween / 60;
-                     str = [NSString stringWithFormat:@"%dm",duration]; //%d or %i both is ok.
-                     [myString appendString:str];
-                 }else if (secondsBetween<86400){
-                     int duration = secondsBetween / 3600;
-                     str = [NSString stringWithFormat:@"%dh",duration]; //%d or %i both is ok.
-                     [myString appendString:str];
-                 }else if (secondsBetween<604800){
-                     int duration = secondsBetween / 86400;
-                     str = [NSString stringWithFormat:@"%dd",duration]; //%d or %i both is ok.
-                     [myString appendString:str];
-                 }else {
-                     int duration = secondsBetween / 604800;
-                     str = [NSString stringWithFormat:@"%dw",duration]; //%d or %i both is ok.
-                     [myString appendString:str];
-                 }
-                 
-                 UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(240, 330, 70, 12)];
-                 time_label.text = [NSString stringWithFormat:@"%@",myString];
-                 time_label.textColor = [UIColor grayColor];
-                 [time_label setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-                 time_label.textAlignment = NSTextAlignmentRight;
-                 [button addSubview:time_label];
-                 
-                 UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 370, 310, 18)];
-                 captionLabel.textColor = [UIColor lightGrayColor];
-                 [captionLabel setFont:[UIFont fontWithName:@"Helvetica-LightOblique" size:15]];
-                 captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
-                 captionLabel.textAlignment = NSTextAlignmentCenter;
-                 captionLabel.adjustsFontSizeToFitWidth = YES;
-                 [button addSubview:captionLabel];
-                 
-                 //                                    KCSCollection *yookaObjects2 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-                 //                                    KCSAppdataStore *store2 = [KCSAppdataStore storeWithCollection:yookaObjects2 options:nil];
-                 //
-                 //                                    KCSQuery* query4 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-                 //                                    KCSQuery* query5 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YAY"];
-                 ////                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-                 //                                    KCSQuery* query7 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query4,query5, nil];
-                 //
-                 //                                    [store2 queryWithQuery:query7 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-                 //                                        if (errorOrNil == nil) {
-                 //
-                 //                                            _yayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-                 ////                                            NSLog(@"TRY 1 postVote = %@",_yayVote);
-                 //
-                 //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-                 //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
-                 //
-                 //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-                 //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
-                 //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-                 //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
-                 //
-                 //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-                 //                                                if (errorOrNil == nil) {
-                 //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-                 ////                                                    NSLog(@"venue name = %@",dishName);
-                 ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
-                 ////                                                    NSLog(@"yay = %@",_yayVote);
-                 ////                                                    NSLog(@"nay = %@",_nayVote);
-                 //
-                 //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
-                 ////                                                    NSLog(@"percentage = %f",percent);
-                 //
-                 //                                                    // Calculate this somehow
-                 //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-                 //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-                 //                                                    [button addSubview:barImage];
-                 //
-                 //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-                 //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
-                 //                                                    [button addSubview:barPercentage];
-                 //
-                 //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-                 //                                                    voteLabel.textColor = [UIColor whiteColor];
-                 //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                 //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-                 //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
-                 //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
-                 //                                                    [button addSubview:voteLabel];
-                 //
-                 //                                                    [_gridScrollView addSubview:button];
-                 //
-                 //                                                    i++;
-                 //                                                    [self loadImages];
-                 //
-                 //                                                }else{
-                 ////                                                    NSLog(@"TRY 4 ");
-                 //                                                    [_gridScrollView addSubview:button];
-                 //
-                 //                                                    i++;
-                 //                                                    [self loadImages];
-                 //                                                }
-                 //
-                 //                                            } withProgressBlock:nil];
-                 //
-                 //                                        }else{
-                 //
-                 ////                                            NSLog(@"TRY 2 ");
-                 //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-                 //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
-                 //
-                 //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-                 //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
-                 //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-                 //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
-                 //
-                 //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-                 //                                                if (errorOrNil == nil) {
-                 //
-                 //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-                 ////                                                    NSLog(@"venue name = %@",dishName);
-                 ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
-                 ////                                                    NSLog(@"yay = %@",_yayVote);
-                 ////                                                    NSLog(@"nay = %@",_nayVote);
-                 //
-                 //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
-                 ////                                                    NSLog(@"percentage = %f",percent);
-                 //
-                 //                                                    // Calculate this somehow
-                 //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-                 //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-                 //                                                    [button addSubview:barImage];
-                 //
-                 //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-                 //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
-                 //                                                    [button addSubview:barPercentage];
-                 //
-                 //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-                 //                                                    voteLabel.textColor = [UIColor whiteColor];
-                 //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                 //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-                 //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
-                 //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
-                 //                                                    [button addSubview:voteLabel];
-                 //
-                 //                                                    [_gridScrollView addSubview:button];
-                 //
-                 //                                                    i++;
-                 //                                                    [self loadImages];
-                 //
-                 //                                                }else{
-                 ////                                                    NSLog(@"TRY 4 ");
-                 //                                                    [_gridScrollView addSubview:button];
-                 //
-                 //                                                    i++;
-                 //                                                    [self loadImages];
-                 //                                                }
-                 //
-                 //                                            } withProgressBlock:nil];
-                 //                                        }
-                 //
-                 //                                    } withProgressBlock:nil];
-                 
-                 if ([post_vote isEqualToString:@"YAY"]) {
-                     CGFloat percent = 1.0;
-                     // Calculate this somehow
-                     UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-                     barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-                     [button addSubview:barImage];
-                     
-                     UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-                     barPercentage.image = [UIImage imageNamed:@"100.png"];
-                     [button addSubview:barPercentage];
-                     
-                     UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-                     voteLabel.textColor = [UIColor whiteColor];
-                     [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                     voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-                     voteLabel.textAlignment = NSTextAlignmentCenter;
-                     voteLabel.adjustsFontSizeToFitWidth = NO;
-                     [button addSubview:voteLabel];
-                 }else{
-                     CGFloat percent = 0.0;
-                     // Calculate this somehow
-                     UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-                     barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-                     [button addSubview:barImage];
-                     
-                     UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-                     barPercentage.image = [UIImage imageNamed:@"100.png"];
-                     [button addSubview:barPercentage];
-                     
-                     UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-                     voteLabel.textColor = [UIColor whiteColor];
-                     [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                     voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-                     voteLabel.textAlignment = NSTextAlignmentCenter;
-                     voteLabel.adjustsFontSizeToFitWidth = NO;
-                     [button addSubview:voteLabel];
-                 }
-                 //                                                    NSLog(@"percentage = %f",percent);
-                 
-                 
-                 [_gridScrollView addSubview:button];
-                 //                                    [self.view addSubview:_gridScrollView];
-                 
-                 if (i==0) {
-                     [self loadImages2];
-                 }
-                 
-                 i++;
-                 [self loadImages];
-                 
-             }
-         }];
+//             }
+//         }];
+        
+        
+        
+        //             }
+        //         }];
+        
+        //        UIButton *button = [self.thumbnails objectAtIndex:i];
+        //
+        //        UIImageView *buttonImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 310, 310)];
+        //        //                [buttonImage2 setBackgroundColor:[UIColor redColor]];
+        //        buttonImage2.image = [UIImage imageNamed:@"YookaPostsBg.png"];
+        //        [button addSubview:buttonImage2];
+        //
+        //        UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7, 7, 304, 304)];
+        //        [buttonImage setBackgroundColor:[UIColor clearColor]];
+        //        buttonImage.contentMode = UIViewContentModeScaleAspectFill;
+        //        buttonImage.clipsToBounds = YES;
+        //        [button addSubview:buttonImage];
+        //
+        //        [buttonImage setImageWithURL:[NSURL URLWithString:dishPicUrl]
+        //                       placeholderImage:nil
+        //                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        //
+        //                                  UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 20, 260, 76, 78)];
+        //                                  buttonImage3.image = [UIImage imageNamed:@"YookaProfilePicbg.png"];
+        //                                  [button addSubview:buttonImage3];
+        //
+        //
+        //                                  UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 290, 45)];
+        //                                  dishLabel.textColor = [UIColor whiteColor];
+        //                                  [dishLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:30]];
+        //                                  dishLabel.text = [dishName uppercaseString];
+        //                                  dishLabel.textAlignment = NSTextAlignmentLeft;
+        //                                  dishLabel.adjustsFontSizeToFitWidth = YES;
+        //                                  dishLabel.numberOfLines = 0;
+        //                                  [dishLabel sizeToFit];
+        //                                  dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
+        //                                  dishLabel.layer.shadowRadius = 1;
+        //                                  dishLabel.layer.shadowOpacity = 1;
+        //                                  dishLabel.layer.shadowOffset = CGSizeMake(2.0, 5.0);
+        //                                  dishLabel.layer.masksToBounds = NO;
+        //                                  [button addSubview:dishLabel];
+        //
+        //                                  UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 315, 155, 30)];
+        //                                  venueLabel.textColor = [UIColor orangeColor];
+        //                                  [venueLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:20]];
+        //                                  venueLabel.text = venueName;
+        //                                  venueLabel.textAlignment = NSTextAlignmentCenter;
+        //                                  venueLabel.adjustsFontSizeToFitWidth = YES;
+        //                                  [button addSubview:venueLabel];
+        //
+        //                                  UIButton *restaurant_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        //                                  [restaurant_button  setFrame:CGRectMake(100, 315, 155, 30)];
+        //                                  [restaurant_button setBackgroundColor:[UIColor clearColor]];
+        //                                  restaurant_button.tag = i;
+        //                                  [restaurant_button addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
+        //                                  [button addSubview:restaurant_button];
+        //
+        //                                  UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(220, 345, 90, 12)];
+        //                                  addressLabel.textColor = [UIColor lightGrayColor];
+        //                                  [addressLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+        //                                  addressLabel.text = venueAddress;
+        //                                  addressLabel.textAlignment = NSTextAlignmentRight;
+        //                                  addressLabel.adjustsFontSizeToFitWidth = NO;
+        //                                  [button addSubview:addressLabel];
+        //
+        //                                  NSDate *createddate = [_newsFeed[i] objectForKey:@"postDate"];
+        //                                  NSDate *now = [NSDate date];
+        //                                  NSString *str;
+        //                                  NSMutableString *myString = [NSMutableString string];
+        //
+        //                                  NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+        //                                  if (secondsBetween<60) {
+        //                                      int duration = secondsBetween;
+        //                                      str = [NSString stringWithFormat:@"%ds",duration]; //%d or %i both is ok.
+        //                                      [myString appendString:str];
+        //                                  }else if (secondsBetween<3600) {
+        //                                      int duration = secondsBetween / 60;
+        //                                      str = [NSString stringWithFormat:@"%dm",duration]; //%d or %i both is ok.
+        //                                      [myString appendString:str];
+        //                                  }else if (secondsBetween<86400){
+        //                                      int duration = secondsBetween / 3600;
+        //                                      str = [NSString stringWithFormat:@"%dh",duration]; //%d or %i both is ok.
+        //                                      [myString appendString:str];
+        //                                  }else if (secondsBetween<604800){
+        //                                      int duration = secondsBetween / 86400;
+        //                                      str = [NSString stringWithFormat:@"%dd",duration]; //%d or %i both is ok.
+        //                                      [myString appendString:str];
+        //                                  }else {
+        //                                      int duration = secondsBetween / 604800;
+        //                                      str = [NSString stringWithFormat:@"%dw",duration]; //%d or %i both is ok.
+        //                                      [myString appendString:str];
+        //                                  }
+        //
+        //                                  UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(240, 330, 70, 12)];
+        //                                  time_label.text = [NSString stringWithFormat:@"%@",myString];
+        //                                  time_label.textColor = [UIColor grayColor];
+        //                                  [time_label setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+        //                                  time_label.textAlignment = NSTextAlignmentRight;
+        //                                  [button addSubview:time_label];
+        //
+        //                                  UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 370, 310, 18)];
+        //                                  captionLabel.textColor = [UIColor darkGrayColor];
+        //                                  [captionLabel setFont:[UIFont fontWithName:@"Helvetica-LightOblique" size:15]];
+        //                                  captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
+        //                                  captionLabel.textAlignment = NSTextAlignmentCenter;
+        //                                  captionLabel.adjustsFontSizeToFitWidth = YES;
+        //                                  [button addSubview:captionLabel];
+        //
+        //                                  //                                    KCSCollection *yookaObjects2 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+        //                                  //                                    KCSAppdataStore *store2 = [KCSAppdataStore storeWithCollection:yookaObjects2 options:nil];
+        //                                  //
+        //                                  //                                    KCSQuery* query4 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+        //                                  //                                    KCSQuery* query5 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YAY"];
+        //                                  ////                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+        //                                  //                                    KCSQuery* query7 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query4,query5, nil];
+        //                                  //
+        //                                  //                                    [store2 queryWithQuery:query7 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        //                                  //                                        if (errorOrNil == nil) {
+        //                                  //
+        //                                  //                                            _yayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+        //                                  ////                                            NSLog(@"TRY 1 postVote = %@",_yayVote);
+        //                                  //
+        //                                  //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+        //                                  //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+        //                                  //
+        //                                  //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+        //                                  //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+        //                                  //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+        //                                  //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+        //                                  //
+        //                                  //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        //                                  //                                                if (errorOrNil == nil) {
+        //                                  //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+        //                                  ////                                                    NSLog(@"venue name = %@",dishName);
+        //                                  ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+        //                                  ////                                                    NSLog(@"yay = %@",_yayVote);
+        //                                  ////                                                    NSLog(@"nay = %@",_nayVote);
+        //                                  //
+        //                                  //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+        //                                  ////                                                    NSLog(@"percentage = %f",percent);
+        //                                  //
+        //                                  //                                                    // Calculate this somehow
+        //                                  //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+        //                                  //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+        //                                  //                                                    [button addSubview:barImage];
+        //                                  //
+        //                                  //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+        //                                  //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+        //                                  //                                                    [button addSubview:barPercentage];
+        //                                  //
+        //                                  //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+        //                                  //                                                    voteLabel.textColor = [UIColor whiteColor];
+        //                                  //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+        //                                  //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+        //                                  //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+        //                                  //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+        //                                  //                                                    [button addSubview:voteLabel];
+        //                                  //
+        //                                  //                                                    [_gridScrollView addSubview:button];
+        //                                  //
+        //                                  //                                                    i++;
+        //                                  //                                                    [self loadImages];
+        //                                  //
+        //                                  //                                                }else{
+        //                                  ////                                                    NSLog(@"TRY 4 ");
+        //                                  //                                                    [_gridScrollView addSubview:button];
+        //                                  //
+        //                                  //                                                    i++;
+        //                                  //                                                    [self loadImages];
+        //                                  //                                                }
+        //                                  //
+        //                                  //                                            } withProgressBlock:nil];
+        //                                  //
+        //                                  //                                        }else{
+        //                                  //
+        //                                  ////                                            NSLog(@"TRY 2 ");
+        //                                  //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+        //                                  //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
+        //                                  //
+        //                                  //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
+        //                                  //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
+        //                                  //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
+        //                                  //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
+        //                                  //
+        //                                  //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        //                                  //                                                if (errorOrNil == nil) {
+        //                                  //
+        //                                  //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
+        //                                  ////                                                    NSLog(@"venue name = %@",dishName);
+        //                                  ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
+        //                                  ////                                                    NSLog(@"yay = %@",_yayVote);
+        //                                  ////                                                    NSLog(@"nay = %@",_nayVote);
+        //                                  //
+        //                                  //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
+        //                                  ////                                                    NSLog(@"percentage = %f",percent);
+        //                                  //
+        //                                  //                                                    // Calculate this somehow
+        //                                  //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+        //                                  //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+        //                                  //                                                    [button addSubview:barImage];
+        //                                  //
+        //                                  //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+        //                                  //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
+        //                                  //                                                    [button addSubview:barPercentage];
+        //                                  //
+        //                                  //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+        //                                  //                                                    voteLabel.textColor = [UIColor whiteColor];
+        //                                  //                                                    [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+        //                                  //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+        //                                  //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
+        //                                  //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
+        //                                  //                                                    [button addSubview:voteLabel];
+        //                                  //
+        //                                  //                                                    [_gridScrollView addSubview:button];
+        //                                  //
+        //                                  //                                                    i++;
+        //                                  //                                                    [self loadImages];
+        //                                  //
+        //                                  //                                                }else{
+        //                                  ////                                                    NSLog(@"TRY 4 ");
+        //                                  //                                                    [_gridScrollView addSubview:button];
+        //                                  //
+        //                                  //                                                    i++;
+        //                                  //                                                    [self loadImages];
+        //                                  //                                                }
+        //                                  //
+        //                                  //                                            } withProgressBlock:nil];
+        //                                  //                                        }
+        //                                  //
+        //                                  //                                    } withProgressBlock:nil];
+        //
+        //                                  if ([post_vote isEqualToString:@"YAY"]) {
+        //                                      CGFloat percent = 1.0;
+        //                                      // Calculate this somehow
+        //                                      UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+        //                                      barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+        //                                      [button addSubview:barImage];
+        //
+        //                                      UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+        //                                      barPercentage.image = [UIImage imageNamed:@"100.png"];
+        //                                      [button addSubview:barPercentage];
+        //
+        //                                      UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+        //                                      voteLabel.textColor = [UIColor whiteColor];
+        //                                      [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+        //                                      voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+        //                                      voteLabel.textAlignment = NSTextAlignmentCenter;
+        //                                      voteLabel.adjustsFontSizeToFitWidth = NO;
+        //                                      [button addSubview:voteLabel];
+        //                                  }else{
+        //                                      CGFloat percent = 0.0;
+        //                                      // Calculate this somehow
+        //                                      UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
+        //                                      barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
+        //                                      [button addSubview:barImage];
+        //
+        //                                      UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
+        //                                      barPercentage.image = [UIImage imageNamed:@"100.png"];
+        //                                      [button addSubview:barPercentage];
+        //
+        //                                      UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
+        //                                      voteLabel.textColor = [UIColor whiteColor];
+        //                                      [voteLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
+        //                                      voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
+        //                                      voteLabel.textAlignment = NSTextAlignmentCenter;
+        //                                      voteLabel.adjustsFontSizeToFitWidth = NO;
+        //                                      [button addSubview:voteLabel];
+        //                                  }
+        //                                  //                                                    NSLog(@"percentage = %f",percent);
+        //
+        //                                  [_gridScrollView addSubview:button];
+        //
+        //
+        //                                  if (i==1) {
+        //                                      [self loadImages2];
+        //                                  }
+        //
+        //                                  i++;
+        //                                  [self loadImages];
+        //
+        //                              }];
         
     }
     
-
     
 }
 
 - (void)loadImages2
 {
     //    NSLog(@"load images");
-    if (j<_newsFeed.count) {
+    if (j<_newsFeed.count && self.working==YES) {
         //        NSLog(@"hahahah");
         //        NSString *dishPicUrl = [[_newsFeed[i] objectForKey:@"dishImage"] objectForKey:@"_downloadURL"];
+        
+        UIButton* button = [self.thumbnails objectAtIndex:j];
+        //        KCSQuery* query = [KCSQuery query];
+        //        KCSQuery* query = [KCSQuery queryOnField:@"location" withExactMatchForValue:@"Mike's House"];
+        //        [query addSortModifier:sortByDate]; //sort the return by the date field
+        //        [query setLimitModifer:[[KCSQueryLimitModifier alloc] initWithLimit:10]]; //just get back 10 results
+        
         NSString *userId = [_newsFeed[j] objectForKey:@"userEmail"];
-        //        NSLog(@"hahahaha = %@",userId);
-        //        NSString *dishName = [_newsFeed[j] objectForKey:@"dishName"];
-        //        NSString *venueName = [_newsFeed[j] objectForKey:@"venueName"];
-        //        NSString *venueAddress = [_newsFeed[j] objectForKey:@"venueAddress"];
-        //        NSString *caption = [_newsFeed[j] objectForKey:@"caption"];
-        //        NSString *kinveyId = [_newsFeed[j] objectForKey:@"_id"];
-        //        NSString *post_vote = [_newsFeed[j] objectForKey:@"postVote"];
+        NSLog(@"hahahaha = %@",userId);
+        //                NSString *dishName = [_newsFeed[j] objectForKey:@"dishName"];
+        //                NSString *venueName = [_newsFeed[j] objectForKey:@"venueName"];
+        //                NSString *venueAddress = [_newsFeed[j] objectForKey:@"venueAddress"];
+        //                NSString *caption = [_newsFeed[j] objectForKey:@"caption"];
+        //                NSString *kinveyId = [_newsFeed[j] objectForKey:@"_id"];
+        //                NSString *post_vote = [_newsFeed[j] objectForKey:@"postVote"];
         
-        _collectionName2 = @"userPicture";
-        _customEndpoint2 = @"NewsFeed";
-        _fieldName2 = @"_id";
-        _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:userId,@"userEmail",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
-        
-        //        [[button subviews]
-        //         makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        
-        [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
-            if ([results isKindOfClass:[NSArray class]]) {
-                NSArray *results_array = [NSArray arrayWithArray:results];
-                if (results_array && results_array.count) {
-                    //                NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
-                    NSString *userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
-                    [_userPicUrls addObject:userPicUrl];
-                    NSString *userFullName = [results[0] objectForKey:@"userFullName"];
-                    [_userNames addObject:userFullName];
-                    
-                    if (userPicUrl) {
-                        
-                        //                        NSLog(@"J=%d",j);
-                        
-                        // do something with image
-                        UIButton* button = [self.thumbnails objectAtIndex:j];
-                        
-                        UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 24, 264, 66, 68)];
-                        buttonImage4.layer.cornerRadius = 5.f;
-                        [buttonImage4 setContentMode:UIViewContentModeScaleAspectFill];
-                        buttonImage4.clipsToBounds = YES;
-                        [button addSubview:buttonImage4];
-                        
-                        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:userPicUrl]
-                                                                            options:0
-                                                                           progress:^(NSInteger receivedSize, NSInteger expectedSize)
-                         {
-                             // progression tracking code
-                         }
-                                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-                         {
-                             if (image && finished)
-                             {
+//        [[SDImageCache sharedImageCache] queryDiskCacheForKey:userId done:^(UIImage *image, SDImageCacheType cacheType)
+//         {
+//             if(image){
+//                 NSLog(@"found cache");
+//                 
+//                 UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 20, 260, 76, 78)];
+//                 buttonImage3.image = [UIImage imageNamed:@"YookaProfilePicbg.png"];
+//                 [button addSubview:buttonImage3];
+//                 
+//                 UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 24, 264, 66, 68)];
+//                 buttonImage4.layer.cornerRadius = 5.f;
+//                 [buttonImage4 setContentMode:UIViewContentModeScaleAspectFill];
+//                 buttonImage4.clipsToBounds = YES;
+//                 buttonImage4.image = nil;
+//                 buttonImage4.opaque = YES;
+//                 
+//                 buttonImage4.image = image;
+//                 [button addSubview:buttonImage4];
+//                 
+//                 UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
+//                 [user_button  setFrame:CGRectMake(20, 260, 76, 78)];
+//                 [user_button setBackgroundColor:[UIColor clearColor]];
+//                 user_button.tag = j;
+//                 [user_button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
+//                 [button addSubview:user_button];
+//                 
+//                 NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+//                 NSString *userFullName = [ud objectForKey:userId];
+//                 
+//                 if (userFullName) {
+//                     UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 340, 100, 30)];
+//                     userLabel.textColor = [UIColor blackColor];
+//                     userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];
+//                     NSArray* firstLastStrings = [userFullName componentsSeparatedByString:@" "];
+//                     NSString *firstName = [firstLastStrings objectAtIndex:0];
+//                     if (firstLastStrings.count>1) {
+//                         NSString *lastName =[firstLastStrings objectAtIndex:1];
+//                         userLabel.text = [NSString stringWithFormat:@"%@\n%@",firstName,lastName];
+//                         
+//                     }else{
+//                         userLabel.text = [NSString stringWithFormat:@"%@",firstName];
+//                         
+//                     }
+//                     userLabel.textAlignment = NSTextAlignmentCenter;
+//                     userLabel.adjustsFontSizeToFitWidth = YES;
+//                     userLabel.numberOfLines = 0;
+//                     [button addSubview:userLabel];
+//                 }
+//                 [_gridScrollView addSubview:button];
+//                 
+//                 j++;
+//                 if (j == _newsFeed.count) {
+//                     
+//                     [self loadlikes];
+//                 }
+//                 
+//                 [self loadImages2];
+//                 
+//             }else{
+                 NSLog(@"no cache");
+                 _collectionName2 = @"userPicture";
+                 _customEndpoint2 = @"NewsFeed";
+                 _fieldName2 = @"_id";
+                 _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:userId,@"userEmail",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
+                 
+                 //        [[button subviews]
+                 //         makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                 
+                 [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
+                     if ([results isKindOfClass:[NSArray class]]) {
+                         NSArray *results_array = [NSArray arrayWithArray:results];
+                         if (results_array && results_array.count) {
+                             //                NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
+                             NSString *userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
+                             [_userPicUrls addObject:userPicUrl];
+                             NSString *userFullName = [results[0] objectForKey:@"userFullName"];
+                             [_userNames addObject:userFullName];
+                             
+                             if (userPicUrl) {
+                                 
+                                 //                                SDWebImageManager *manager = [SDWebImageManager sharedManager];
+                                 //                                [manager downloadWithURL:[NSURL URLWithString:userPicUrl]
+                                 //
+                                 //                                                 options:0
+                                 //                                                progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                                 //                                 {
+                                 //                                     // progression tracking code
+                                 //                                 }
+                                 //                                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+                                 //                                 {
+                                 //                                     if (image)
+                                 //                                     {
                                  // do something with image
+                                 UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 24, 264, 66, 68)];
+                                 buttonImage4.layer.cornerRadius = 5.f;
+                                 [buttonImage4 setContentMode:UIViewContentModeScaleAspectFill];
+                                 buttonImage4.clipsToBounds = YES;
+                                 buttonImage4.image = nil;
+                                 buttonImage4.opaque = YES;
+                                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:userPicUrl]
+                                                                                     options:0
+                                                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                                  {
+                                      // progression tracking code
+                                  }
+                                                                                   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                                  {
+                                      if (image && finished)
+                                      {
+                                          NSLog(@"found image");
+                                          [[SDImageCache sharedImageCache] storeImage:image forKey:userId];
+                                          NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                                          [ud setObject:userFullName forKey:userId];
+                                          NSString *userId2 = [NSString stringWithFormat:@"%@%@",userId,userId];
+                                          [ud setObject:userPicUrl forKey:userId2];
+                                          [ud synchronize];
+                                          NSLog(@"stored cache");
+                                          //                                     }else{
+                                          //                                         NSLog(@"no image");
+                                          //                                     }
+                                          
+                                          buttonImage4.image = image;
+                                          [button addSubview:buttonImage4];
+                                          
+                                          UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                                          [user_button  setFrame:CGRectMake(20, 260, 76, 78)];
+                                          [user_button setBackgroundColor:[UIColor clearColor]];
+                                          user_button.tag = j;
+                                          [user_button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
+                                          [button addSubview:user_button];
+                                          
+                                          UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 340, 100, 30)];
+                                          userLabel.textColor = [UIColor blackColor];
+                                          userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];
+                                          NSArray* firstLastStrings = [userFullName componentsSeparatedByString:@" "];
+                                          NSString *firstName = [firstLastStrings objectAtIndex:0];
+                                          if (firstLastStrings.count>1) {
+                                              NSString *lastName =[firstLastStrings objectAtIndex:1];
+                                              userLabel.text = [NSString stringWithFormat:@"%@\n%@",firstName,lastName];
+                                              
+                                          }else{
+                                              userLabel.text = [NSString stringWithFormat:@"%@",firstName];
+                                              
+                                          }
+                                          userLabel.textAlignment = NSTextAlignmentCenter;
+                                          userLabel.adjustsFontSizeToFitWidth = YES;
+                                          userLabel.numberOfLines = 0;
+                                          [button addSubview:userLabel];
+                                          
+                                          [_gridScrollView addSubview:button];
+                                          
+                                          j++;
+                                          if (j == _newsFeed.count) {
+                                              
+                                              [self loadlikes];
+                                          }
+                                          
+                                          [self loadImages2];
+                                      }else{
+                                          j++;
+                                          if (j == _newsFeed.count) {
+                                              
+                                              [self loadlikes];
+                                          }
+                                          
+                                          [self loadImages2];
+                                      }
+                                      
+                                  }];
                                  
-                                 [buttonImage4 setImage:image];
+                                 //                                     }
+                                 //                                 }];
                                  
-                                 UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                                 [user_button  setFrame:CGRectMake(20, 260, 76, 78)];
-                                 [user_button setBackgroundColor:[UIColor clearColor]];
-                                 user_button.tag = j;
-                                 [user_button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
-                                 [button addSubview:user_button];
+                             }else{
                                  
-                                 UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 340, 100, 30)];
-                                 userLabel.textColor = [UIColor blackColor];
-                                 userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];
-                                 NSArray* firstLastStrings = [userFullName componentsSeparatedByString:@" "];
-                                 NSString *firstName = [firstLastStrings objectAtIndex:0];
-                                 if (firstLastStrings.count>1) {
-                                     NSString *lastName =[firstLastStrings objectAtIndex:1];
-                                     userLabel.text = [NSString stringWithFormat:@"%@\n%@",firstName,lastName];
+                                 //                        NSLog(@"fail 3");
+                                 j++;
+                                 if (j == _newsFeed.count) {
                                      
-                                 }else{
-                                     userLabel.text = [NSString stringWithFormat:@"%@",firstName];
+                                     [self loadlikes];
+                                     
+                                     //                                    [self stopActivityIndicator];
+                                     //        NSLog(@"user pic url = %@",_userPicUrls);
                                      
                                  }
-                                 userLabel.textAlignment = NSTextAlignmentCenter;
-                                 userLabel.adjustsFontSizeToFitWidth = YES;
-                                 userLabel.numberOfLines = 0;
-                                 [button addSubview:userLabel];
                                  
-                                 [_gridScrollView addSubview:button];
-                                 
-                                 j++;
                                  [self loadImages2];
                                  
                              }
-                         }];
-                        
-                        //                             }
-                        //                         }];
-                        
-                    }else{
-                        
-                        //                        NSLog(@"fail 3");
-                        j++;
-                        [self loadImages2];
-                        
-                    }
-                    
-                    
-                }else{
-                    //                    NSLog(@"fail 1");
-                    j++;
-                    [self loadImages2];
-                }
-                
-            }else{
-                //                NSLog(@"fail 2");
-                j++;
-                [self loadImages2];
-            }
-        }];
+                             
+                             
+                         }else{
+                             //                    NSLog(@"fail 1");
+                             j++;
+                             if (j == _newsFeed.count) {
+                                 
+                                 [self loadlikes];
+                                 
+                                 //                                [self stopActivityIndicator];
+                                 //        NSLog(@"user pic url = %@",_userPicUrls);
+                                 
+                             }
+                             
+                             [self loadImages2];
+                         }
+                         
+                     }else{
+                         //                NSLog(@"fail 2");
+                         j++;
+                         if (j == _newsFeed.count) {
+                             
+                             [self loadlikes];
+                             
+                             //                            [self stopActivityIndicator];
+                             //        NSLog(@"user pic url = %@",_userPicUrls);
+                             
+                         }
+                         
+                         [self loadImages2];
+                     }
+                 }];
+                 
+//             }
+//         }];
         
     }
     
-    if (j == _newsFeed.count-1) {
-        
-        [self loadlikes];
-        
-        [self stopActivityIndicator];
-        //        NSLog(@"user pic url = %@",_userPicUrls);
-        
-    }
 }
 
 - (void)loadlikes
 {
-    if(k<_newsFeed.count){
+    if(k<_newsFeed.count && self.working==YES){
+        
+        //        YookaBackend *yooka4 = _newsFeed[k];
         
         NSString *kinveyId = [_newsFeed[k] objectForKey:@"_id"];
+        //        NSLog(@"kinveyId = %@",kinveyId);
         
         UIButton* button = [self.thumbnails objectAtIndex:k];
         
@@ -1254,6 +2053,20 @@ const NSInteger yookaThumbnailSpace4 = 5;
                             likesLabel.adjustsFontSizeToFitWidth = YES;
                             [likesImageView addSubview:likesLabel];
                             
+                            UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                            [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
+                            [like_button setBackgroundColor:[UIColor clearColor]];
+                            like_button.tag = k;
+                            [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
+                            [button addSubview:like_button];
+                            k++;
+                            if (k==_newsFeed.count) {
+                                [self stopActivityIndicator];
+                            }
+                            [self loadlikes];
+                            
+                            
+                            
                         }else{
                             UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(255, 260, 50, 45)];
                             likesImageView.image = [UIImage imageNamed:@"heartempty.png"];
@@ -1268,6 +2081,20 @@ const NSInteger yookaThumbnailSpace4 = 5;
                             [likesImageView addSubview:likesLabel];
                             [_likesData addObject:@"0"];
                             [_likersData addObject:[NSNull null]];
+                            
+                            UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                            [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
+                            [like_button setBackgroundColor:[UIColor clearColor]];
+                            like_button.tag = k;
+                            [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
+                            [button addSubview:like_button];
+                            k++;
+                            if (k==_newsFeed.count) {
+                                [self stopActivityIndicator];
+                            }
+                            [self loadlikes];
+                            
+                            
                         }
                         
                     }else{
@@ -1285,6 +2112,20 @@ const NSInteger yookaThumbnailSpace4 = 5;
                         [likesImageView addSubview:likesLabel];
                         [_likesData addObject:@"0"];
                         [_likersData addObject:[NSNull null]];
+                        
+                        UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                        [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
+                        [like_button setBackgroundColor:[UIColor clearColor]];
+                        like_button.tag = k;
+                        [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
+                        [button addSubview:like_button];
+                        k++;
+                        if (k==_newsFeed.count) {
+                            [self stopActivityIndicator];
+                        }
+                        [self loadlikes];
+                        
+                        
                     }
                     
                     //                                                NSLog(@"successful reload: %@", backendObject.likers); // event updated
@@ -1308,6 +2149,18 @@ const NSInteger yookaThumbnailSpace4 = 5;
                     likesLabel.adjustsFontSizeToFitWidth = YES;
                     [likesImageView addSubview:likesLabel];
                     
+                    UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
+                    [like_button setBackgroundColor:[UIColor clearColor]];
+                    like_button.tag = k;
+                    [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
+                    [button addSubview:like_button];
+                    k++;
+                    if (k==_newsFeed.count) {
+                        [self stopActivityIndicator];
+                    }
+                    [self loadlikes];
+                    
                 }
                 
             } else {
@@ -1328,21 +2181,23 @@ const NSInteger yookaThumbnailSpace4 = 5;
                 likesLabel.textAlignment = NSTextAlignmentCenter;
                 likesLabel.adjustsFontSizeToFitWidth = YES;
                 [likesImageView addSubview:likesLabel];
+                
+                UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
+                [like_button setBackgroundColor:[UIColor clearColor]];
+                like_button.tag = k;
+                [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
+                [button addSubview:like_button];
+                k++;
+                if (k==_newsFeed.count) {
+                    [self stopActivityIndicator];
+                }
+                [self loadlikes];
+                
             }
         } withProgressBlock:nil];
         
-        UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
-        [like_button setBackgroundColor:[UIColor clearColor]];
-        like_button.tag = k;
-        [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
-        [button addSubview:like_button];
-        
-        k++;
-        [self loadlikes];
-        
     }
-    
     
 }
 
@@ -1358,19 +2213,25 @@ const NSInteger yookaThumbnailSpace4 = 5;
 
 - (void)buttonAction2:(id)sender
 {
-//    UIButton* button = sender;
-//    NSUInteger b = button.tag;
-//    //        NSLog(@"button %lu pressed",(unsigned long)b);
-//    BDViewController2 *media = [[BDViewController2 alloc]init];
-//    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
-//    self.navigationItem.backBarButtonItem = backBtn;
-//    [self.navigationItem setBackBarButtonItem: backBtn];
-//    media.userFullName = _userNames[b];
-//    media.userEmail = _userEmails[b];
-//    media.userPicUrl = _userPicUrls[b];
-//    //    NSLog(@"userpicurl = %@",_userEmails[b]);
-//    
-//    [self.navigationController pushViewController:media animated:YES];
+    UIButton* button = sender;
+    NSUInteger b = button.tag;
+    //        NSLog(@"button %lu pressed",(unsigned long)b);
+    BDViewController2 *media = [[BDViewController2 alloc]init];
+    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
+    self.navigationItem.backBarButtonItem = backBtn;
+    [self.navigationItem setBackBarButtonItem: backBtn];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [_newsFeed[b] objectForKey:@"userEmail"];
+    NSString *userFullName = [ud objectForKey:userId];
+    NSString *userId2 = [NSString stringWithFormat:@"%@%@",userId,userId];
+    NSString *userPicUrl = [ud objectForKey:userId2];
+    media.userFullName = userFullName;
+    media.userEmail = userId;
+    media.userPicUrl = userPicUrl;
+    //    NSLog(@"userpicurl = %@",_userEmails[b]);
+    
+    [self.navigationController pushViewController:media animated:YES];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
@@ -1432,31 +2293,41 @@ const NSInteger yookaThumbnailSpace4 = 5;
                                                                             reuseIdentifier:SFAnnotationIdentifier];
             annotationView.canShowCallout = YES;
             
-            UIImage *flagImage = [UIImage imageNamed:@"flag.png"];
-            
-            // size the flag down to the appropriate size
-            CGRect resizeRect;
-            resizeRect.size = flagImage.size;
-            CGSize maxSize = CGRectInset(self.view.bounds,
-                                         [YookaHuntRestaurantViewController annotationPadding],
-                                         [YookaHuntRestaurantViewController annotationPadding]).size;
-            maxSize.height -= self.navigationController.navigationBar.frame.size.height + [YookaHuntRestaurantViewController calloutHeight];
-            if (resizeRect.size.width > maxSize.width)
-                resizeRect.size = CGSizeMake(maxSize.width, resizeRect.size.height / resizeRect.size.width * maxSize.width);
-            if (resizeRect.size.height > maxSize.height)
-                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
-            
-            resizeRect.origin = CGPointMake(0.0, 0.0);
-            UIGraphicsBeginImageContext(resizeRect.size);
-            [flagImage drawInRect:resizeRect];
-            UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            annotationView.image = resizedImage;
-            annotationView.opaque = NO;
-            
-            UIImageView *sfIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SFIcon.png"]];
-            annotationView.leftCalloutAccessoryView = sfIconView;
+
+                UIImage *flagImage = [UIImage imageNamed:@"pin.png"];
+                // size the flag down to the appropriate size
+                CGRect resizeRect;
+                
+                //            resizeRect.size = flagImage.size;
+                //            CGSize maxSize = CGRectInset(self.view.bounds,
+                //                                         [YookaHuntVenuesViewController annotationPadding],
+                //                                         [YookaHuntVenuesViewController annotationPadding]).size;
+                //            maxSize.height -= self.navigationController.navigationBar.frame.size.height + [YookaHuntVenuesViewController calloutHeight];
+                //            if (resizeRect.size.width > maxSize.width)
+                //                resizeRect.size = CGSizeMake(maxSize.width, resizeRect.size.height / resizeRect.size.width * maxSize.width);
+                //            if (resizeRect.size.height > maxSize.height)
+                //                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
+                
+                resizeRect = CGRectMake(0.f, 0.f, 30.f, 45.f);
+                
+                resizeRect.origin = CGPointMake(0.0, 0.0);
+                UIGraphicsBeginImageContext(resizeRect.size);
+                [flagImage drawInRect:resizeRect];
+                UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                annotationView.image = resizedImage;
+                annotationView.opaque = NO;
+                
+                //            UIImageView *sfIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SFIcon.png"]];
+                //            annotationView.leftCalloutAccessoryView = sfIconView;
+                
+//                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 5, 22, 22)];
+//                tagLabel.textColor = [UIColor blackColor];
+//                tagLabel.font = [UIFont fontWithName:@"Montserrat-Regular" size:18.0];
+//                tagLabel.textAlignment = NSTextAlignmentCenter;
+//                tagLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)[_mapAnnotations indexOfObject:annotation]+1];
+//                [annotationView addSubview:tagLabel];
             
             // offset the flag annotation so that the flag pole rests on the map coordinate
             annotationView.centerOffset = CGPointMake( annotationView.centerOffset.x + annotationView.image.size.width/2, annotationView.centerOffset.y - annotationView.image.size.height/2 );
@@ -1466,6 +2337,9 @@ const NSInteger yookaThumbnailSpace4 = 5;
         else
         {
             flagAnnotationView.annotation = annotation;
+            //            SFAnnotation *myAnn = (SFAnnotation *)annotation;
+            
+            //            NSLog(@"tag = %@",myAnn.tag);
         }
         return flagAnnotationView;
     }
@@ -1481,29 +2355,42 @@ const NSInteger yookaThumbnailSpace4 = 5;
             
         }
         
-        //        UIButton *annotationBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 90.0, 90.0)];
-        //        [annotationBtn setBackgroundColor:[UIColor clearColor]];
-        //        annotationBtn.tag = [_mapAnnotations indexOfObject:annotation];
-        //        [annotationBtn addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
-        
-        //        NSDictionary* image_Media = [self.checkinObjects2 objectAtIndex:annotationBtn.tag];
-        //        //        NSUInteger likes = [[image_Media objectForKey:@"likes"] integerValue];
-        //        //        NSUInteger comments_count = [[image_Media objectForKey:@"comments_count"]integerValue];
-        //        NSString* thumbUrl = [[image_Media objectForKey:@"user_shape"]objectForKey:@"_downloadURL"];
-        //
-        //        [[[AsyncImageDownloader alloc] initWithMediaURL:thumbUrl successBlock:^(UIImage *image)  {
-        //            UIImageView *annotationImg = [[UIImageView alloc]initWithFrame:CGRectMake(15.0, 5.0, 70.0, 75.0)];
-        //            annotationImg.image = image;
-        //            [annotationBtn addSubview:annotationImg];
-        //            [annotationView addSubview:annotationBtn];
-        //        } failBlock:^(NSError *error) {
-        //            //            NSLog(@"Failed to download image due to %@!", error);
-        //        }] startDownload];
-        
         return annotationView;
     }
     
     return nil;
+}
+
+-(void)zoomToFitMapAnnotations:(MKMapView*)aMapView
+{
+    if([aMapView.annotations count] == 0)
+        return;
+    
+    CLLocationCoordinate2D topLeftCoord;
+    topLeftCoord.latitude = -90;
+    topLeftCoord.longitude = 180;
+    
+    CLLocationCoordinate2D bottomRightCoord;
+    bottomRightCoord.latitude = 90;
+    bottomRightCoord.longitude = -180;
+    
+    for(MKPointAnnotation *annotation in _mapView.annotations)
+    {
+        topLeftCoord.longitude = fmin(topLeftCoord.longitude, annotation.coordinate.longitude);
+        topLeftCoord.latitude = fmax(topLeftCoord.latitude, annotation.coordinate.latitude);
+        
+        bottomRightCoord.longitude = fmax(bottomRightCoord.longitude, annotation.coordinate.longitude);
+        bottomRightCoord.latitude = fmin(bottomRightCoord.latitude, annotation.coordinate.latitude);
+    }
+    
+    MKCoordinateRegion region;
+    region.center.latitude = topLeftCoord.latitude - (topLeftCoord.latitude - bottomRightCoord.latitude) * 0.5;
+    region.center.longitude = topLeftCoord.longitude + (bottomRightCoord.longitude - topLeftCoord.longitude) * 0.5;
+    region.span.latitudeDelta = fabs(topLeftCoord.latitude - bottomRightCoord.latitude) * 1.85; // Add a little extra space on the sides
+    region.span.longitudeDelta = fabs(bottomRightCoord.longitude - topLeftCoord.longitude) * 1.85; // Add a little extra space on the sides
+    
+    region = [aMapView regionThatFits:region];
+    [_mapView setRegion:region animated:YES];
 }
 
 - (void)beginUpdatingLocation
@@ -1545,42 +2432,38 @@ const NSInteger yookaThumbnailSpace4 = 5;
     
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [_delegate sendrestaurantDataToA:_huntTitle];
-}
-
 - (void)getRestaurantDetails
 {
 
     [Foursquare2 venueGetDetail:_venueId callback:^(BOOL success, id result){
+        
         if (success) {
             NSDictionary *dic = result;
-//            NSLog(@"venue data 1 = %@", dic);
-//            NSLog(@"venue data 1 = %@",[dic valueForKeyPath:@"response.venue.hours.timeframes.open.renderedTime"]);
-
-            NSLog(@"venue data 2 = %@",[dic valueForKeyPath:@"response.venue.location.address"]);
-            _venueAddress = [dic valueForKeyPath:@"response.venue.location.address"];
-//            NSLog(@"venue data 3 = %@",[dic valueForKeyPath:@"response.venue.location.cc"]);
-            _venueCc = [dic valueForKeyPath:@"response.venue.location.cc"];
-//            NSLog(@"venue data 4 = %@",[dic valueForKeyPath:@"response.venue.location.city"]);
-            _venueCity = [dic valueForKeyPath:@"response.venue.location.city"];
-//            NSLog(@"venue data 5 = %@",[dic valueForKeyPath:@"response.venue.location.country"]);
-            _venueCountry = [dic valueForKeyPath:@"response.venue.location.country"];
-//            NSLog(@"venue data 6 = %@",[dic valueForKeyPath:@"response.venue.location.crossStreet"]);
+            //            NSLog(@"venue data 1 = %@", dic);
+            //            NSLog(@"venue data 1 = %@",[dic valueForKeyPath:@"response.venue.hours.timeframes.open.renderedTime"]);
             
-//            NSLog(@"venue data 7 = %@",[dic valueForKeyPath:@"response.venue.location.lat"]);
-//            _latitude = [dic valueForKeyPath:@"response.venue.location.lat"];
-//            NSLog(@"venue data 8 = %@",[dic valueForKeyPath:@"response.venue.location.lng"]);
-//            _longitude = [dic valueForKeyPath:@"response.venue.location.lng"];
-//            NSLog(@"venue data 9 = %@",[dic valueForKeyPath:@"response.venue.location.postalCode"]);
+            //            NSLog(@"venue data 2 = %@",[dic valueForKeyPath:@"response.venue.location.address"]);
+            _venueAddress = [dic valueForKeyPath:@"response.venue.location.address"];
+            //            NSLog(@"venue data 3 = %@",[dic valueForKeyPath:@"response.venue.location.cc"]);
+            _venueCc = [dic valueForKeyPath:@"response.venue.location.cc"];
+            //            NSLog(@"venue data 4 = %@",[dic valueForKeyPath:@"response.venue.location.city"]);
+            _venueCity = [dic valueForKeyPath:@"response.venue.location.city"];
+            //            NSLog(@"venue data 5 = %@",[dic valueForKeyPath:@"response.venue.location.country"]);
+            _venueCountry = [dic valueForKeyPath:@"response.venue.location.country"];
+            //            NSLog(@"venue data 6 = %@",[dic valueForKeyPath:@"response.venue.location.crossStreet"]);
+            
+            //            NSLog(@"venue data 7 = %@",[dic valueForKeyPath:@"response.venue.location.lat"]);
+            //            _latitude = [dic valueForKeyPath:@"response.venue.location.lat"];
+            //            NSLog(@"venue data 8 = %@",[dic valueForKeyPath:@"response.venue.location.lng"]);
+            //            _longitude = [dic valueForKeyPath:@"response.venue.location.lng"];
+            //            NSLog(@"venue data 9 = %@",[dic valueForKeyPath:@"response.venue.location.postalCode"]);
             _venuePostalCode = [dic valueForKeyPath:@"response.venue.location.postalCode"];
-//            NSLog(@"venue data 10 = %@",[dic valueForKeyPath:@"response.venue.location.state"]);
+            //            NSLog(@"venue data 10 = %@",[dic valueForKeyPath:@"response.venue.location.state"]);
             _venueState = [dic valueForKeyPath:@"response.venue.location.state"];
-
-//            NSString *menus = [dic valueForKeyPath:@"response.menu.menus.count"];
-//            NSLog(@"venue data 2 = %@",menus);
-            NSLog(@"venue data 10 = %@",[dic valueForKeyPath:@"response.venue.location"]);
+            
+            //            NSString *menus = [dic valueForKeyPath:@"response.menu.menus.count"];
+            //            NSLog(@"venue data 2 = %@",menus);
+            //            NSLog(@"venue data 10 = %@",[dic valueForKeyPath:@"response.venue.location"]);
             _phoneLabel = [dic valueForKeyPath:@"response.venue.contact.formattedPhone"];
             _latitude = [NSString stringWithFormat:@"%@",[dic valueForKeyPath:@"response.venue.location.lat"]];
             _longitude = [NSString stringWithFormat:@"%@",[dic valueForKeyPath:@"response.venue.location.lng"]];
@@ -1647,9 +2530,9 @@ const NSInteger yookaThumbnailSpace4 = 5;
             _restaurantNameLabel.adjustsFontSizeToFitWidth = YES;
             [self.whiteBg addSubview:_restaurantNameLabel];
             
-            UIImageView *restaurantImageBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 310, 320, 300)];
-            [restaurantImageBg setBackgroundColor:[UIColor darkGrayColor]];
-            [self.gridScrollView addSubview:restaurantImageBg];
+            //            UIImageView *restaurantImageBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 310, 320, 300)];
+            //            [restaurantImageBg setBackgroundColor:[UIColor darkGrayColor]];
+            //            [self.gridScrollView addSubview:restaurantImageBg];
             
             self.phoneCallButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [self.phoneCallButton  setFrame:CGRectMake(190, 220, 120, 25)];
@@ -1679,9 +2562,10 @@ const NSInteger yookaThumbnailSpace4 = 5;
             self.menuButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             [self.menuButton setTitle:@"MENU" forState:UIControlStateNormal];
             [self.gridScrollView addSubview:self.menuButton];
-
+            
             
         }
+        
     }];
     
     
@@ -1722,13 +2606,12 @@ const NSInteger yookaThumbnailSpace4 = 5;
         NSString *lon = _longitude;
         NSString *pinTitle = _selectedRestaurantName;
 //        NSLog(@"lat = %@, lon = %@, rest = %@",lat,lon,pinTitle);
-        BridgeAnnotation *item1 = [[BridgeAnnotation alloc] init];
-        item1.latitude = lat;
-        item1.longitude = lon;
-        item1.pinTitle = pinTitle;
-        
+    SFAnnotation *item1 = [[SFAnnotation alloc] init];
+    item1.latitude = lat;
+    item1.longitude = lon;
+    item1.pinTitle = pinTitle;
+    
         [self.mapAnnotations insertObject:item1 atIndex:0];
-        
     
     [self.mapView removeAnnotations:self.mapView.annotations];  // remove any annotations that exist
     [self.mapView addAnnotations:self.mapAnnotations];
@@ -1739,6 +2622,16 @@ const NSInteger yookaThumbnailSpace4 = 5;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [[SDImageCache sharedImageCache] clearMemory];
+    [[SDImageCache sharedImageCache] clearDisk];
+    NSUserDefaults * myNSUserDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary * dict = [myNSUserDefaults dictionaryRepresentation];
+    for (id key in dict) {
+        
+        //heck the keys if u need
+        [myNSUserDefaults removeObjectForKey:key];
+    }
+    [myNSUserDefaults synchronize];
 }
 
 /*

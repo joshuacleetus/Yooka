@@ -54,7 +54,24 @@
 @property (nonatomic, retain) NSString* open_hours;
 @property (nonatomic, retain) NSString* fsq_venue_id;
 @property (nonatomic, retain) NSString* HuntLogoUrl;
+@property (nonatomic, retain) NSString* huntPicUrl;
 @property (nonatomic, retain) NSString* postVote;
+@property (nonatomic, retain) NSString* tag;
+@property (nonatomic, retain) NSString* Category;
+@property (nonatomic, retain) NSString* subcatName;
+@property (nonatomic, retain) NSString* subcatDescription;
+@property (nonatomic, retain) NSString* subcatPicUrl;
+@property (nonatomic, retain) NSString* postType;
+@property (nonatomic, retain) NSString* postCaption;
+@property (nonatomic, retain) NSString* myHuntCount;
+@property (nonatomic, retain) NSString* totalHuntCount;
+@property (nonatomic, retain) NSString* teampic;
+@property (nonatomic, retain) NSString* popuppic;
+@property (nonatomic, retain) NSString* Hood;
+@property (nonatomic, retain) NSString* secret;
+@property (nonatomic, retain) NSString* yooka_private;
+@property (nonatomic, retain) NSString* deleted;
+
 @property (nonatomic, retain) NSDate* postDate;
 @property (nonatomic, retain) NSDate* userDate;//user profile created or updated date
 @property (nonatomic, retain) UIImage* attachment;
@@ -68,5 +85,18 @@
 @property (nonatomic, copy) NSArray* following_users;
 @property (nonatomic, copy) NSArray* followers;
 @property (nonatomic, copy) NSArray* likers;
+@property (nonatomic, copy) NSArray* subcatHuntNames;
+@property (nonatomic, copy) NSArray* category_hunts;
+@property (nonatomic, copy) NSArray* sponsored_hunts;
+@property (nonatomic, copy) NSArray* menu_list;
+@property (nonatomic, copy) NSArray* yay_list;
+@property (nonatomic, copy) NSArray* nay_list;
+@property (nonatomic, copy) NSArray* public_hunts;
+
+@property (nonatomic, copy) NSDictionary* huntPicsUrl;
+@property (nonatomic, copy) NSDictionary* huntLocations;
+
+@property (nonatomic, assign) NSUInteger SubcatCount;
+
 
 @end

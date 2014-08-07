@@ -35,8 +35,12 @@
 @property (nonatomic, strong) NSString *venueCountry;
 @property (nonatomic, strong) NSString *venuePostalCode;
 @property (nonatomic, strong) NSString *venueState;
-@property (strong, nonatomic) NSArray *locationSelected;
+@property (strong, nonatomic) NSMutableArray *locationSelected;
 @property(nonatomic,assign)id delegate;
 @property (strong, nonatomic) IBOutlet UISearchBar *locationSearch;
+
+@property (nonatomic, strong) UILabel *detailLabel;
+
+@property (strong, nonatomic) IBOutlet UIButton *cancelBtn;
 
 @end

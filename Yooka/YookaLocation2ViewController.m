@@ -11,6 +11,7 @@
 #import "FSQView/FSConverter.h"
 #import "YookaHuntRestaurantViewController.h"
 #import <Reachability.h>
+#import "Foursquare2.h"
 
 @interface YookaLocation2ViewController ()
 
@@ -39,7 +40,7 @@
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
     [self.navigationItem setTitle:@"Restaurants"];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.toolbar.translucent = NO;
     
@@ -125,25 +126,19 @@
         _currentLocation = manager.location;
         //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
     }
+        
+        [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude) longitude:@(_currentLocation.coordinate.longitude) query:s limit:@(100) intent:intentBrowse radius:@(50000) categoryId:nil callback:^(BOOL success, id result){
+            if (success) {
+                NSDictionary *dic = result;
+                NSArray *venues = [dic valueForKeyPath:@"response.venues"];
+                FSConverter *converter = [[FSConverter alloc]init];
+                self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
+                //                                          NSLog(@"%@",self.nearbyVenues);
+                [_locationTableView reloadData];
+                
+            }
+        }];
     
-    [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude)
-                                 longitude:@(_currentLocation.coordinate.longitude)
-                                     query:s
-                                     limit:@(100)
-                                    intent:intentBrowse
-                                    radius:@(50000)
-                                categoryId:nil
-                                  callback:^(BOOL success, id result){
-                                      if (success) {
-                                          NSDictionary *dic = result;
-                                          NSArray *venues = [dic valueForKeyPath:@"response.venues"];
-                                          FSConverter *converter = [[FSConverter alloc]init];
-                                          self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
-                                          //                                          NSLog(@"%@",self.nearbyVenues);
-                                          [_locationTableView reloadData];
-                                          
-                                      }
-                                  }];
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
                                                         message:nil
@@ -308,7 +303,7 @@
                                           NSArray *venues = [dic valueForKeyPath:@"response.venues"];
                                           FSConverter *converter = [[FSConverter alloc]init];
                                           self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
-                                          NSLog(@"%@",self.nearbyVenues);
+//                                          NSLog(@"%@",self.nearbyVenues);
                                           [_locationTableView reloadData];
                                           
                                       }
@@ -317,7 +312,7 @@
 
 
 - (void)backAction {
-    NSLog(@"back action");
+//    NSLog(@"back action");
 }
 
 @end

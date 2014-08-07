@@ -67,7 +67,7 @@
 {
     if([response respondsToSelector:@selector(statusCode)])
     {
-        int statusCode = (int)[((NSHTTPURLResponse *)response) statusCode];
+        int statusCode = [((NSHTTPURLResponse *)response) statusCode];
         if (statusCode >= 400)
         {
             [connection cancel];

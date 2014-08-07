@@ -116,4 +116,10 @@
 @property (nonatomic, strong) NSMutableArray *userEmails;
 @property (nonatomic, strong) NSMutableArray *userPicUrls;
 
+@property (nonatomic, retain) KCSCachedStore* updateStore2;
+@property (nonatomic, retain) KCSCachedStore* updateStore3;
+@property (nonatomic, strong) NSMutableArray *newsFeed2;
+
+@property (nonatomic, assign) BOOL working;
+
 @end

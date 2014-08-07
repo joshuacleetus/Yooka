@@ -27,7 +27,7 @@
 @property (nonatomic, strong) NSString *venueAddress;
 @property (nonatomic, strong) NSString *menuSelected;
 @property (strong, nonatomic) NSArray *menu;
-@property (strong, nonatomic) NSArray *menuData;
+@property (strong, nonatomic) NSMutableArray *menuData;
 @property (nonatomic, strong) NSString *venueCc;
 @property (nonatomic, strong) NSString *venueCity;
 @property (nonatomic, strong) NSString *venueCountry;
@@ -51,5 +51,8 @@
 @property (nonatomic, copy) NSString *savedSearchTerm;
 @property (nonatomic) NSInteger savedScopeButtonIndex;
 @property (nonatomic) BOOL searchWasActive;
+
+@property (strong, nonatomic) IBOutlet UIButton *cancelBtn;
+@property (strong, nonatomic) IBOutlet UIButton *addBtn;
 
 @end

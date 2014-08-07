@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSString *secondTag;
 @property (nonatomic, strong) NSString *ThirdTag;
-
+@property (nonatomic, assign) NSUInteger fourthTag;
+@property (nonatomic, strong) UIImage *buttonImage;
 
 @end
