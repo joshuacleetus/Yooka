@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A3CDE138-2D3F-4246-AEE2-C764CD8D5A41</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Yooka</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2CA43F38-5C11-4565-97B2-A741ABC7DE8E</key>
+		<string>https://github.com/joshuacleetus/Yooka.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Yooka.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2CA43F38-5C11-4565-97B2-A741ABC7DE8E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/joshuacleetus/Yooka.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2CA43F38-5C11-4565-97B2-A741ABC7DE8E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2CA43F38-5C11-4565-97B2-A741ABC7DE8E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Yooka</string>
+		</dict>
+	</array>
+</dict>
+</plist>
