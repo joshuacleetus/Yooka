@@ -47,236 +47,418 @@
     _userEmail = [[KCSUser activeUser] email];
     _userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
     
-    //set background color.
-    [self.view setBackgroundColor:[self colorWithHexString:@"212529"]];
     
-    UIView *top_bg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 218)];
-    top_bg.backgroundColor = [self colorWithHexString:@"272c30"];
-    [self.view addSubview:top_bg];
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     
-    //set userview here.
-    self.userView = [[UIImageView alloc]initWithFrame:CGRectMake(79, 50, 100, 100)];
-    self.userView.layer.cornerRadius = self.userView.frame.size.height / 2;
-    [self.userView setContentMode:UIViewContentModeScaleAspectFill];
-    [self.userView.layer setBorderWidth:4.0];
-    [self.userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-    [self.userView setClipsToBounds:YES];
+    if (INTERFACE_IS_PHONE) {
+        if (screenSize.height > 480.0f) {
     
-//    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(10, 187, 250, 0.25)];
-//    lineView.backgroundColor = [UIColor whiteColor];
-//    [self.view addSubview:lineView];
     
-    self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.profileButton  setFrame:CGRectMake(0, 0, 180, 218)];
-    [self.profileButton setBackgroundColor:[UIColor clearColor]];
-    [self.profileButton addTarget:self action:@selector(profileButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.profileButton];
-    
-//    UIView *lineViewx = [[UIView alloc] initWithFrame:CGRectMake(12, 100, 1, 500)];
-//    lineViewx.backgroundColor = [UIColor whiteColor];
-//    [self.view addSubview:lineViewx];
-//    
-//    UIView *lineViewxy = [[UIView alloc] initWithFrame:CGRectMake(41, 100, 1, 500)];
-//    lineViewxy.backgroundColor = [UIColor whiteColor];
-//    [self.view addSubview:lineViewxy];
-    
-    // check if image is already cached in userdefaults.
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSData* imageData = [ud objectForKey:@"MyProfilePic"];
-    UIImage *image = [UIImage imageWithData:imageData];
-    if (image) {
+            //set background color.
+            [self.view setBackgroundColor:[self colorWithHexString:@"212529"]];
+            
+            UIView *top_bg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 218)];
+            top_bg.backgroundColor = [self colorWithHexString:@"272c30"];
+            [self.view addSubview:top_bg];
+            
+            //set userview here.
+            self.userView = [[UIImageView alloc]initWithFrame:CGRectMake(79, 50, 100, 100)];
+            self.userView.layer.cornerRadius = self.userView.frame.size.height / 2;
+            [self.userView setContentMode:UIViewContentModeScaleAspectFill];
+            [self.userView.layer setBorderWidth:4.0];
+            [self.userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.userView setClipsToBounds:YES];
+            
+            //    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(10, 187, 250, 0.25)];
+            //    lineView.backgroundColor = [UIColor whiteColor];
+            //    [self.view addSubview:lineView];
+            
+            self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.profileButton  setFrame:CGRectMake(0, 0, 180, 218)];
+            [self.profileButton setBackgroundColor:[UIColor clearColor]];
+            [self.profileButton addTarget:self action:@selector(profileButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.profileButton];
+            
+            //    UIView *lineViewx = [[UIView alloc] initWithFrame:CGRectMake(12, 100, 1, 500)];
+            //    lineViewx.backgroundColor = [UIColor whiteColor];
+            //    [self.view addSubview:lineViewx];
+            //
+            //    UIView *lineViewxy = [[UIView alloc] initWithFrame:CGRectMake(41, 100, 1, 500)];
+            //    lineViewxy.backgroundColor = [UIColor whiteColor];
+            //    [self.view addSubview:lineViewxy];
+            
+            // check if image is already cached in userdefaults.
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            NSData* imageData = [ud objectForKey:@"MyProfilePic"];
+            UIImage *image = [UIImage imageWithData:imageData];
+            if (image) {
+                
+                //if image is already there set it to userview.
+                [self.userView setImage:image];
+                
+            }else{
+                
+                //get the user image from facebook or kinvey if its not cached.
+                [self get_user_image];
+            }
+            [self.view addSubview:self.userView];
+            
+            //set user name label here
+            _usernameLbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 160, 240, 24)];
+            _usernameLbl.textColor = [UIColor whiteColor];
+            _usernameLbl.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.0];
+            _usernameLbl.text = [_userFullName uppercaseString];
+            _usernameLbl.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:_usernameLbl];
+            
+            //set home button here
+            
+            UIImageView *home_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 253-30, 32, 32)];
+            [home_image_view setImage:[UIImage imageNamed:@"home_artisse.png"]];
+            [self.view addSubview:home_image_view];
+            
+            UILabel *homeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 255-30, 205, 30)];
+            homeLabel.textColor = [UIColor whiteColor];
+            homeLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            homeLabel.textAlignment = NSTextAlignmentLeft;
+            [homeLabel setText:@"Home"];
+            [self.view addSubview:homeLabel];
+            
+            self.homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.homeButton  setFrame:CGRectMake(10, 255-30, 210, 35)];
+            [self.homeButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.homeButton setBackgroundImage:[[UIImage imageNamed:@"home_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.homeButton addTarget:self action:@selector(homeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.homeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.homeButton];
+            
+            UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 240-22, 320, 0.25)];
+            lineView2.backgroundColor = [self colorWithHexString:@"515558"];
+            [self.view addSubview:lineView2];
+            
+            //set profile button here
+            //    UIImageView *profile_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 253, 35, 35)];
+            //    [profile_image_view setImage:[UIImage imageNamed:@"profile_artisse.png"]];
+            //    [self.view addSubview:profile_image_view];
+            
+            UIView *lineView3 = [[UIView alloc] initWithFrame:CGRectMake(50, 300-30, 250, 0.25)];
+            lineView3.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView3];
+            
+            //    UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 255, 205, 30)];
+            //    profileLabel.textColor = [UIColor whiteColor];
+            //    profileLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            //    profileLabel.textAlignment = NSTextAlignmentLeft;
+            //    [profileLabel setText:@"Profile"];
+            //    [self.view addSubview:profileLabel];
+            
+            //set profile navigation button here
+            
+            
+            
+            //set newsfeed button here
+            UIImageView *newsfeed_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 315-30, 33, 31)];
+            [newsfeed_image_view setImage:[UIImage imageNamed:@"newsfeed_artisse.png"]];
+            [self.view addSubview:newsfeed_image_view];
+            
+            UILabel *newsfeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 315-30, 205, 30)];
+            newsfeedLabel.textColor = [UIColor whiteColor];
+            newsfeedLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            newsfeedLabel.textAlignment = NSTextAlignmentLeft;
+            [newsfeedLabel setText:@"Newsfeed"];
+            [self.view addSubview:newsfeedLabel];
+            
+            self.newsFeedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.newsFeedButton  setFrame:CGRectMake(10, 320-30, 210, 35)];
+            [self.newsFeedButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.newsFeedButton setBackgroundImage:[[UIImage imageNamed:@"newsfeed_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.newsFeedButton addTarget:self action:@selector(newsFeedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.newsFeedButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.newsFeedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.newsFeedButton];
+            
+            UIView *lineView4 = [[UIView alloc] initWithFrame:CGRectMake(50, 360-30, 250, 0.25)];
+            lineView4.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView4];
+            
+            //set upload photo button here
+            UIImageView *upload_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 375-30, 33, 31)];
+            [upload_image_view setImage:[UIImage imageNamed:@"upload_artisse.png"]];
+            [self.view addSubview:upload_image_view];
+            
+            UILabel *uploadLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 375-30, 205, 30)];
+            uploadLabel.textColor = [UIColor whiteColor];
+            uploadLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            uploadLabel.textAlignment = NSTextAlignmentLeft;
+            [uploadLabel setText:@"Upload Photo"];
+            [self.view addSubview:uploadLabel];
+            
+            self.uploadPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.uploadPhotoButton  setFrame:CGRectMake(10, 370-30, 210, 40)];
+            [self.uploadPhotoButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.uploadPhotoButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.uploadPhotoButton addTarget:self action:@selector(uploadPhotoButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.uploadPhotoButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.uploadPhotoButton];
+            
+            UIView *lineView5 = [[UIView alloc] initWithFrame:CGRectMake(50, 420-30, 250, 0.25)];
+            lineView5.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView5];
+            
+            //set search button
+            
+            UIImageView *search_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 432-30, 33, 32)];
+            [search_image_view setImage:[UIImage imageNamed:@"search_artisse.png"]];
+            [self.view addSubview:search_image_view];
+            
+            UILabel *searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 435-30, 205, 30)];
+            searchLabel.textColor = [UIColor whiteColor];
+            searchLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            searchLabel.textAlignment = NSTextAlignmentLeft;
+            [searchLabel setText:@"Search"];
+            [self.view addSubview:searchLabel];
+            
+            self.searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.searchButton  setFrame:CGRectMake(10, 430-30, 210, 40)];
+            [self.searchButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.searchButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.searchButton addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.searchButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.searchButton];
+            
+            UIView *lineView6 = [[UIView alloc] initWithFrame:CGRectMake(50, 480-30, 250, 0.25)];
+            lineView6.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView6];
+            
+            UIView *lineView7 = [[UIView alloc] initWithFrame:CGRectMake(50, 540-30, 250, 0.25)];
+            lineView7.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView7];
+            
+            UIView *vertical_line = [[UIView alloc] initWithFrame:CGRectMake(259, 0, 0.5, 586)];
+            vertical_line.backgroundColor = [self colorWithHexString:@"515558"];
+            [self.view addSubview:vertical_line];
+            
+            UIImageView *logout_view = [[UIImageView alloc]initWithFrame:CGRectMake(9, 494-30, 34, 32)];
+            [logout_view setImage:[UIImage imageNamed:@"logoout_artisse.png"]];
+            [self.view addSubview:logout_view];
+            
+            UILabel *logoutLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 495-30, 205, 30)];
+            logoutLabel.textColor = [UIColor whiteColor];
+            logoutLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            logoutLabel.textAlignment = NSTextAlignmentLeft;
+            [logoutLabel setText:@"Logout"];
+            [self.view addSubview:logoutLabel];
+            
+            self.logoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.logoutButton  setFrame:CGRectMake(10, 495-30, 210, 40)];
+            [self.logoutButton setBackgroundColor:[UIColor clearColor]];
+            [self.logoutButton addTarget:self action:@selector(logoutButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.logoutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.logoutButton];
+            
+        }
         
-        //if image is already there set it to userview.
-        [self.userView setImage:image];
         
-    }else{
         
-        //get the user image from facebook or kinvey if its not cached.
-        [self get_user_image];
+        else{
+            //iPhone 4
+            
+            [self.view setBackgroundColor:[self colorWithHexString:@"212529"]];
+            
+            UIView *top_bg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 218-30)];
+            top_bg.backgroundColor = [self colorWithHexString:@"272c30"];
+            [self.view addSubview:top_bg];
+            
+            self.userView = [[UIImageView alloc]initWithFrame:CGRectMake(79, 40, 100, 100)];
+            self.userView.layer.cornerRadius = self.userView.frame.size.height / 2;
+            [self.userView setContentMode:UIViewContentModeScaleAspectFill];
+            [self.userView.layer setBorderWidth:4.0];
+            [self.userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.userView setClipsToBounds:YES];
+            
+            self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.profileButton  setFrame:CGRectMake(0, 0, 180, 190)];
+            [self.profileButton setBackgroundColor:[UIColor clearColor]];
+            [self.profileButton addTarget:self action:@selector(profileButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.profileButton];
+            
+
+            // check if image is already cached in userdefaults.
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            NSData* imageData = [ud objectForKey:@"MyProfilePic"];
+            UIImage *image = [UIImage imageWithData:imageData];
+            if (image) {
+                
+                //if image is already there set it to userview.
+                [self.userView setImage:image];
+                
+            }else{
+                
+                //get the user image from facebook or kinvey if its not cached.
+                [self get_user_image];
+            }
+            [self.view addSubview:self.userView];
+            
+            //set user name label here
+            _usernameLbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 160-10, 240, 24)];
+            _usernameLbl.textColor = [UIColor whiteColor];
+            _usernameLbl.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.0];
+            _usernameLbl.text = [_userFullName uppercaseString];
+            _usernameLbl.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:_usernameLbl];
+            
+            //set home button here
+            
+            UIImageView *home_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 200, 32, 32)];
+            [home_image_view setImage:[UIImage imageNamed:@"home_artisse.png"]];
+            [self.view addSubview:home_image_view];
+            
+            UILabel *homeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 200, 205, 30)];
+            homeLabel.textColor = [UIColor whiteColor];
+            homeLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            homeLabel.textAlignment = NSTextAlignmentLeft;
+            [homeLabel setText:@"Home"];
+            [self.view addSubview:homeLabel];
+            
+            self.homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.homeButton  setFrame:CGRectMake(10, 200, 210, 35)];
+            [self.homeButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.homeButton setBackgroundImage:[[UIImage imageNamed:@"home_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.homeButton addTarget:self action:@selector(homeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.homeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.homeButton];
+            
+            UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 240-22-30, 320, 0.25)];
+            lineView2.backgroundColor = [self colorWithHexString:@"515558"];
+            [self.view addSubview:lineView2];
+            
+            
+            //set newsfeed button here
+            UIImageView *newsfeed_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 255, 33, 31)];
+            [newsfeed_image_view setImage:[UIImage imageNamed:@"newsfeed_artisse.png"]];
+            [self.view addSubview:newsfeed_image_view];
+            
+            UILabel *newsfeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 255, 205, 30)];
+            newsfeedLabel.textColor = [UIColor whiteColor];
+            newsfeedLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            newsfeedLabel.textAlignment = NSTextAlignmentLeft;
+            [newsfeedLabel setText:@"Newsfeed"];
+            [self.view addSubview:newsfeedLabel];
+            
+            self.newsFeedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.newsFeedButton  setFrame:CGRectMake(10, 255, 210, 35)];
+            [self.newsFeedButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.newsFeedButton setBackgroundImage:[[UIImage imageNamed:@"newsfeed_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.newsFeedButton addTarget:self action:@selector(newsFeedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.newsFeedButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.newsFeedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.newsFeedButton];
+            
+            UIView *lineView4 = [[UIView alloc] initWithFrame:CGRectMake(50, 360-30-30, 250, 0.25)];
+            lineView4.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView4];
+            
+            //set upload photo button here
+            UIImageView *upload_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 310, 33, 31)];
+            [upload_image_view setImage:[UIImage imageNamed:@"upload_artisse.png"]];
+            [self.view addSubview:upload_image_view];
+            
+            UILabel *uploadLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 310, 205, 30)];
+            uploadLabel.textColor = [UIColor whiteColor];
+            uploadLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            uploadLabel.textAlignment = NSTextAlignmentLeft;
+            [uploadLabel setText:@"Upload Photo"];
+            [self.view addSubview:uploadLabel];
+            
+            self.uploadPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.uploadPhotoButton  setFrame:CGRectMake(10, 310, 210, 35)];
+            [self.uploadPhotoButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.uploadPhotoButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.uploadPhotoButton addTarget:self action:@selector(uploadPhotoButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.uploadPhotoButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.uploadPhotoButton];
+            
+            UIView *lineView5 = [[UIView alloc] initWithFrame:CGRectMake(50, 360, 250, 0.25)];
+            lineView5.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView5];
+            
+            //set search button
+            
+            UIImageView *search_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 365, 33, 32)];
+            [search_image_view setImage:[UIImage imageNamed:@"search_artisse.png"]];
+            [self.view addSubview:search_image_view];
+            
+            UILabel *searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 365, 205, 30)];
+            searchLabel.textColor = [UIColor whiteColor];
+            searchLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            searchLabel.textAlignment = NSTextAlignmentLeft;
+            [searchLabel setText:@"Search"];
+            [self.view addSubview:searchLabel];
+            
+            self.searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.searchButton  setFrame:CGRectMake(10, 365, 210, 35)];
+            [self.searchButton setBackgroundColor:[UIColor clearColor]];
+            //    [self.searchButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.searchButton addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            self.searchButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.searchButton];
+            
+            UIView *lineView6 = [[UIView alloc] initWithFrame:CGRectMake(50, 480-30-5-30, 250, 0.25)];
+            lineView6.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView6];
+            
+            UIView *lineView7 = [[UIView alloc] initWithFrame:CGRectMake(50, 540-30-5-30, 250, 0.25)];
+            lineView7.backgroundColor = [self colorWithHexString:@"515558"];
+            //[self.view addSubview:lineView7];
+            
+            UIView *vertical_line = [[UIView alloc] initWithFrame:CGRectMake(259, 0, 0.5, 586)];
+            vertical_line.backgroundColor = [self colorWithHexString:@"515558"];
+            [self.view addSubview:vertical_line];
+            
+            UIImageView *logout_view = [[UIImageView alloc]initWithFrame:CGRectMake(9, 420, 34, 32)];
+            [logout_view setImage:[UIImage imageNamed:@"logoout_artisse.png"]];
+            [self.view addSubview:logout_view];
+            
+            UILabel *logoutLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 420, 205, 30)];
+            logoutLabel.textColor = [UIColor whiteColor];
+            logoutLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
+            logoutLabel.textAlignment = NSTextAlignmentLeft;
+            [logoutLabel setText:@"Logout"];
+            [self.view addSubview:logoutLabel];
+            
+            self.logoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.logoutButton  setFrame:CGRectMake(10, 420, 210, 30)];
+            [self.logoutButton setBackgroundColor:[UIColor clearColor]];
+            [self.logoutButton addTarget:self action:@selector(logoutButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.logoutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.logoutButton];
+            
+    
+            
+            
+            
+            
+        }
     }
-    [self.view addSubview:self.userView];
-
-    //set user name label here
-    _usernameLbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 160, 240, 24)];
-    _usernameLbl.textColor = [UIColor whiteColor];
-    _usernameLbl.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.0];
-    _usernameLbl.text = [_userFullName uppercaseString];
-    _usernameLbl.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:_usernameLbl];
     
-    //set home button here
-    
-    UIImageView *home_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 253-30, 32, 32)];
-    [home_image_view setImage:[UIImage imageNamed:@"home_artisse.png"]];
-    [self.view addSubview:home_image_view];
-    
-    UILabel *homeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 255-30, 205, 30)];
-    homeLabel.textColor = [UIColor whiteColor];
-    homeLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-    homeLabel.textAlignment = NSTextAlignmentLeft;
-    [homeLabel setText:@"Home"];
-    [self.view addSubview:homeLabel];
-    
-    self.homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.homeButton  setFrame:CGRectMake(10, 255-30, 210, 35)];
-    [self.homeButton setBackgroundColor:[UIColor clearColor]];
-//    [self.homeButton setBackgroundImage:[[UIImage imageNamed:@"home_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-//    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.homeButton addTarget:self action:@selector(homeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.homeButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.homeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.homeButton];
-    
-    UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 240-22, 320, 0.25)];
-    lineView2.backgroundColor = [self colorWithHexString:@"515558"];
-    [self.view addSubview:lineView2];
-    
-    //set profile button here
-//    UIImageView *profile_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 253, 35, 35)];
-//    [profile_image_view setImage:[UIImage imageNamed:@"profile_artisse.png"]];
-//    [self.view addSubview:profile_image_view];
-    
-    UIView *lineView3 = [[UIView alloc] initWithFrame:CGRectMake(50, 300-30, 250, 0.25)];
-    lineView3.backgroundColor = [self colorWithHexString:@"515558"];
-    //[self.view addSubview:lineView3];
-    
-//    UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 255, 205, 30)];
-//    profileLabel.textColor = [UIColor whiteColor];
-//    profileLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-//    profileLabel.textAlignment = NSTextAlignmentLeft;
-//    [profileLabel setText:@"Profile"];
-//    [self.view addSubview:profileLabel];
-    
-    //set profile navigation button here
-
-    
-    
-    //set newsfeed button here
-    UIImageView *newsfeed_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 315-30, 33, 31)];
-    [newsfeed_image_view setImage:[UIImage imageNamed:@"newsfeed_artisse.png"]];
-    [self.view addSubview:newsfeed_image_view];
-    
-    UILabel *newsfeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 315-30, 205, 30)];
-    newsfeedLabel.textColor = [UIColor whiteColor];
-    newsfeedLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-    newsfeedLabel.textAlignment = NSTextAlignmentLeft;
-    [newsfeedLabel setText:@"Newsfeed"];
-    [self.view addSubview:newsfeedLabel];
-    
-    self.newsFeedButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.newsFeedButton  setFrame:CGRectMake(10, 320-30, 210, 35)];
-    [self.newsFeedButton setBackgroundColor:[UIColor clearColor]];
-//    [self.newsFeedButton setBackgroundImage:[[UIImage imageNamed:@"newsfeed_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-    //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.newsFeedButton addTarget:self action:@selector(newsFeedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.newsFeedButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.newsFeedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.newsFeedButton];
-    
-    UIView *lineView4 = [[UIView alloc] initWithFrame:CGRectMake(50, 360-30, 250, 0.25)];
-    lineView4.backgroundColor = [self colorWithHexString:@"515558"];
-    //[self.view addSubview:lineView4];
-    
-    //set upload photo button here
-    UIImageView *upload_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 375-30, 33, 31)];
-    [upload_image_view setImage:[UIImage imageNamed:@"upload_artisse.png"]];
-    [self.view addSubview:upload_image_view];
-    
-    UILabel *uploadLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 375-30, 205, 30)];
-    uploadLabel.textColor = [UIColor whiteColor];
-    uploadLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-    uploadLabel.textAlignment = NSTextAlignmentLeft;
-    [uploadLabel setText:@"Upload Photo"];
-    [self.view addSubview:uploadLabel];
-    
-    self.uploadPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.uploadPhotoButton  setFrame:CGRectMake(10, 370-30, 210, 40)];
-    [self.uploadPhotoButton setBackgroundColor:[UIColor clearColor]];
-//    [self.uploadPhotoButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-    //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.uploadPhotoButton addTarget:self action:@selector(uploadPhotoButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.uploadPhotoButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.uploadPhotoButton];
-    
-    UIView *lineView5 = [[UIView alloc] initWithFrame:CGRectMake(50, 420-30, 250, 0.25)];
-    lineView5.backgroundColor = [self colorWithHexString:@"515558"];
-    //[self.view addSubview:lineView5];
-    
-    //set search button
-    
-    UIImageView *search_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(10, 432-30, 33, 32)];
-    [search_image_view setImage:[UIImage imageNamed:@"search_artisse.png"]];
-    [self.view addSubview:search_image_view];
-    
-    UILabel *searchLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 435-30, 205, 30)];
-    searchLabel.textColor = [UIColor whiteColor];
-    searchLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-    searchLabel.textAlignment = NSTextAlignmentLeft;
-    [searchLabel setText:@"Search"];
-    [self.view addSubview:searchLabel];
-    
-    self.searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.searchButton  setFrame:CGRectMake(10, 430-30, 210, 40)];
-    [self.searchButton setBackgroundColor:[UIColor clearColor]];
-//    [self.searchButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-    //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.searchButton addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.searchButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.searchButton];
-    
-    UIView *lineView6 = [[UIView alloc] initWithFrame:CGRectMake(50, 480-30, 250, 0.25)];
-    lineView6.backgroundColor = [self colorWithHexString:@"515558"];
-    //[self.view addSubview:lineView6];
-    
-    UIView *lineView7 = [[UIView alloc] initWithFrame:CGRectMake(50, 540-30, 250, 0.25)];
-    lineView7.backgroundColor = [self colorWithHexString:@"515558"];
-    //[self.view addSubview:lineView7];
-    
-    UIView *vertical_line = [[UIView alloc] initWithFrame:CGRectMake(259, 0, 0.5, 586)];
-    vertical_line.backgroundColor = [self colorWithHexString:@"515558"];
-    [self.view addSubview:vertical_line];
-    
-    UIImageView *logout_view = [[UIImageView alloc]initWithFrame:CGRectMake(9, 494-30, 34, 32)];
-    [logout_view setImage:[UIImage imageNamed:@"logoout_artisse.png"]];
-    [self.view addSubview:logout_view];
-    
-    UILabel *logoutLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 495-30, 205, 30)];
-    logoutLabel.textColor = [UIColor whiteColor];
-    logoutLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-    logoutLabel.textAlignment = NSTextAlignmentLeft;
-    [logoutLabel setText:@"Logout"];
-    [self.view addSubview:logoutLabel];
-    
-    self.logoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.logoutButton  setFrame:CGRectMake(10, 495-30, 210, 40)];
-    [self.logoutButton setBackgroundColor:[UIColor clearColor]];
-    //    [self.searchButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-    //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.logoutButton addTarget:self action:@selector(logoutButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-    self.logoutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.logoutButton];
-    
-//    UILabel *mapLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 495-30, 205, 30)];
-//    mapLabel.textColor = [UIColor whiteColor];
-//    mapLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
-//    logoutLabel.textAlignment = NSTextAlignmentLeft;
-//    [mapLabel setText:@"Map"];
-//    [self.view addSubview:mapLabel];
-//    
-//    self.mapButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.mapButton  setFrame:CGRectMake(10, 490-30, 210, 40)];
-//    [self.mapButton setBackgroundColor:[UIColor clearColor]];
-//    //    [self.searchButton setBackgroundImage:[[UIImage imageNamed:@"camera_new.png"]stretchableImageWithLeftCapWidth:5.0 topCapHeight:2.0] forState:UIControlStateNormal];
-//    //    [self.homeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [self.mapButton addTarget:self action:@selector(mapButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//    //    [self.uploadPhotoButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-//    self.mapButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-//    [self.view addSubview:self.mapButton];
 }
 
 -(UIColor*)colorWithHexString:(NSString*)hex

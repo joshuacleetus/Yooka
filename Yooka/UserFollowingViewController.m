@@ -135,6 +135,7 @@
                 
                 if ([results isKindOfClass:[NSArray class]]){
                      self.userFollowing = [NSMutableArray arrayWithArray:results];
+
                 }
                 
                 if (self.userFollowing.count>0) {
@@ -330,15 +331,12 @@
     
     if (self.userFollowing.count>0 && (indexPath.row<self.userFollowing.count)) {
         
-        NSArray *array = [NSArray arrayWithArray:self.userFollowing[indexPath.row]];
         
         NSString *user_fullname;
         NSString *userPicUrl;
         
-        if (array.count) {
-            user_fullname = [array[0] objectForKey:@"userFullName"];
-            userPicUrl = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
-        }
+            user_fullname = [self.userFollowing[indexPath.row] objectForKey:@"userFullName"];
+            userPicUrl = [[self.userFollowing[indexPath.row] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
         
         if (user_fullname) {
             [(UILabel *)[cell.contentView viewWithTag:1] setText:user_fullname];
@@ -416,14 +414,10 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSArray *array = [NSArray arrayWithArray:self.userFollowing[indexPath.row]];
-    
-    if (array.count) {
-        _userEmailSelected = [array[0] objectForKey:@"userEmail"];
-        _userFullNameSelected = [array[0] objectForKey:@"userFullName"];
-        _userPicUrlSelected = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
+        _userEmailSelected = [self.userFollowing[indexPath.row] objectForKey:@"userEmail"];
+        _userFullNameSelected = [self.userFollowing[indexPath.row] objectForKey:@"userFullName"];
+        _userPicUrlSelected = [[self.userFollowing[indexPath.row] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
         [self userDidSelectUser];
-    }
     
 }
 

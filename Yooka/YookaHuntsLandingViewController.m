@@ -90,8 +90,6 @@
     
     NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:[NSDate date]];
     NSInteger currentHour = [components hour];
-//    NSInteger currentMinute = [components minute];
-//    NSInteger currentSecond = [components second];
     
     if (currentHour>6 && currentHour<18){
         // Do Something
@@ -106,20 +104,10 @@
         if (screenSize.height > 480.0f) {
             
             self.myEmail = [KCSUser activeUser].email;
-//            NSLog(@"email = %@",self.myEmail);
             
             self.bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
             [self.bgImageView setImage:[UIImage imageNamed:@"yooka_front.png"]];
             [self.view addSubview:self.bgImageView];
-            
-            self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
-            [self.navButton3  setFrame:CGRectMake(0, 0, 60, 70)];
-            [self.navButton3 setBackgroundColor:[UIColor clearColor]];
-            [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            self.navButton3.tag = 1;
-            self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            [self.view addSubview:self.navButton3];
             
             self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [self.navButton  setFrame:CGRectMake(10, 27, 25, 18)];
@@ -130,6 +118,15 @@
             self.navButton.tag = 1;
             self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             [self.view addSubview:self.navButton];
+            
+            self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton3  setFrame:CGRectMake(0, 0, 60, 80)];
+            [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.navButton3.tag = 1;
+            self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton3];
 
             //create carousel
             self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 300)];
@@ -156,17 +153,71 @@
             
             self.hunts_pages.backgroundColor = [UIColor clearColor];
             
-            
             UIImageView *arrowview = [[UIImageView alloc]initWithFrame:CGRectMake(140, 507, 40, 40)];
             arrowview.image = [UIImage imageNamed:@"arrow_landing.png"];
             [self.view addSubview:arrowview];
-            
-  
             
             // Get ready for swipes
             [self setupGestures];
             
         }else{
+            
+            self.myEmail = [KCSUser activeUser].email;
+            
+            self.bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+            [self.bgImageView setImage:[UIImage imageNamed:@"yooka_front.png"]];
+            [self.view addSubview:self.bgImageView];
+            
+            self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton  setFrame:CGRectMake(10, 27, 25, 18)];
+            [self.navButton setBackgroundColor:[UIColor clearColor]];
+            [self.navButton setBackgroundImage:[[UIImage imageNamed:@"grey_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.navButton.tag = 1;
+            self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton];
+            
+            self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton3  setFrame:CGRectMake(0, 0, 60, 80)];
+            [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.navButton3.tag = 1;
+            self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton3];
+            
+            //create carousel
+            self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 300)];
+            self.carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            self.carousel.type = iCarouselTypeWheel;
+            self.carousel.delegate = self;
+            self.carousel.dataSource = self;
+            self.carousel.backgroundColor = [UIColor clearColor];
+            //add carousel to view
+            [self.view addSubview:self.carousel];
+            
+            self.categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(65, 525, 190, 50)];
+            self.categoryLabel.textColor = [UIColor whiteColor];
+            self.categoryLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:19.0];
+            [self.categoryLabel setTextAlignment:NSTextAlignmentCenter];
+            [self.categoryLabel setBackgroundColor:[UIColor clearColor]];
+            [self.view addSubview:self.categoryLabel];
+            
+            self.hunts_pages = [[UIPageControl alloc] init];
+            self.hunts_pages.frame = CGRectMake(141,77,29,27);
+            self.hunts_pages.enabled = TRUE;
+            [self.hunts_pages setHighlighted:YES];
+            [self.view addSubview:self.hunts_pages];
+            
+            self.hunts_pages.backgroundColor = [UIColor clearColor];
+            
+            UIImageView *arrowview = [[UIImageView alloc]initWithFrame:CGRectMake(140, 507, 40, 40)];
+            arrowview.image = [UIImage imageNamed:@"arrow_landing.png"];
+            [self.view addSubview:arrowview];
+            
+            // Get ready for swipes
+            [self setupGestures];
             
         }
     }
@@ -226,13 +277,22 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
+    float scrollViewHeight = scrollView.frame.size.height;
+    float scrollContentSizeHeight = scrollView.contentSize.height;
+    float scrollOffset = scrollView.contentOffset.x;
+    
+    if (scrollView == self.topScrollView) {
+        NSLog(@"scroll offset = %f",scrollOffset);
+    }
+
     CGFloat pageWidth = scrollView.frame.size.width;
     float fractionalPage = scrollView.contentOffset.x / pageWidth;
     NSInteger page = lround(fractionalPage);
     if (scrollView == self.topScrollView) {
+        
         self.hunts_pages.currentPage = page;
         
-        if(self.topScrollView.contentOffset.x > (self.topScrollView.frame.size.width * (total_featured_hunts-1))+15){
+        if(scrollOffset > (self.topScrollView.frame.size.width * (total_featured_hunts-1))+50){
             // You have reached last page
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;
             
@@ -255,7 +315,7 @@
                 /*Do iPad stuff here.*/
             }
             
-        }else if(self.topScrollView.contentOffset.x < -15)       {
+        }else if(self.topScrollView.contentOffset.x < -50)       {
             // You have reached page 1
             //            NSLog(@"we reached the end %f",self.scrollView1.frame.size.width);
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;
@@ -927,7 +987,7 @@
                 NSMutableArray *removeArray = [_featuredHuntNames mutableCopy];
                 [removeArray removeObjectsInArray:_subscribedHuntNames];
                 _unSubscribedHuntNames = removeArray;
-                //                NSLog(@"remove array = %@",_unSubscribedHuntNames);
+//                NSLog(@"remove array = %@",_unSubscribedHuntNames);
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setObject:_subscribedHuntNames forKey:@"subscribedHuntNames"];
                 [defaults setObject:_unSubscribedHuntNames forKey:@"unsubscribedHuntNames"];
@@ -1005,8 +1065,7 @@
                 _cacheUnSubscribedHuntNames = [NSMutableArray new];
                 
                 YookaBackend *yooka = objectsOrNil[0];
-                //                NSLog(@"featured hunts = %@",_featuredHuntNames);
-                //                NSLog(@"subscribed hunts = %@",yooka.HuntNames);
+
                 _subscribedHuntNames = [NSMutableArray arrayWithArray:yooka.HuntNames];
                 NSMutableArray *public_hunts = [NSMutableArray new];
                 if (yooka.public_hunts) {
@@ -1025,7 +1084,7 @@
                 NSMutableArray *removeArray = [_featuredHuntNames mutableCopy];
                 [removeArray removeObjectsInArray:_subscribedHuntNames];
                 _unSubscribedHuntNames = removeArray;
-                //                NSLog(@"remove array = %@",_unSubscribedHuntNames);
+//                NSLog(@"remove array = %@",_unSubscribedHuntNames);
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setObject:_subscribedHuntNames forKey:@"subscribedHuntNames"];
                 [defaults setObject:_unSubscribedHuntNames forKey:@"unsubscribedHuntNames"];
@@ -1174,8 +1233,13 @@
         }
         if (i < total_featured_hunts) {
             
-            new_page_frame = CGRectMake(i * 320, 00, 320, 350);
-            self.FeaturedView = [[UIView alloc]initWithFrame:new_page_frame];
+            if (i==0) {
+                new_page_frame = CGRectMake(320, 00, 320, 350);
+                self.FeaturedView = [[UIView alloc]initWithFrame:new_page_frame];
+            }else{
+                new_page_frame = CGRectMake(i * 320, 00, 320, 350);
+                self.FeaturedView = [[UIView alloc]initWithFrame:new_page_frame];
+            }
             
             self.image3 = [[UIImageView alloc]initWithFrame:CGRectMake(-91, -170, 550, 550)];
             self.image3.image = [UIImage imageNamed:@"blimp2.png"];
@@ -1202,12 +1266,45 @@
             [self.topScrollView addSubview:self.FeaturedView];
             
             if (i==0) {
+                
+                [UIView animateWithDuration:1.0f
+                                      delay:0.0f
+                                    options:UIViewAnimationOptionAllowUserInteraction
+                                 animations:^{
+                                     [self.FeaturedView setFrame:CGRectMake(0.0f, 0.0f, 320.0f, 350.0f)];
+                                 }
+                                 completion:^(BOOL finished){
+                                     if(finished)
+                                         [self scrollblimpautomatically];
+                                     // do any stuff here if you want
+                                 }];
+                
+//                [UIScrollView animateWithDuration:3.0f delay:1.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+//                    
+//                    [self.topScrollView setContentOffset:CGPointMake(0, 0)];
+//                    
+//                }
+//                                       completion:^(BOOL finished){
+//                                           if(finished)
+//                                               [self scrollblimpautomatically];
+//                                           // do any stuff here if you want
+//                                           
+//                                       }];
+                
+                self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.navButton3  setFrame:CGRectMake(0, 0, 60, 80)];
+                [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+                [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+                self.navButton3.tag = 1;
+                self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                [self.view addSubview:self.navButton3];
+                
                 self.navButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.navButton2  setFrame:CGRectMake(0, 63, 60, 520)];
                 [self.navButton2 setBackgroundColor:[UIColor clearColor]];
                 [self.navButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [self.navButton2 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-                [self.navButton2.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
                 self.navButton2.tag = 0;
                 self.navButton2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
                 [self.view addSubview:self.navButton2];
@@ -1222,6 +1319,46 @@
     }
 }
 
+- (void) scrollblimpautomatically
+{
+
+    CGPoint scrollOffset = self.topScrollView.contentOffset;
+    scrollOffset.x = scrollOffset.x+320;
+
+    if (scrollOffset.x < (320 * (total_featured_hunts))) {
+        
+        
+        [UIScrollView animateWithDuration:1.0f delay:3.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+
+            [self.topScrollView setContentOffset:scrollOffset];
+
+        }
+                               completion:^(BOOL finished){
+                                   if(finished)
+                                       [self scrollblimpautomatically];
+                                   // do any stuff here if you want
+
+                               }];
+    }else{
+        
+        [UIScrollView animateWithDuration:0.0f delay:3.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+            
+            [self.topScrollView setContentOffset:CGPointMake(0, 0)];
+            
+        }
+                               completion:^(BOOL finished){
+
+                                   // do any stuff here if you want
+                                   
+                               }];
+
+        
+    }
+
+    
+
+}
+
 - (void)featuredButtonTouched:(id)sender
 {
     
@@ -1233,11 +1370,11 @@
     if ([self.sponsored_hunt_names[b] isEqualToString:@"MORE HUNTS COMING"]) {
 
     }else{
-        
         [self.topScrollView removeFromSuperview];
 
         YookaFeaturedHuntViewController *media = [[YookaFeaturedHuntViewController alloc]init];
         media.huntTitle = self.sponsored_hunt_names[b];
+        media.sponsored_hunt_name = self.sponsored_hunt_names[b];
         media.subscribedHunts = _cachesubscribedHuntNames;
         media.unsubscribedHunts = _cacheUnSubscribedHuntNames;
         [self presentViewController:media animated:YES completion:nil];

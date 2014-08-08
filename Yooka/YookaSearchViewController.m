@@ -47,9 +47,9 @@
     [super viewDidLoad];
     
     self.peopleArray = [NSMutableArray new];
-
+    
     // Do any additional setup after loading the view.
-
+    
     j=0;
     k=0;
     
@@ -81,9 +81,8 @@
     _tryl = [tips objectAtIndex:randomIndex];
     [self Load100Users];
     
-    UIColor * color2 = [UIColor colorWithRed:244/255.0f green:243/255.0f blue:243/255.0f alpha:1.0f];
-    [self.view setBackgroundColor:color2];
-
+    [self.view setBackgroundColor: [UIColor whiteColor]];
+    
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
@@ -93,271 +92,537 @@
     _firstName = [KCSUser activeUser].givenName;
     _lastName = [KCSUser activeUser].surname;
     _userFullName = [NSString stringWithFormat:@"%@ %@",_firstName,_lastName];
-//    NSLog(@"%@ %@ %@ %@",_userEmail,_firstName,_lastName,_userFullName);
+    //    NSLog(@"%@ %@ %@ %@",_userEmail,_firstName,_lastName,_userFullName);
     
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     [self.navigationItem setTitle:@"Users"];
     
-    UIImageView *whitebg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 100)];
-    whitebg.backgroundColor=[UIColor whiteColor];
-    [self.view addSubview:whitebg];
-    
-    UIImageView *topBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 60, 280, 40)];
-    //    topBgImage.image = [UIImage imageNamed:@"search_bar_new.png"];
-    [topBgImage setBackgroundColor:[UIColor whiteColor]];
-   // [self.view addSubview:topBgImage];
-    
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
-    _textField.borderStyle = UITextBorderStyleNone;
-    _textField.font = [UIFont fontWithName:@"OpenSans-Regular" size:16];
-    _textField.textColor = [UIColor lightGrayColor];
-    UIColor *color1 = [UIColor lightGrayColor];
-    self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color1}];
-//    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
-    _textField.backgroundColor = [UIColor whiteColor];
-    _textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    _textField.keyboardType = UIKeyboardTypeDefault;
-    _textField.returnKeyType = UIReturnKeySearch;
-    _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    [_textField addTarget:self
-                   action:@selector(textFieldDone:)
-         forControlEvents:UIControlEventEditingDidEndOnExit];
-    [_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
-    [self.view addSubview:_textField];
-    
-    UIImageView *fb_icon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 53, 20, 20)];
-    fb_icon.image = [UIImage imageNamed:@"facebook-icon.png"];
-    [self.view addSubview:fb_icon];
-    
-    UILabel *fbLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 53, 250, 20)];
-    fbLabel.textColor = [UIColor lightGrayColor];
-    fbLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:15.0];
-    fbLabel.text = @"INVITE FACEBOOK FRIENDS";
-    fbLabel.textAlignment = NSTextAlignmentLeft;
-    fbLabel.backgroundColor =[UIColor whiteColor];
-    [self.view addSubview:fbLabel];
-    
-    UIButton *fbButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [fbButton setFrame:CGRectMake(0, 40, 320, 50)];
-    [fbButton setBackgroundColor:[UIColor clearColor]];
-    [fbButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
-    [fbButton setEnabled:YES];
-    [self.view addSubview:fbButton];
-    
-//    self.inviteButton = [[FUIButton alloc]initWithFrame:CGRectMake(35, 107.5, 250, 25)];
-//    UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
-//    self.inviteButton.buttonColor = color4;
-//    UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
-//    self.inviteButton.shadowColor = color5;
-//    self.inviteButton.shadowHeight = 3.0f;
-//    self.inviteButton.cornerRadius = 6.0f;
-//    self.inviteButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:12.0];
-//    [self.inviteButton setTitle:@"Invite Facebook Friends" forState:UIControlStateNormal];
-//    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-//    [self.inviteButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:self.inviteButton];
-    
-    _searchTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 89.f, 320.f, self.view.bounds.size.height-140.f)];
-    _searchTableView.delegate = self;
-    _searchTableView.dataSource = self;
-    [_searchTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-    //    _locationTableView.backgroundColor = [UIColor blackColor];
-    //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
-    [self.searchTableView setTag:0];
-    [self.view addSubview:_searchTableView];
-    
-    self.locationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 586)];
-    [self.locationView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.locationView];
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
 
-    [self.locationView setHidden:YES];
-    [self.view setUserInteractionEnabled:YES];
     
-    //extends the lines in the table view fully
-    [_searchTableView setSeparatorInset:UIEdgeInsetsZero];
-
-    UIImageView *search_icon = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 40, 40)];
-    search_icon.image = [UIImage imageNamed:@"search_button_blue.png"];
-    [self.view addSubview:search_icon];
-    
-    self.horz_line3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 82, 320, 11)];
-    self.horz_line3.image = [UIImage imageNamed:@"lines.png"];
-    [self.view addSubview:self.horz_line3];
-    
-    self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
-    self.titleLabel.textColor = [UIColor grayColor];
-    self.titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
-    //self.titleLabel.text = @"PEOPLE";
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.titleLabel];
-    
-    self.titleLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
-    self.titleLabel2.textColor = [UIColor grayColor];
-    self.titleLabel2.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
-   // self.titleLabel2.text = @"PLACES";
-    self.titleLabel2.textAlignment = NSTextAlignmentCenter;
-    [self.titleLabel2 setBackgroundColor:[UIColor clearColor]];
-    [self.locationView addSubview:self.titleLabel2];
-    
-    self.location_textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
-    self.location_textField.borderStyle = UITextBorderStyleNone;
-    self.location_textField.font = [UIFont fontWithName:@"OpenSans-Regular" size:16];
-    self.location_textField.textColor = [UIColor lightGrayColor];
-    UIColor *color10 = [UIColor lightGrayColor];
-    self.location_textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color10}];
-    //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
-    self.location_textField.backgroundColor = [UIColor whiteColor];
-    self.location_textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.location_textField.keyboardType = UIKeyboardTypeDefault;
-    self.location_textField.returnKeyType = UIReturnKeySearch;
-    self.location_textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.location_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    [self.location_textField addTarget:self
-                   action:@selector(textFieldDone2:)
-         forControlEvents:UIControlEventEditingDidEndOnExit];
-    [self.location_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
-    [self.locationView addSubview:self.location_textField];
-    
-    //PLACES
-    
-    _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 45.f, 320.f, self.view.frame.size.height-95)];
-    //    _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height)];
-    _locationTableView.delegate = self;
-    _locationTableView.dataSource = self;
-    [self.locationTableView setTag:1];
-    //    [_locationTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-    //    _locationTableView.backgroundColor = [UIColor blackColor];
-    //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
-    [self.locationView addSubview:_locationTableView];
-    
-    //extends the lines in the table view fully
-    [_locationTableView setSeparatorInset:UIEdgeInsetsZero];
-    
-    
-    
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    [networkReachability startNotifier];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    
-    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
-        
-        if ([CLLocationManager locationServicesEnabled] == YES) {
+    if (INTERFACE_IS_PHONE) {
+        if (screenSize.height > 480.0f) {
             
-            self.locationManager = [[CLLocationManager alloc]init];
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-            self.locationManager.delegate = self;
-            [self.locationManager startUpdatingLocation];
+            UIImageView *whitebg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 100)];
+            whitebg.backgroundColor=[UIColor whiteColor];
+            [self.view addSubview:whitebg];
             
-            CLLocationManager* manager = [[CLLocationManager alloc] init];
-            //... set up CLLocationManager and start updates
-            _currentLocation = manager.location;
-            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
-        }else{
+            UIImageView *topBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 60, 280, 40)];
+            //    topBgImage.image = [UIImage imageNamed:@"search_bar_new.png"];
+            [topBgImage setBackgroundColor:[UIColor whiteColor]];
+            // [self.view addSubview:topBgImage];
             
-            [self showLocationAlert];
+            _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
+            _textField.borderStyle = UITextBorderStyleNone;
+            _textField.font = [UIFont fontWithName:@"OpenSans" size:16];
+            _textField.textColor = [UIColor grayColor];
+            UIColor *color1 = [UIColor grayColor];
+            self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color1}];
+            //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+            _textField.backgroundColor = [UIColor whiteColor];
+            _textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            _textField.keyboardType = UIKeyboardTypeDefault;
+            _textField.returnKeyType = UIReturnKeySearch;
+            _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+            [_textField addTarget:self
+                           action:@selector(textFieldDone:)
+                 forControlEvents:UIControlEventEditingDidEndOnExit];
+            [_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
+            [self.view addSubview:_textField];
+            
+            UIImageView *fb_icon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 53, 20, 20)];
+            fb_icon.image = [UIImage imageNamed:@"facebook-icon.png"];
+            [self.view addSubview:fb_icon];
+            
+            UILabel *fbLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 53, 250, 20)];
+            fbLabel.textColor = [UIColor grayColor];
+            fbLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:15.0];
+            fbLabel.text = @"INVITE FACEBOOK FRIENDS";
+            fbLabel.textAlignment = NSTextAlignmentLeft;
+            fbLabel.backgroundColor =[UIColor whiteColor];
+            [self.view addSubview:fbLabel];
+            
+            UIButton *fbButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [fbButton setFrame:CGRectMake(0, 40, 320, 50)];
+            [fbButton setBackgroundColor:[UIColor clearColor]];
+            [fbButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
+            [fbButton setEnabled:YES];
+            [self.view addSubview:fbButton];
+            
+            //    self.inviteButton = [[FUIButton alloc]initWithFrame:CGRectMake(35, 107.5, 250, 25)];
+            //    UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
+            //    self.inviteButton.buttonColor = color4;
+            //    UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
+            //    self.inviteButton.shadowColor = color5;
+            //    self.inviteButton.shadowHeight = 3.0f;
+            //    self.inviteButton.cornerRadius = 6.0f;
+            //    self.inviteButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:12.0];
+            //    [self.inviteButton setTitle:@"Invite Facebook Friends" forState:UIControlStateNormal];
+            //    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            //    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            //    [self.inviteButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.view addSubview:self.inviteButton];
+            
+            _searchTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 89.f, 320.f, self.view.bounds.size.height-140.f)];
+            _searchTableView.delegate = self;
+            _searchTableView.dataSource = self;
+            [_searchTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+            //    _locationTableView.backgroundColor = [UIColor blackColor];
+            //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
+            [self.searchTableView setTag:0];
+            [self.view addSubview:_searchTableView];
+            
+            self.locationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 586)];
+            [self.locationView setBackgroundColor:[UIColor clearColor]];
+            [self.view addSubview:self.locationView];
+            
+            [self.locationView setHidden:YES];
+            [self.view setUserInteractionEnabled:YES];
+            
+            //extends the lines in the table view fully
+            [_searchTableView setSeparatorInset:UIEdgeInsetsZero];
+            
+            UIImageView *search_icon = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 40, 40)];
+            search_icon.image = [UIImage imageNamed:@"search_button_blue.png"];
+            [self.view addSubview:search_icon];
+            
+            self.horz_line3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 82, 320, 11)];
+            self.horz_line3.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:self.horz_line3];
+            
+            self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+            self.titleLabel.textColor = [UIColor grayColor];
+            self.titleLabel.font = [UIFont fontWithName:@"OpenSans" size:20.0];
+            //self.titleLabel.text = @"PEOPLE";
+            self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:self.titleLabel];
+            
+            self.titleLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+            self.titleLabel2.textColor = [UIColor grayColor];
+            self.titleLabel2.font = [UIFont fontWithName:@"OpenSans" size:20.0];
+            // self.titleLabel2.text = @"PLACES";
+            self.titleLabel2.textAlignment = NSTextAlignmentCenter;
+            [self.titleLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.locationView addSubview:self.titleLabel2];
+            
+            self.location_textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
+            self.location_textField.borderStyle = UITextBorderStyleNone;
+            self.location_textField.font = [UIFont fontWithName:@"OpenSans" size:16];
+            self.location_textField.textColor = [UIColor grayColor];
+            UIColor *color10 = [UIColor grayColor];
+            self.location_textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color10}];
+            //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+            self.location_textField.backgroundColor = [UIColor whiteColor];
+            self.location_textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            self.location_textField.keyboardType = UIKeyboardTypeDefault;
+            self.location_textField.returnKeyType = UIReturnKeySearch;
+            self.location_textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            self.location_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+            [self.location_textField addTarget:self
+                                        action:@selector(textFieldDone2:)
+                              forControlEvents:UIControlEventEditingDidEndOnExit];
+            [self.location_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
+            [self.locationView addSubview:self.location_textField];
+            
+            //PLACES
+            
+            _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 45.f, 320.f, self.view.frame.size.height-95)];
+         
+            _locationTableView.delegate = self;
+            _locationTableView.dataSource = self;
+            [self.locationTableView setTag:1];
+           
+            [self.locationView addSubview:_locationTableView];
+            
+            //extends the lines in the table view fully
+            [_locationTableView setSeparatorInset:UIEdgeInsetsZero];
+            
+            
+            
+            Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+            [networkReachability startNotifier];
+            NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+            
+            if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+                
+                if ([CLLocationManager locationServicesEnabled] == YES) {
+                    
+                    self.locationManager = [[CLLocationManager alloc]init];
+                    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+                    self.locationManager.delegate = self;
+                    [self.locationManager startUpdatingLocation];
+                    
+                    CLLocationManager* manager = [[CLLocationManager alloc] init];
+                    //... set up CLLocationManager and start updates
+                    _currentLocation = manager.location;
+                    //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+                }else{
+                    
+                    [self showLocationAlert];
+                    
+                }
+                
+                
+                
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                
+                [alert show];
+            }
+            
+            UIImageView *ver_line = [[UIImageView alloc]initWithFrame:CGRectMake(35, 0, 10, 40)];
+            ver_line.image = [UIImage imageNamed:@"horizontal_line.png"];
+            [self.view addSubview:ver_line];
+            
+            
+            UIView *whiteline =[[UIView alloc]initWithFrame:CGRectMake(20, 39, 30, 1)];
+            whiteline.backgroundColor = [UIColor whiteColor];
+            [self.view addSubview:whiteline];
+            
+            UIImageView *horz_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 27, 320, 20)];
+            horz_line.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:horz_line];
+            
+            UIImageView *horz_line2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, -25, 320, 41)];
+            horz_line2.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:horz_line2];
+            
+            UIImageView *corline = [[UIImageView alloc]initWithFrame:CGRectMake(0,515, 320, 50)];
+            corline.backgroundColor = [UIColor whiteColor];
+            [self.view addSubview:corline];
+            
+            self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton3  setFrame:CGRectMake(0, 0, 45, 45)];
+            [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton3.tag = 1;
+            self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton3];
+            
+            self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton  setFrame:CGRectMake(10, 11, 25, 21)];
+            [self.navButton setBackgroundColor:[UIColor clearColor]];
+            [self.navButton setBackgroundImage:[[UIImage imageNamed:@"grey_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton.tag = 1;
+            self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton];
+            
+            self.navButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton2  setFrame:CGRectMake(0, 63, 45, 520)];
+            [self.navButton2 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton2 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton2.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton2.tag = 0;
+            self.navButton2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton2];
+            
+            [self.navButton2 setHidden:YES];
+            
+            self.peopleSearch = [[UIImageView alloc]initWithFrame:CGRectMake(75, 520, 173,38)];
+            [self.peopleSearch setImage:[UIImage imageNamed:@"people.png"]];
+            [self.view addSubview:self.peopleSearch];
+            
+            self.placesSearch = [[UIImageView alloc]initWithFrame:CGRectMake(80, 525, 160, 37)];
+            [self.placesSearch setImage:[UIImage imageNamed:@"placestab_2.png"]];
+            [self.view addSubview:self.placesSearch];
+            
+            [self.placesSearch setHidden:YES];
+            
+            UIButton *peopleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [peopleButton setFrame:CGRectMake(80, 520, 80, 40)];
+            [peopleButton setBackgroundColor:[UIColor clearColor]];
+            [peopleButton addTarget:self action:@selector(showPeople:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:peopleButton];
+            
+            UIButton *placesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [placesButton setFrame:CGRectMake(160, 520, 80, 40)];
+            [placesButton setBackgroundColor:[UIColor clearColor]];
+            [placesButton addTarget:self action:@selector(showPlaces:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:placesButton];
+            
+            [self setupGestures];
+            
+            self.tap_button = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.tap_button  setFrame:CGRectMake(0, 40, 320, 310)];
+            [self.tap_button setBackgroundColor:[UIColor clearColor]];
+            [self.tap_button addTarget:self action:@selector(dismissKeyboard2:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:self.tap_button];
+            [self.tap_button setHidden:YES];
             
         }
-        
-        
-        
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        
-        [alert show];
+        else{
+            
+            UIImageView *whitebg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 100)];
+            whitebg.backgroundColor=[UIColor whiteColor];
+            [self.view addSubview:whitebg];
+            
+            UIImageView *topBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 60, 280, 40)];
+            //    topBgImage.image = [UIImage imageNamed:@"search_bar_new.png"];
+            [topBgImage setBackgroundColor:[UIColor whiteColor]];
+            // [self.view addSubview:topBgImage];
+            
+            _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
+            _textField.borderStyle = UITextBorderStyleNone;
+            _textField.font = [UIFont fontWithName:@"OpenSans" size:16];
+            _textField.textColor = [UIColor grayColor];
+            UIColor *color1 = [UIColor grayColor];
+            self.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color1}];
+            //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+            _textField.backgroundColor = [UIColor whiteColor];
+            _textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            _textField.keyboardType = UIKeyboardTypeDefault;
+            _textField.returnKeyType = UIReturnKeySearch;
+            _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+            [_textField addTarget:self
+                           action:@selector(textFieldDone:)
+                 forControlEvents:UIControlEventEditingDidEndOnExit];
+            [_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
+            [self.view addSubview:_textField];
+            
+            UIImageView *fb_icon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 53, 20, 20)];
+            fb_icon.image = [UIImage imageNamed:@"facebook-icon.png"];
+            [self.view addSubview:fb_icon];
+            
+            UILabel *fbLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 53, 250, 20)];
+            fbLabel.textColor = [UIColor grayColor];
+            fbLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:15.0];
+            fbLabel.text = @"INVITE FACEBOOK FRIENDS";
+            fbLabel.textAlignment = NSTextAlignmentLeft;
+            fbLabel.backgroundColor =[UIColor whiteColor];
+            [self.view addSubview:fbLabel];
+            
+            UIButton *fbButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [fbButton setFrame:CGRectMake(0, 40, 320, 50)];
+            [fbButton setBackgroundColor:[UIColor clearColor]];
+            [fbButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
+            [fbButton setEnabled:YES];
+            [self.view addSubview:fbButton];
+            
+            //    self.inviteButton = [[FUIButton alloc]initWithFrame:CGRectMake(35, 107.5, 250, 25)];
+            //    UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
+            //    self.inviteButton.buttonColor = color4;
+            //    UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
+            //    self.inviteButton.shadowColor = color5;
+            //    self.inviteButton.shadowHeight = 3.0f;
+            //    self.inviteButton.cornerRadius = 6.0f;
+            //    self.inviteButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:12.0];
+            //    [self.inviteButton setTitle:@"Invite Facebook Friends" forState:UIControlStateNormal];
+            //    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            //    [self.inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            //    [self.inviteButton addTarget:self action:@selector(ShowFriendDialog:) forControlEvents:UIControlEventTouchUpInside];
+            //    [self.view addSubview:self.inviteButton];
+            
+            _searchTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 89.f, 320.f, self.view.bounds.size.height-140.f)];
+            _searchTableView.delegate = self;
+            _searchTableView.dataSource = self;
+            [_searchTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+            //    _locationTableView.backgroundColor = [UIColor blackColor];
+            //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
+            [self.searchTableView setTag:0];
+            [self.view addSubview:_searchTableView];
+            
+            self.locationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 586)];
+            [self.locationView setBackgroundColor:[UIColor clearColor]];
+            [self.view addSubview:self.locationView];
+            
+            [self.locationView setHidden:YES];
+            [self.view setUserInteractionEnabled:YES];
+            
+            //extends the lines in the table view fully
+            [_searchTableView setSeparatorInset:UIEdgeInsetsZero];
+            
+            UIImageView *search_icon = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 40, 40)];
+            search_icon.image = [UIImage imageNamed:@"search_button_blue.png"];
+            [self.view addSubview:search_icon];
+            
+            self.horz_line3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 82, 320, 11)];
+            self.horz_line3.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:self.horz_line3];
+            
+            self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+            self.titleLabel.textColor = [UIColor grayColor];
+            self.titleLabel.font = [UIFont fontWithName:@"OpenSans" size:20.0];
+            //self.titleLabel.text = @"PEOPLE";
+            self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:self.titleLabel];
+            
+            self.titleLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+            self.titleLabel2.textColor = [UIColor grayColor];
+            self.titleLabel2.font = [UIFont fontWithName:@"OpenSans" size:20.0];
+            // self.titleLabel2.text = @"PLACES";
+            self.titleLabel2.textAlignment = NSTextAlignmentCenter;
+            [self.titleLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.locationView addSubview:self.titleLabel2];
+            
+            self.location_textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 280, 40)];
+            self.location_textField.borderStyle = UITextBorderStyleNone;
+            self.location_textField.font = [UIFont fontWithName:@"OpenSans" size:16];
+            self.location_textField.textColor = [UIColor grayColor];
+            UIColor *color10 = [UIColor grayColor];
+            self.location_textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"SEARCH" attributes:@{NSForegroundColorAttributeName: color10}];
+            //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+            self.location_textField.backgroundColor = [UIColor whiteColor];
+            self.location_textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            self.location_textField.keyboardType = UIKeyboardTypeDefault;
+            self.location_textField.returnKeyType = UIReturnKeySearch;
+            self.location_textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            self.location_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+            [self.location_textField addTarget:self
+                                        action:@selector(textFieldDone2:)
+                              forControlEvents:UIControlEventEditingDidEndOnExit];
+            [self.location_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
+            [self.locationView addSubview:self.location_textField];
+            
+            //PLACES
+            
+            _locationTableView = [[UITableView alloc]initWithFrame:CGRectMake(0.f, 45.f, 320.f, self.view.frame.size.height-95)];
+            
+            _locationTableView.delegate = self;
+            _locationTableView.dataSource = self;
+            [self.locationTableView setTag:1];
+            
+            [self.locationView addSubview:_locationTableView];
+            
+            //extends the lines in the table view fully
+            [_locationTableView setSeparatorInset:UIEdgeInsetsZero];
+            
+            
+            
+            Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+            [networkReachability startNotifier];
+            NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+            
+            if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+                
+                if ([CLLocationManager locationServicesEnabled] == YES) {
+                    
+                    self.locationManager = [[CLLocationManager alloc]init];
+                    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+                    self.locationManager.delegate = self;
+                    [self.locationManager startUpdatingLocation];
+                    
+                    CLLocationManager* manager = [[CLLocationManager alloc] init];
+                    //... set up CLLocationManager and start updates
+                    _currentLocation = manager.location;
+                    //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+                }else{
+                    
+                    [self showLocationAlert];
+                    
+                }
+                
+                
+                
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
+                
+                [alert show];
+            }
+            
+            UIImageView *ver_line = [[UIImageView alloc]initWithFrame:CGRectMake(35, 0, 10, 40)];
+            ver_line.image = [UIImage imageNamed:@"horizontal_line.png"];
+            [self.view addSubview:ver_line];
+            
+            
+            UIView *whiteline =[[UIView alloc]initWithFrame:CGRectMake(20, 39, 30, 1)];
+            whiteline.backgroundColor = [UIColor whiteColor];
+            [self.view addSubview:whiteline];
+            
+            UIImageView *horz_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 27, 320, 20)];
+            horz_line.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:horz_line];
+            
+            UIImageView *horz_line2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, -25, 320, 41)];
+            horz_line2.image = [UIImage imageNamed:@"lines.png"];
+            [self.view addSubview:horz_line2];
+            
+            UIImageView *corline = [[UIImageView alloc]initWithFrame:CGRectMake(0,515, 320, 50)];
+            corline.backgroundColor = [UIColor whiteColor];
+            [self.view addSubview:corline];
+            
+            self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton3  setFrame:CGRectMake(0, 0, 45, 45)];
+            [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton3.tag = 1;
+            self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton3];
+            
+            self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton  setFrame:CGRectMake(10, 11, 25, 21)];
+            [self.navButton setBackgroundColor:[UIColor clearColor]];
+            [self.navButton setBackgroundImage:[[UIImage imageNamed:@"grey_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+            [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton.tag = 1;
+            self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton];
+            
+            self.navButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.navButton2  setFrame:CGRectMake(0, 63, 45, 520)];
+            [self.navButton2 setBackgroundColor:[UIColor clearColor]];
+            [self.navButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.navButton2 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.navButton2.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.navButton2.tag = 0;
+            self.navButton2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.view addSubview:self.navButton2];
+            
+            [self.navButton2 setHidden:YES];
+            
+            self.peopleSearch = [[UIImageView alloc]initWithFrame:CGRectMake(75, 520-88, 173,38)];
+            [self.peopleSearch setImage:[UIImage imageNamed:@"people.png"]];
+            [self.view addSubview:self.peopleSearch];
+            
+            self.placesSearch = [[UIImageView alloc]initWithFrame:CGRectMake(80, 525-88, 160, 37)];
+            [self.placesSearch setImage:[UIImage imageNamed:@"placestab_2.png"]];
+            [self.view addSubview:self.placesSearch];
+            
+            [self.placesSearch setHidden:YES];
+            
+            UIButton *peopleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [peopleButton setFrame:CGRectMake(80, 520-88, 80, 40)];
+            [peopleButton setBackgroundColor:[UIColor clearColor]];
+            [peopleButton addTarget:self action:@selector(showPeople:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:peopleButton];
+            
+            UIButton *placesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [placesButton setFrame:CGRectMake(160, 520-88, 80, 40)];
+            [placesButton setBackgroundColor:[UIColor clearColor]];
+            [placesButton addTarget:self action:@selector(showPlaces:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:placesButton];
+            
+            [self setupGestures];
+            
+            self.tap_button = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.tap_button  setFrame:CGRectMake(0, 40, 320, 310)];
+            [self.tap_button setBackgroundColor:[UIColor clearColor]];
+            [self.tap_button addTarget:self action:@selector(dismissKeyboard2:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:self.tap_button];
+            [self.tap_button setHidden:YES];
+            
+        }
     }
-    
-    UIImageView *ver_line = [[UIImageView alloc]initWithFrame:CGRectMake(35, 0, 10, 40)];
-    ver_line.image = [UIImage imageNamed:@"horizontal_line.png"];
-    [self.view addSubview:ver_line];
-
-    
-    UIView *whiteline =[[UIView alloc]initWithFrame:CGRectMake(20, 39, 30, 1)];
-    whiteline.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:whiteline];
-    
-    UIImageView *horz_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 27, 320, 20)];
-    horz_line.image = [UIImage imageNamed:@"lines.png"];
-    [self.view addSubview:horz_line];
-    
-    UIImageView *horz_line2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, -25, 320, 41)];
-    horz_line2.image = [UIImage imageNamed:@"lines.png"];
-    [self.view addSubview:horz_line2];
-    
-    UIImageView *corline = [[UIImageView alloc]initWithFrame:CGRectMake(0,515, 320, 50)];
-    corline.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:corline];
-    
-    self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navButton3  setFrame:CGRectMake(0, 0, 45, 45)];
-    [self.navButton3 setBackgroundColor:[UIColor clearColor]];
-    [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:18]];
-    self.navButton3.tag = 1;
-    self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.navButton3];
-    
-    self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navButton  setFrame:CGRectMake(10, 11, 25, 21)];
-    [self.navButton setBackgroundColor:[UIColor clearColor]];
-    [self.navButton setBackgroundImage:[[UIImage imageNamed:@"grey_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
-    [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:18]];
-    self.navButton.tag = 1;
-    self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.navButton];
-    
-    self.navButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.navButton2  setFrame:CGRectMake(0, 63, 45, 520)];
-    [self.navButton2 setBackgroundColor:[UIColor clearColor]];
-    [self.navButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.navButton2 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navButton2.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:18]];
-    self.navButton2.tag = 0;
-    self.navButton2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:self.navButton2];
-    
-    [self.navButton2 setHidden:YES];
-    
-    self.peopleSearch = [[UIImageView alloc]initWithFrame:CGRectMake(75, 520, 173,38)];
-    [self.peopleSearch setImage:[UIImage imageNamed:@"people.png"]];
-    [self.view addSubview:self.peopleSearch];
-    
-    self.placesSearch = [[UIImageView alloc]initWithFrame:CGRectMake(80, 525, 160, 37)];
-    [self.placesSearch setImage:[UIImage imageNamed:@"placestab_2.png"]];
-    [self.view addSubview:self.placesSearch];
-    
-    [self.placesSearch setHidden:YES];
-    
-    UIButton *peopleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [peopleButton setFrame:CGRectMake(80, 520, 80, 40)];
-    [peopleButton setBackgroundColor:[UIColor clearColor]];
-    [peopleButton addTarget:self action:@selector(showPeople:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:peopleButton];
-    
-    UIButton *placesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [placesButton setFrame:CGRectMake(160, 520, 80, 40)];
-    [placesButton setBackgroundColor:[UIColor clearColor]];
-    [placesButton addTarget:self action:@selector(showPlaces:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:placesButton];
-    
-    [self setupGestures];
-    
-    self.tap_button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.tap_button  setFrame:CGRectMake(0, 40, 320, 310)];
-    [self.tap_button setBackgroundColor:[UIColor clearColor]];
-    [self.tap_button addTarget:self action:@selector(dismissKeyboard2:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.tap_button];
-    [self.tap_button setHidden:YES];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -872,10 +1137,10 @@
             _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, -5.0, 270.0, 40.0)];
             [_descriptionLabel setTag:1];
             [_descriptionLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
-            _descriptionLabel.textColor = [UIColor lightGrayColor];
+            _descriptionLabel.textColor = [UIColor grayColor];
             _descriptionLabel.textAlignment = NSTextAlignmentLeft;
             [_descriptionLabel setFont:[UIFont systemFontOfSize:16.0]];
-           [_descriptionLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:23]];
+           [_descriptionLabel setFont:[UIFont fontWithName:@"OpenSans" size:16]];
             // custom views should be added as subviews of the cell's contentView:
             [cell.contentView addSubview:_descriptionLabel];
             
@@ -883,7 +1148,7 @@
             self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 25, 270.0, 10.0)];
             [self.detailLabel setTag:2];
             [self.detailLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
-            self.detailLabel.textColor = [UIColor lightGrayColor];
+            self.detailLabel.textColor = [UIColor grayColor];
             self.detailLabel.textAlignment = NSTextAlignmentLeft;
             [self.detailLabel setFont:[UIFont systemFontOfSize:10.0]];
             //[_descriptionLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:23]];

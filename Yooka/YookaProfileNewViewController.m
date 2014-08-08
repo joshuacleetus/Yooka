@@ -486,6 +486,440 @@ const NSInteger yookaThumbnailSpace2000 = 5;
             [self setupGestures];
             
         }
+        
+        else{
+            
+            
+            [self.view setBackgroundColor:[UIColor whiteColor]];
+            
+            self.huntDict1 = [NSMutableDictionary new];
+            self.huntDict2 = [NSMutableDictionary new];
+            self.huntDict3 = [NSMutableDictionary new];
+            self.huntDict4 = [NSMutableDictionary new];
+            self.huntDict5 = [NSMutableDictionary new];
+            self.huntDict6 = [NSMutableDictionary new];
+            self.finishedHuntVenues = [NSMutableDictionary new];
+            self.cachesubscribedHuntNames = [NSMutableArray new];
+            self.cacheUnSubscribedHuntNames = [NSMutableArray new];
+            self.finishedHuntNames = [NSMutableArray new];
+            self.inProgressHuntNames = [NSMutableArray new];
+            self.thumbnails = [NSMutableArray new];
+            self.thumbnails2 = [NSMutableArray new];
+            self.thumbnails3 = [NSMutableArray new];
+            self.inProgressHuntCounts = [NSMutableArray new];
+            self.finishedHuntCounts = [NSMutableArray new];
+            self.postLikers = [NSMutableArray new];
+            self.likesData = [NSMutableArray new];
+            self.likersData = [NSMutableArray new];
+            self.imagesArray = [NSMutableArray new];
+            
+            i = 0;
+            j = 0;
+            j2 = 0;
+            l = 0;
+            m = 0;
+            n = 0;
+            p = 0;
+            q = 0;
+            row = 0, col = 0;
+            row2 = 0, col2 = 0;
+            row3 = 0, col3 = 0;
+            contentSize = 340;
+            contentSize2 = 340;
+            contentSize3 = 30;
+            maincontentSize = 285;
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            self.huntDict1 = [defaults objectForKey:@"huntDescription"];
+            self.huntDict2 = [defaults objectForKey:@"huntCount"];
+            self.huntDict3 = [defaults objectForKey:@"huntLogoUrl"];
+            self.huntDict4 = [defaults objectForKey:@"huntPicsUrl"];
+            self.huntDict5 = [defaults objectForKey:@"huntLocations"];
+            self.huntDict6 = [defaults objectForKey:@"huntPicUrl"];
+            self.cachesubscribedHuntNames = [defaults objectForKey:@"subscribedHuntNames"];
+            self.cacheUnSubscribedHuntNames = [defaults objectForKey:@"unsubscribedHuntNames"];
+            
+            self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
+            self.myEmail = [KCSUser activeUser].email;
+            
+            KCSCollection* collection = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
+            self.updateStore = [KCSLinkedAppdataStore storeWithOptions:@{ KCSStoreKeyResource : collection, KCSStoreKeyCachePolicy : @(KCSCachePolicyBoth), KCSStoreKeyOfflineUpdateEnabled : @YES }];
+            
+            CGRect screenRect5 = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+            self.gridScrollView=[[UIScrollView alloc] initWithFrame:screenRect5];
+            self.gridScrollView.contentSize= self.view.bounds.size;
+            self.gridScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+            [self.view addSubview:self.gridScrollView];
+            
+            CGRect screenRect4 = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+            
+            self.profileScrollView=[[UIScrollView alloc] initWithFrame:screenRect4];
+            self.profileScrollView.contentSize= self.view.bounds.size;
+            self.profileScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+            [self.view addSubview:self.profileScrollView];
+            [self.profileScrollView setBackgroundColor:[UIColor clearColor]];
+            
+            UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 278)];
+            [bg_color setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.profileScrollView addSubview:bg_color];
+            
+            //set profile image background color here.
+            self.bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 220)];
+            //            [self.bgImageView setBackgroundColor:[self colorWithHexString:(@"fb604e")]];
+            [self.profileScrollView addSubview:self.bgImageView];
+            
+            self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
+            self.titleLabel.textAlignment = NSTextAlignmentCenter;
+            self.titleLabel.textColor = [UIColor whiteColor];
+            NSString *string5 = @"ME";
+            NSMutableAttributedString *attributedString5 = [[NSMutableAttributedString alloc] initWithString:string5];
+            float spacing5 = 1.5f;
+            [attributedString5 addAttribute:NSKernAttributeName
+                                      value:@(spacing5)
+                                      range:NSMakeRange(0, [string5 length])];
+            
+            self.titleLabel.attributedText = attributedString5;
+            self.titleLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+            [self.profileScrollView addSubview:self.titleLabel];
+            
+            self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(111, 75, 100, 100)];
+            self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+            [self.profileImageView.layer setBorderWidth:4.0];
+            [self.profileImageView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.profileImageView setContentMode:UIViewContentModeScaleAspectFit];
+            [self.profileImageView setClipsToBounds:YES];
+            [self.profileScrollView addSubview:self.profileImageView];
+            
+            // check if image is already cached in userdefaults.
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            NSData* imageData = [ud objectForKey:@"MyProfilePic"];
+            UIImage *image = [UIImage imageWithData:imageData];
+            
+            UIImage *image2 = [image scaleToSize:CGSizeMake(100, 100)];
+            
+            if (image) {
+                
+                [self.profileImageView setImage:image2];
+                
+            }else{
+                
+                [self getUserPicUrl];
+                
+            }
+            //            self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 100, 100, 100)];
+            //            self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+            //            [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
+            //            [self.profileImageView setClipsToBounds:YES];
+            //            [self.profileImageView setImage:image];
+            //            [self.profileScrollView addSubview:self.profileImageView];
+            
+            _pickImageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_pickImageBtn setFrame:CGRectMake(111, 65, 100, 100)];
+            [_pickImageBtn setTitle:nil forState:UIControlStateNormal];
+            [_pickImageBtn setBackgroundColor:[UIColor clearColor]];
+            [_pickImageBtn addTarget:self action:@selector(takePicture:) forControlEvents:UIControlEventTouchUpInside];
+            [self.profileScrollView addSubview:_pickImageBtn];
+            
+            self.profileLabel = [[UILabel alloc]initWithFrame:CGRectMake( 10, 190, 300, 20)];
+            self.profileLabel.textAlignment = NSTextAlignmentCenter;
+            self.profileLabel.textColor = [UIColor whiteColor];
+            self.profileLabel.text = [_userFullName uppercaseString];
+            self.profileLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:16.0];
+            [self.profileLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileLabel setAdjustsFontSizeToFitWidth:YES];
+            [self.profileScrollView addSubview:self.profileLabel];
+            
+            self.settingsImage = [[UIImageView alloc]initWithFrame:CGRectMake(105, 200, 25, 25)];
+            [self.settingsImage setImage:[UIImage imageNamed:@"edit_profile.png"]];
+            //[self.profileScrollView addSubview:self.settingsImage];
+            
+            self.editLabel = [[UILabel alloc]initWithFrame:CGRectMake(123, 200, 100, 25)];
+            self.editLabel.textAlignment = NSTextAlignmentCenter;
+            self.editLabel.textColor = [UIColor whiteColor];
+            self.editLabel.text = @"EDIT PROFILE";
+            self.editLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+            [self.editLabel setBackgroundColor:[UIColor clearColor]];
+            // [self.profileScrollView addSubview:self.editLabel];
+            
+            self.listCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 230, 107, 25)];
+            self.listCountLabel.textAlignment = NSTextAlignmentCenter;
+            self.listCountLabel.textColor = [UIColor whiteColor];
+            self.listCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.listCountLabel setBackgroundColor:[UIColor clearColor]];
+            NSString *count_string = [NSString stringWithFormat:@"%lu",(unsigned long)self.cachesubscribedHuntNames.count];
+            [self.listCountLabel setText:count_string];
+            [self.profileScrollView addSubview:self.listCountLabel];
+            
+            self.listLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 250, 107, 25)];
+            self.listLabel.textAlignment = NSTextAlignmentCenter;
+            self.listLabel.textColor = [UIColor whiteColor];
+            self.listLabel.text = @"LIST";
+            self.listLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            [self.listLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.listLabel];
+            
+            self.followersCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
+            self.followersCountLabel.textAlignment = NSTextAlignmentCenter;
+            self.followersCountLabel.textColor = [UIColor whiteColor];
+            self.followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.followersCountLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.followersCountLabel];
+            
+            self.followersLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 250, 107, 25)];
+            self.followersLabel.textAlignment = NSTextAlignmentCenter;
+            self.followersLabel.textColor = [UIColor whiteColor];
+            self.followersLabel.text = @"FOLLOWERS";
+            self.followersLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            [self.followersLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.followersLabel];
+            
+            [self getFollowerUsers];
+            
+            self.followingCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 230, 107, 25)];
+            self.followingCountLabel.textAlignment = NSTextAlignmentCenter;
+            self.followingCountLabel.textColor = [UIColor whiteColor];
+            self.followingCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.followingCountLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.followingCountLabel];
+            
+            self.followingLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 250, 107, 25)];
+            self.followingLabel.textAlignment = NSTextAlignmentCenter;
+            self.followingLabel.textColor = [UIColor whiteColor];
+            self.followingLabel.text = @"FOLLOWING";
+            self.followingLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            [self.followingLabel setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.followingLabel];
+            [self getFollowingUsers];
+            
+            UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 278, 320, 1)];
+            lineView.backgroundColor = [UIColor whiteColor];
+            [self.profileScrollView addSubview:lineView];
+            
+            UIView *lineView4 = [[UIView alloc] initWithFrame:CGRectMake(0, 335, 320, 1)];
+            lineView4.backgroundColor = [self colorWithHexString:@"e5e4e4"];
+            [self.profileScrollView addSubview:lineView4];
+            
+            self.progressView = [[UIView alloc]initWithFrame:CGRectMake(0, 300, 320, self.view.frame.size.height)];
+            [self.progressView setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.progressView];
+            
+            self.completedView = [[UIView alloc]initWithFrame:CGRectMake(0, 300, 320, self.view.frame.size.height)];
+            [self.completedView setBackgroundColor:[UIColor clearColor]];
+            [self.profileScrollView addSubview:self.completedView];
+            
+            self.feedView = [[UIView alloc]initWithFrame:CGRectMake(0, 300, 300, self.view.frame.size.height)];
+            [self.feedView setBackgroundColor:[UIColor clearColor]];
+            [self.feedView setUserInteractionEnabled:YES];
+            [self.profileScrollView addSubview:self.feedView];
+            
+            [self.feedView setHidden:YES];
+            [self.completedView setHidden:YES];
+            
+            UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, -21, 107, 56)];
+            [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.progressView addSubview:blue_bg];
+            
+            self.progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -5, 107, 20)];
+            self.progressLabel.textColor = [UIColor whiteColor];
+            self.progressLabel.textAlignment = NSTextAlignmentCenter;
+            self.progressLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            NSString *string = @"PROGRESS";
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+            float spacing = 1.25f;
+            [attributedString addAttribute:NSKernAttributeName
+                                     value:@(spacing)
+                                     range:NSMakeRange(0, [string length])];
+            
+            self.progressLabel.attributedText = attributedString;
+            [self.progressLabel setBackgroundColor:[UIColor clearColor]];
+            [self.progressView addSubview:self.progressLabel];
+            
+            UILabel *progressLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(0, -5, 107, 20)];
+            progressLabel2.textColor = [UIColor lightGrayColor];
+            progressLabel2.textAlignment = NSTextAlignmentCenter;
+            progressLabel2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            progressLabel2.attributedText = attributedString;
+            [progressLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.completedView addSubview:progressLabel2];
+            
+            UILabel *progressLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(0, -5, 107, 20)];
+            progressLabel3.textColor = [UIColor lightGrayColor];
+            progressLabel3.textAlignment = NSTextAlignmentCenter;
+            progressLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            progressLabel3.attributedText = attributedString;
+            [progressLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedView addSubview:progressLabel3];
+            
+            self.completedLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, -5, 107, 20)];
+            self.completedLabel.textColor = [UIColor lightGrayColor];
+            self.completedLabel.textAlignment = NSTextAlignmentCenter;
+            self.completedLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            NSString *string2 = @"COMPLETED";
+            NSMutableAttributedString *attributedString2 = [[NSMutableAttributedString alloc] initWithString:string2];
+            float spacing2 = 1.25f;
+            [attributedString2 addAttribute:NSKernAttributeName
+                                      value:@(spacing2)
+                                      range:NSMakeRange(0, [string2 length])];
+            
+            self.completedLabel.attributedText = attributedString2;
+            [self.completedLabel setBackgroundColor:[UIColor clearColor]];
+            [self.progressView addSubview:self.completedLabel];
+            
+            UIImageView *blue_bg_2 = [[UIImageView alloc]initWithFrame:CGRectMake(108, -21, 106, 56)];
+            [blue_bg_2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.completedView addSubview:blue_bg_2];
+            
+            UILabel *completedLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(107, -5, 107, 20)];
+            completedLabel2.textColor = [UIColor whiteColor];
+            completedLabel2.textAlignment = NSTextAlignmentCenter;
+            completedLabel2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            completedLabel2.attributedText = attributedString2;
+            [completedLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.completedView addSubview:completedLabel2];
+            
+            UILabel *completedLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(107, -5, 107, 20)];
+            completedLabel3.textColor = [UIColor lightGrayColor];
+            completedLabel3.textAlignment = NSTextAlignmentCenter;
+            completedLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            completedLabel3.attributedText = attributedString2;
+            [completedLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedView addSubview:completedLabel3];
+            
+            self.feedLabel = [[UILabel alloc]initWithFrame:CGRectMake(214, -5, 107, 20)];
+            self.feedLabel.textColor = [UIColor lightGrayColor];
+            self.feedLabel.textAlignment = NSTextAlignmentCenter;
+            self.feedLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            NSString *string3 = @"NEWSFEED";
+            NSMutableAttributedString *attributedString3 = [[NSMutableAttributedString alloc] initWithString:string3];
+            float spacing3 = 1.25f;
+            [attributedString3 addAttribute:NSKernAttributeName
+                                      value:@(spacing3)
+                                      range:NSMakeRange(0, [string3 length])];
+            
+            self.feedLabel.attributedText = attributedString3;
+            [self.feedLabel setBackgroundColor:[UIColor clearColor]];
+            [self.progressView addSubview:self.feedLabel];
+            
+            UILabel *feedLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(214, -5, 107, 20)];
+            feedLabel2.textColor = [UIColor lightGrayColor];
+            feedLabel2.textAlignment = NSTextAlignmentCenter;
+            feedLabel2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            feedLabel2.attributedText = attributedString3;
+            [feedLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.completedView addSubview:feedLabel2];
+            
+            UIImageView *blue_bg_3 = [[UIImageView alloc]initWithFrame:CGRectMake(215, -21, 107, 56)];
+            [blue_bg_3 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.feedView addSubview:blue_bg_3];
+            
+            UILabel *feedLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(214, -5, 107, 20)];
+            feedLabel3.textColor = [UIColor whiteColor];
+            feedLabel3.textAlignment = NSTextAlignmentCenter;
+            feedLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
+            feedLabel3.attributedText = attributedString3;
+            [feedLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedView addSubview:feedLabel3];
+            
+            self.progressButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.progressButton  setFrame:CGRectMake(5, 280, 100, 55)];
+            [self.progressButton setBackgroundColor:[UIColor clearColor]];
+            [self.progressButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.progressButton addTarget:self action:@selector(progressButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.progressButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.progressButton.tag = 1;
+            self.progressButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.profileScrollView addSubview:self.progressButton];
+            
+            self.completedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.completedButton  setFrame:CGRectMake(110, 280, 100, 55)];
+            [self.completedButton setBackgroundColor:[UIColor clearColor]];
+            [self.completedButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.completedButton addTarget:self action:@selector(completedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.completedButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.completedButton.tag = 1;
+            self.completedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.profileScrollView addSubview:self.completedButton];
+            
+            self.feedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.feedButton  setFrame:CGRectMake(216, 280, 100, 55)];
+            [self.feedButton setBackgroundColor:[UIColor clearColor]];
+            [self.feedButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self.feedButton addTarget:self action:@selector(feedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.feedButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            self.feedButton.tag = 1;
+            self.feedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.profileScrollView addSubview:self.feedButton];
+            
+            self.finishedHuntVenues = [defaults objectForKey:@"finishedHuntVenues"];
+            self.inProgressHuntNames = [defaults objectForKey:@"inProgressHuntNames"];
+            self.finishedHuntNames = [defaults objectForKey:@"finishedHuntNames"];
+            self.inProgressHuntCounts = [defaults objectForKey:@"inProgressHuntCounts"];
+            self.finishedHuntCounts = [defaults objectForKey:@"finishedHuntCounts"];
+            
+            self.finishedHuntVenues = [NSMutableDictionary new];
+            self.inProgressHuntNames = [NSMutableArray new];
+            self.finishedHuntNames = [NSMutableArray new];
+            self.inProgressHuntCounts = [NSMutableArray new];
+            self.finishedHuntCounts = [NSMutableArray new];
+            
+            [self getMyHuntCounts];
+            [self getMyNewsFeed];
+            //            }
+            
+            if(self.presentingViewController.presentedViewController == self) {
+                
+                self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 30, 30, 30)];
+                self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
+                [self.profileScrollView addSubview:self.backBtnImage];
+                
+                self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.backBtn setFrame:CGRectMake(10, 20, 40, 40)];
+                [self.backBtn setTitle:@"" forState:UIControlStateNormal];
+                [self.backBtn setBackgroundColor:[UIColor clearColor]];
+                //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+                [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+                [self.profileScrollView addSubview:self.backBtn];
+                
+            }else{
+                
+                self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.navButton3  setFrame:CGRectMake(0, 0, 60, 70)];
+                [self.navButton3 setBackgroundColor:[UIColor clearColor]];
+                [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self.navButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+                self.navButton3.tag = 1;
+                self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                [self.view addSubview:self.navButton3];
+                
+                self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.navButton  setFrame:CGRectMake(10, 27, 25, 18)];
+                [self.navButton setBackgroundColor:[UIColor clearColor]];
+                [self.navButton setBackgroundImage:[[UIImage imageNamed:@"white_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+                [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self.navButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+                self.navButton.tag = 1;
+                self.navButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                [self.view addSubview:self.navButton];
+                
+                self.navButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.navButton2  setFrame:CGRectMake(0, 63, 60, 520)];
+                [self.navButton2 setBackgroundColor:[UIColor clearColor]];
+                [self.navButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [self.navButton2 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self.navButton2.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+                self.navButton2.tag = 0;
+                self.navButton2.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+                [self.profileScrollView addSubview:self.navButton2];
+                
+                [self.navButton2 setHidden:YES];
+            }
+            
+            // Get ready for swipes
+            [self setupGestures];
+
+        }
     }
     
 }
@@ -872,7 +1306,6 @@ const NSInteger yookaThumbnailSpace2000 = 5;
              //[huntCountLabel sizeToFit];
              
              [button addSubview:huntCountLabel];
-             
              
              self.hunts_options_button = [[FUIButton alloc]initWithFrame:CGRectMake(133, 127, 26, 13)];
              //self.hunts_options_button = [[FUIButton alloc]initWithFrame:CGRectMake(133, 107, 25, 33)];
@@ -2021,19 +2454,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                  // image is not nil if image was found
                  if (image) {
                      
-                     if (m==0 ) {
-                         NSLog(@"liverpool %@",self.myPosts[m]);
-                     }
-                     
-                     if (m==1 ) {
-                         NSLog(@"liverpool2 %@",self.myPosts[m]);
-                         
-                     }
-                     
-                     if (m==2 ) {
-                         NSLog(@"liverpool3 %@",self.myPosts[m]);
-                         
-                     }
+
                      
 
                      

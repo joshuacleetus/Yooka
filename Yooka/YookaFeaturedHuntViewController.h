@@ -54,6 +54,7 @@ enum {
 @property (nonatomic, strong) NSString *userFullName;
 @property (nonatomic, strong) NSString *huntPicUrl;
 @property (nonatomic, strong) NSString *huntDescription;
+@property (nonatomic, strong) NSString *sponsored_hunt_name;
 
 @property (nonatomic, strong) NSMutableDictionary *huntDescriptionDict;
 @property (nonatomic, strong) NSMutableDictionary *huntCountDict;

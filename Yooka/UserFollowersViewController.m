@@ -138,11 +138,6 @@
             }
             
             if (self.userFollower.count>0) {
-//                NSLog(@"results = %@",self.userFollower[0]);
-//
-//                NSArray *array = [NSArray arrayWithArray:self.userFollower[0]];
-//                
-//                NSLog(@"user full name = %@",[array[0] objectForKey:@"userFullName"]);
                 [self.followerTableView reloadData];
                 [self.followerTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
             }
@@ -278,15 +273,11 @@
         
     if (self.userFollower.count>0 && (indexPath.row<self.userFollower.count)) {
         
-        NSArray *array = [NSArray arrayWithArray:self.userFollower[indexPath.row]];
-        
         NSString *user_fullname;
         NSString *userPicUrl;
         
-        if (array.count) {
-            user_fullname = [array[0] objectForKey:@"userFullName"];
-            userPicUrl = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
-        }
+        user_fullname = [self.userFollower[indexPath.row] objectForKey:@"userFullName"];
+        userPicUrl = [[self.userFollower[indexPath.row] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
         
         if (user_fullname) {
             [(UILabel *)[cell.contentView viewWithTag:1] setText:user_fullname];
@@ -349,14 +340,10 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSArray *array = [NSArray arrayWithArray:self.userFollower[indexPath.row]];
-    
-    if (array.count) {
-        _userEmailSelected = [array[0] objectForKey:@"userEmail"];
-        _userFullNameSelected = [array[0] objectForKey:@"userFullName"];
-        _userPicUrlSelected = [[array[0] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
+        _userEmailSelected = [self.userFollower[indexPath.row] objectForKey:@"userEmail"];
+        _userFullNameSelected = [self.userFollower[indexPath.row] objectForKey:@"userFullName"];
+        _userPicUrlSelected = [[self.userFollower[indexPath.row] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
         [self userDidSelectUser];
-    }
 
 }
 

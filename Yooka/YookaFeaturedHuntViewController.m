@@ -693,6 +693,11 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:self.subscribedHunts forKey:@"subscribedHuntNames"];
     [defaults setObject:self.unsubscribedHunts forKey:@"unsubscribedHuntNames"];
+    NSMutableArray *sponsored_hunt_names = [[defaults objectForKey:@"sponsoredHunts"]mutableCopy];
+    if ([sponsored_hunt_names containsObject:self.huntTitle]) {
+        [sponsored_hunt_names removeObject:self.sponsored_hunt_name];
+        [defaults setObject:sponsored_hunt_names forKey:@"sponsoredHunts"];
+    }
     
     KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"SubscribedHunts" ofClass:[YookaBackend class]];
     KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];

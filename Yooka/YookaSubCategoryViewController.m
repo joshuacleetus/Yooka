@@ -40,7 +40,7 @@
     item = 0;
     row = 0;
     col = 0;
-    contentSize = 300;
+    contentSize = 60;
     
     self.myEmail = [KCSUser activeUser].email;
     
@@ -75,7 +75,7 @@
     
     UIImageView *top_blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
     [top_blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-    [self.gridScrollView addSubview:top_blue_bg];
+    [self.view addSubview:top_blue_bg];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
     titleLabel.textColor = [UIColor whiteColor];
@@ -87,23 +87,22 @@
     //    [titleLabel sizeToFit];
     titleLabel.layer.masksToBounds = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
-    [self.gridScrollView addSubview:titleLabel];
+    [self.view addSubview:titleLabel];
     
     _backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
     _backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
-    [self.gridScrollView addSubview:_backBtnImage];
+    [self.view addSubview:_backBtnImage];
     
     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backBtn setFrame:CGRectMake(10, 20, 40, 40)];
+    [self.backBtn setFrame:CGRectMake(0, 0, 60, 60)];
     [self.backBtn setTitle:@"" forState:UIControlStateNormal];
     [self.backBtn setBackgroundColor:[UIColor clearColor]];
     //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.gridScrollView addSubview:self.backBtn];
+    [self.view addSubview:self.backBtn];
     
 //    [self getsubCatPicture];
     
-    NSLog(@"sub category array = %@",self.subCategoryArray);
     
     [self getSubCatHuntPics];
 
@@ -349,10 +348,9 @@
         NSString *hunt_name = self.subCategoryArray[i];
             
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(col*160,
-                                                                 (row*169)+59,
+                                                                 (row*172)+60,
                                                                  160,
-                                                                 140)];
-            contentSize += 140/2;
+                                                                 169)];
             button.tag = i;
             button.userInteractionEnabled = YES;
             
@@ -361,6 +359,8 @@
             if (col >= 2) {
                 row++;
                 col = 0;
+            }else{
+                contentSize += 172;
             }
         
         [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -380,7 +380,7 @@
              {
 
                 
-                 UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 3, 160, 157)];
+                 UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 1, 160, 157)];
                  buttonImage.image = image;
                  buttonImage.contentMode = UIViewContentModeScaleToFill;
                  [buttonImage setBackgroundColor:[UIColor clearColor]];

@@ -23,6 +23,7 @@
     CGRect new_page_frame_4;
     
     int i;
+    int i2;
     int j;
     int k;
     int l;
@@ -92,6 +93,8 @@
 @property (nonatomic, strong) NSMutableArray *sponsored_hunts;
 @property (nonatomic, strong) NSMutableArray *sponsored_hunt_names;
 @property (nonatomic, strong) NSMutableArray *cache_sponsored_hunt_names;
+
+@property (nonatomic, strong) NSMutableArray *thumbnails;
 
 @property (nonatomic, strong) NSMutableDictionary *huntDict1;
 @property (nonatomic, strong) NSMutableDictionary *huntDict2;

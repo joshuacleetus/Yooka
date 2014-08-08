@@ -50,7 +50,7 @@
     
     UIImageView *top_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 200)];
     [top_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-    [self.gridScrollView addSubview:top_bg];
+    [self.view addSubview:top_bg];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 70, 260, 120)];
     titleLabel.textColor = [UIColor whiteColor];
@@ -62,23 +62,23 @@
     [titleLabel sizeToFit];
     titleLabel.layer.masksToBounds = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
-    [self.gridScrollView addSubview:titleLabel];
+    [self.view addSubview:titleLabel];
     
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(120, 150, 80, 2)];
     lineView.backgroundColor = [UIColor whiteColor];
-    [self.gridScrollView addSubview:lineView];
+    [self.view addSubview:lineView];
     
     self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
     self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
-    [self.gridScrollView addSubview:self.backBtnImage];
+    [self.view addSubview:self.backBtnImage];
     
     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backBtn setFrame:CGRectMake(10, 20, 40, 40)];
+    [self.backBtn setFrame:CGRectMake( 0, 0, 60, 60)];
     [self.backBtn setTitle:@"" forState:UIControlStateNormal];
     [self.backBtn setBackgroundColor:[UIColor clearColor]];
     //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    [self.gridScrollView addSubview:self.backBtn];
+    [self.view addSubview:self.backBtn];
     
     self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 10, 120, 60)];
     self.titleLabel.textColor = [UIColor whiteColor];
@@ -95,7 +95,6 @@
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     //[self.gridScrollView addSubview:self.titleLabel];
         
-    NSLog(@"category array = %@",_categoryArray);
     
     [self getCategoryHunts];
     

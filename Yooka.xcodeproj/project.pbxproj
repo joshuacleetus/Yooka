@@ -267,7 +267,6 @@
 		7947626918FF6A930057F799 /* hunt30x30teal.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7947626718FF6A930057F799 /* hunt30x30teal.pdf */; };
 		7947626C18FF6B2D0057F799 /* coin30x30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947626A18FF6B2D0057F799 /* coin30x30.png */; };
 		7947626D18FF6B2D0057F799 /* hunt30x30.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947626B18FF6B2D0057F799 /* hunt30x30.png */; };
-		7947AF4619901108002458F2 /* YookaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF4519901108002458F2 /* YookaSearchViewController.m */; };
 		7947AF541990435B002458F2 /* ribbon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF531990435B002458F2 /* ribbon.png */; };
 		7947AF5619904364002458F2 /* add_to_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF5519904364002458F2 /* add_to_button.png */; };
 		7947AF5A19918538002458F2 /* blimp2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF5919918538002458F2 /* blimp2.png */; };
@@ -277,9 +276,7 @@
 		7947AF621991855E002458F2 /* yooka_front.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF611991855E002458F2 /* yooka_front.png */; };
 		7947AF6419918578002458F2 /* YookaCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6319918578002458F2 /* YookaCategoryViewController.m */; };
 		7947AF661991858A002458F2 /* YookaFeaturedHuntViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF651991858A002458F2 /* YookaFeaturedHuntViewController.m */; };
-		7947AF6A199185BC002458F2 /* YookaHuntVenuesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF69199185BC002458F2 /* YookaHuntVenuesViewController.m */; };
 		7947AF6C199185CE002458F2 /* YookaNewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */; };
-		7947AF6E199185DE002458F2 /* YookaPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6D199185DE002458F2 /* YookaPostViewController.m */; };
 		7947AF70199185ED002458F2 /* YookaRestaurantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */; };
 		7947AF7319918F3B002458F2 /* blue_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF7119918F3B002458F2 /* blue_pin.png */; };
 		7947AF7419918F3B002458F2 /* grey_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF7219918F3B002458F2 /* grey_pin.png */; };
@@ -399,10 +396,7 @@
 		79AA1BA018E5F0AC00142733 /* CoreTextArcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AA1B9F18E5F0AC00142733 /* CoreTextArcView.m */; };
 		79AC6935197EB2BB006603A8 /* pin_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AC6934197EB2BB006603A8 /* pin_artisse.png */; };
 		79AD874D191011A200F22840 /* 1splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AD874C191011A200F22840 /* 1splash.png */; };
-		79ADCF56199278FF00C79506 /* YookaHuntsLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79ADCF55199278FF00C79506 /* YookaHuntsLandingViewController.m */; };
 		79ADCF5819927B8100C79506 /* arrow_landing.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADCF5719927B8100C79506 /* arrow_landing.png */; };
-		79ADCF5A1992A7FA00C79506 /* YookaProfileNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79ADCF591992A7FA00C79506 /* YookaProfileNewViewController.m */; };
-		79ADCF5C1992C8F100C79506 /* YookaClickProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79ADCF5B1992C8F100C79506 /* YookaClickProfileViewController.m */; };
 		79ADF25E198D8CEA004C1585 /* homescreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADF25D198D8CEA004C1585 /* homescreen.png */; };
 		79ADF260198D8CF1004C1585 /* mappin2.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADF25F198D8CF1004C1585 /* mappin2.png */; };
 		79ADF262198D8CFA004C1585 /* green_blimp.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADF261198D8CFA004C1585 /* green_blimp.png */; };
@@ -416,7 +410,6 @@
 		79B0AA06198C1F7E00B43167 /* add_hunt_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B0AA05198C1F7E00B43167 /* add_hunt_button.png */; };
 		79B0AA10198C253400B43167 /* urban_explorer.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B0AA0F198C253400B43167 /* urban_explorer.png */; };
 		79B0AA12198C26DC00B43167 /* yooka_landing_page.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B0AA11198C26DC00B43167 /* yooka_landing_page.png */; };
-		79B0AA14198C358400B43167 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0AA13198C358400B43167 /* NavigationViewController.m */; };
 		79B0AA18198C35BD00B43167 /* logoout_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B0AA17198C35BD00B43167 /* logoout_artisse.png */; };
 		79B0AA23198D548200B43167 /* UserFollowersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0AA20198D548200B43167 /* UserFollowersViewController.m */; };
 		79B0AA24198D548200B43167 /* UserFollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0AA22198D548200B43167 /* UserFollowingViewController.m */; };
@@ -443,6 +436,13 @@
 		79B153E019772BD8002222DD /* profile_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153DF19772BD8002222DD /* profile_artisse.png */; };
 		79B153E219772BE0002222DD /* search_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153E119772BE0002222DD /* search_artisse.png */; };
 		79B153E419772BE7002222DD /* upload_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153E319772BE7002222DD /* upload_artisse.png */; };
+		79B1A7A81994180900CC9A62 /* YookaClickProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */; };
+		79B1A7AC1994182B00CC9A62 /* YookaHuntVenuesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */; };
+		79B1A7AE1994183C00CC9A62 /* YookaProfileNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */; };
+		79B1A7B01994185000CC9A62 /* YookaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */; };
+		79B1A7B21994186800CC9A62 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B11994186800CC9A62 /* NavigationViewController.m */; };
+		79B1A7B419941A8D00CC9A62 /* YookaHuntsLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */; };
+		79B1A7B61995279700CC9A62 /* YookaPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B51995279700CC9A62 /* YookaPostViewController.m */; };
 		79B5D4CC1981BFE000495A63 /* YookaMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */; };
 		79B5D4DF1982AAD800495A63 /* doggy.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B5D4DE1982AAD800495A63 /* doggy.png */; };
 		79B943C018E7912C0037D574 /* commentdropbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B943BE18E7912C0037D574 /* commentdropbox.png */; };
@@ -931,7 +931,6 @@
 		7947626718FF6A930057F799 /* hunt30x30teal.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = hunt30x30teal.pdf; sourceTree = "<group>"; };
 		7947626A18FF6B2D0057F799 /* coin30x30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin30x30.png; sourceTree = "<group>"; };
 		7947626B18FF6B2D0057F799 /* hunt30x30.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hunt30x30.png; sourceTree = "<group>"; };
-		7947AF4519901108002458F2 /* YookaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSearchViewController.m; sourceTree = "<group>"; };
 		7947AF531990435B002458F2 /* ribbon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ribbon.png; sourceTree = "<group>"; };
 		7947AF5519904364002458F2 /* add_to_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_to_button.png; sourceTree = "<group>"; };
 		7947AF5919918538002458F2 /* blimp2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blimp2.png; sourceTree = "<group>"; };
@@ -941,9 +940,7 @@
 		7947AF611991855E002458F2 /* yooka_front.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yooka_front.png; sourceTree = "<group>"; };
 		7947AF6319918578002458F2 /* YookaCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaCategoryViewController.m; sourceTree = "<group>"; };
 		7947AF651991858A002458F2 /* YookaFeaturedHuntViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaFeaturedHuntViewController.m; sourceTree = "<group>"; };
-		7947AF69199185BC002458F2 /* YookaHuntVenuesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntVenuesViewController.m; sourceTree = "<group>"; };
 		7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaNewsFeedViewController.m; sourceTree = "<group>"; };
-		7947AF6D199185DE002458F2 /* YookaPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaPostViewController.m; sourceTree = "<group>"; };
 		7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaRestaurantViewController.m; sourceTree = "<group>"; };
 		7947AF7119918F3B002458F2 /* blue_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_pin.png; sourceTree = "<group>"; };
 		7947AF7219918F3B002458F2 /* grey_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grey_pin.png; sourceTree = "<group>"; };
@@ -1087,10 +1084,7 @@
 		79AA1B9F18E5F0AC00142733 /* CoreTextArcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextArcView.m; sourceTree = "<group>"; };
 		79AC6934197EB2BB006603A8 /* pin_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin_artisse.png; sourceTree = "<group>"; };
 		79AD874C191011A200F22840 /* 1splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1splash.png; sourceTree = "<group>"; };
-		79ADCF55199278FF00C79506 /* YookaHuntsLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntsLandingViewController.m; sourceTree = "<group>"; };
 		79ADCF5719927B8100C79506 /* arrow_landing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_landing.png; sourceTree = "<group>"; };
-		79ADCF591992A7FA00C79506 /* YookaProfileNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaProfileNewViewController.m; sourceTree = "<group>"; };
-		79ADCF5B1992C8F100C79506 /* YookaClickProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaClickProfileViewController.m; sourceTree = "<group>"; };
 		79ADF25D198D8CEA004C1585 /* homescreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homescreen.png; sourceTree = "<group>"; };
 		79ADF25F198D8CF1004C1585 /* mappin2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mappin2.png; sourceTree = "<group>"; };
 		79ADF261198D8CFA004C1585 /* green_blimp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_blimp.png; sourceTree = "<group>"; };
@@ -1106,7 +1100,6 @@
 		79B0AA05198C1F7E00B43167 /* add_hunt_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_hunt_button.png; sourceTree = "<group>"; };
 		79B0AA0F198C253400B43167 /* urban_explorer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = urban_explorer.png; sourceTree = "<group>"; };
 		79B0AA11198C26DC00B43167 /* yooka_landing_page.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yooka_landing_page.png; sourceTree = "<group>"; };
-		79B0AA13198C358400B43167 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		79B0AA17198C35BD00B43167 /* logoout_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoout_artisse.png; sourceTree = "<group>"; };
 		79B0AA1F198D548200B43167 /* UserFollowersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserFollowersViewController.h; sourceTree = "<group>"; };
 		79B0AA20198D548200B43167 /* UserFollowersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFollowersViewController.m; sourceTree = "<group>"; };
@@ -1143,6 +1136,13 @@
 		79B153DF19772BD8002222DD /* profile_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_artisse.png; sourceTree = "<group>"; };
 		79B153E119772BE0002222DD /* search_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_artisse.png; sourceTree = "<group>"; };
 		79B153E319772BE7002222DD /* upload_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload_artisse.png; sourceTree = "<group>"; };
+		79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaClickProfileViewController.m; sourceTree = "<group>"; };
+		79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntVenuesViewController.m; sourceTree = "<group>"; };
+		79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaProfileNewViewController.m; sourceTree = "<group>"; };
+		79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSearchViewController.m; sourceTree = "<group>"; };
+		79B1A7B11994186800CC9A62 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
+		79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntsLandingViewController.m; sourceTree = "<group>"; };
+		79B1A7B51995279700CC9A62 /* YookaPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaPostViewController.m; sourceTree = "<group>"; };
 		79B5D4CA1981BFDA00495A63 /* YookaMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YookaMapViewController.h; sourceTree = "<group>"; };
 		79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaMapViewController.m; sourceTree = "<group>"; };
 		79B5D4D71981D0DA00495A63 /* YookaRestaurantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaRestaurantViewController.h; sourceTree = "<group>"; };
@@ -1495,17 +1495,17 @@
 				79DC957F19363E89000692F6 /* MainViewController.h */,
 				79DC958019363E89000692F6 /* MainViewController.m */,
 				79DC95821936425D000692F6 /* NavigationViewController.h */,
-				79B0AA13198C358400B43167 /* NavigationViewController.m */,
+				79B1A7B11994186800CC9A62 /* NavigationViewController.m */,
 				79F2B14D18CB9ED300ACCE51 /* YookaHuntVenuesViewController.h */,
-				7947AF69199185BC002458F2 /* YookaHuntVenuesViewController.m */,
+				79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */,
 				79AFCB551979AB3100F09C12 /* YookaProfileNewViewController.h */,
-				79ADCF591992A7FA00C79506 /* YookaProfileNewViewController.m */,
+				79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */,
 				799841FA198849C30069C9C1 /* YookaClickProfileViewController.h */,
-				79ADCF5B1992C8F100C79506 /* YookaClickProfileViewController.m */,
+				79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */,
 				79B5D4CA1981BFDA00495A63 /* YookaMapViewController.h */,
 				79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */,
 				7910A0901980332800500319 /* YookaHuntsLandingViewController.h */,
-				79ADCF55199278FF00C79506 /* YookaHuntsLandingViewController.m */,
+				79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */,
 				79805D01196EE14800009304 /* YookaNewsFeedViewController.h */,
 				7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */,
 				799841FD198950C60069C9C1 /* YookaNewNewsfeedViewController.h */,
@@ -1517,9 +1517,9 @@
 				79274E0519522E0900C058DE /* YookaSubCategoryViewController.h */,
 				7947AF7919919945002458F2 /* YookaSubCategoryViewController.m */,
 				7998420219898F900069C9C1 /* YookaSearchViewController.h */,
-				7947AF4519901108002458F2 /* YookaSearchViewController.m */,
+				79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */,
 				7920F3CB196B140D008B7D7A /* YookaPostViewController.h */,
-				7947AF6D199185DE002458F2 /* YookaPostViewController.m */,
+				79B1A7B51995279700CC9A62 /* YookaPostViewController.m */,
 				79B5D4D71981D0DA00495A63 /* YookaRestaurantViewController.h */,
 				7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */,
 				79B0AA1F198D548200B43167 /* UserFollowersViewController.h */,
@@ -2979,7 +2979,7 @@
 				79B0A9F0198BF3BC00B43167 /* LLACircularProgressView.m in Sources */,
 				7962439E18E0E44600C680AD /* BDDynamicGridCell.m in Sources */,
 				79CAB465193CE12E00BD577B /* RVCollectionViewLayout.m in Sources */,
-				79B0AA14198C358400B43167 /* NavigationViewController.m in Sources */,
+				79B1A7B21994186800CC9A62 /* NavigationViewController.m in Sources */,
 				79B1518C1975AEB2002222DD /* YookaMenuViewController.m in Sources */,
 				79244D1F18EA6DB2000D4EB6 /* BDViewController+Private2.m in Sources */,
 				03D1859D18AC4725007A26BA /* YookaHuntsViewController.m in Sources */,
@@ -2997,7 +2997,7 @@
 				79DCB606194BBC7100006512 /* YookaHuntRestaurantViewController.m in Sources */,
 				791884251909F1B300B99295 /* UIButton+WebCache.m in Sources */,
 				791884221909F1B300B99295 /* SDWebImageDownloaderOperation.m in Sources */,
-				7947AF4619901108002458F2 /* YookaSearchViewController.m in Sources */,
+				79B1A7B01994185000CC9A62 /* YookaSearchViewController.m in Sources */,
 				79E1416618F0F1E20043A7E7 /* YookaLocation2ViewController.m in Sources */,
 				79B153CD19770E1E002222DD /* UIERealTimeBlurView.m in Sources */,
 				79244D1918EA6700000D4EB6 /* BDDynamicGridViewController2.m in Sources */,
@@ -3008,7 +3008,7 @@
 				79D08C3B19413D1400EB6A03 /* MPAnimation.m in Sources */,
 				7947AF661991858A002458F2 /* YookaFeaturedHuntViewController.m in Sources */,
 				791884291909F1B300B99295 /* UIImageView+WebCache.m in Sources */,
-				7947AF6A199185BC002458F2 /* YookaHuntVenuesViewController.m in Sources */,
+				79B1A7AC1994182B00CC9A62 /* YookaHuntVenuesViewController.m in Sources */,
 				7900AC6C18CE9B2C006C3AA6 /* DetailViewController.m in Sources */,
 				79DC927A192EC6D0000692F6 /* Foursquare2.m in Sources */,
 				03D1848218A8683A007A26BA /* YookaAppDelegate.m in Sources */,
@@ -3022,7 +3022,7 @@
 				79DC927D192EC6D0000692F6 /* FSOAuthNoAppStore.m in Sources */,
 				7962439518E0C97300C680AD /* YookaButton.m in Sources */,
 				799841FF198950C60069C9C1 /* YookaNewNewsfeedViewController.m in Sources */,
-				79ADCF5C1992C8F100C79506 /* YookaClickProfileViewController.m in Sources */,
+				79B1A7A81994180900CC9A62 /* YookaClickProfileViewController.m in Sources */,
 				03D185BC18B5342C007A26BA /* FSVenue.m in Sources */,
 				79B153CE19770E1E002222DD /* UIImage+BoxBlur.m in Sources */,
 				791884201909F1B300B99295 /* SDWebImageDecoder.m in Sources */,
@@ -3046,12 +3046,12 @@
 				03D1859A18ABCF82007A26BA /* YookaBackend.m in Sources */,
 				79E1416318F0E47A0043A7E7 /* YookaSearchLandingViewController.m in Sources */,
 				794C08D518D8DCF80033BA7C /* YookaHuntSearchViewController.m in Sources */,
-				79ADCF5A1992A7FA00C79506 /* YookaProfileNewViewController.m in Sources */,
+				79B1A7AE1994183C00CC9A62 /* YookaProfileNewViewController.m in Sources */,
 				7918841D1909F1B300B99295 /* NSData+ImageContentType.m in Sources */,
 				791884271909F1B300B99295 /* UIImage+MultiFormat.m in Sources */,
 				03D185A618AC47B6007A26BA /* YookaProfileViewController.m in Sources */,
 				7900AC7018CE9DDC006C3AA6 /* AddressAnnotation.m in Sources */,
-				7947AF6E199185DE002458F2 /* YookaPostViewController.m in Sources */,
+				79B1A7B61995279700CC9A62 /* YookaPostViewController.m in Sources */,
 				79DC927C192EC6D0000692F6 /* FSKeychain.m in Sources */,
 				03D185BB18B5342C007A26BA /* FSConverter.m in Sources */,
 				79B0AA24198D548200B43167 /* UserFollowingViewController.m in Sources */,
@@ -3062,7 +3062,7 @@
 				7980ED7B195E3A1500ED5EE0 /* UIImage+Crop.m in Sources */,
 				7926D29D18D1414E0051EF2B /* YookaMenu2ViewController.m in Sources */,
 				7918841F1909F1B300B99295 /* SDWebImageCompat.m in Sources */,
-				79ADCF56199278FF00C79506 /* YookaHuntsLandingViewController.m in Sources */,
+				79B1A7B419941A8D00CC9A62 /* YookaHuntsLandingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3147,7 +3147,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				SDKROOT = iphoneos7.1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3182,7 +3182,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				SDKROOT = iphoneos7.1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3233,7 +3233,7 @@
 					Social,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				SDKROOT = iphoneos7.1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3284,7 +3284,7 @@
 					Social,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				SDKROOT = iphoneos7.1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3307,6 +3307,7 @@
 				);
 				INFOPLIST_FILE = "YookaTests/YookaTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -3325,6 +3326,7 @@
 				GCC_PREFIX_HEADER = "Yooka/Yooka-Prefix.pch";
 				INFOPLIST_FILE = "YookaTests/YookaTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};

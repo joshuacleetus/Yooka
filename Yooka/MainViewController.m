@@ -53,8 +53,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupView];
-    
-    [self setNeedsStatusBarAppearanceUpdate];
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
+    {
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

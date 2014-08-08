@@ -109,7 +109,7 @@
                 self.logoImage.image = [UIImage imageNamed:@"Yookatransparent.png"];
                 [self.view addSubview:self.logoImage];
                 
-                self.fbBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 268, 288, 43)];
+                self.fbBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 248, 288, 43)];
                 UIColor * color2 = [UIColor colorWithRed:67/255.0f green:125/255.0f blue:162/255.0f alpha:1.0f];
                 self.fbBtn.buttonColor = color2;
                 UIColor * color3 = [UIColor colorWithRed:45/255.0f green:93/255.0f blue:124/255.0f alpha:1.0f];
@@ -123,7 +123,7 @@
                 [self.fbBtn addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
                 [self.view addSubview:self.fbBtn];
                 
-                self.signInBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 321, 288, 43)];
+                self.signInBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 301, 288, 43)];
                 UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
                 self.signInBtn.buttonColor = color4;
                 UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
@@ -137,7 +137,7 @@
                 [self.signInBtn addTarget:self action:@selector(signInBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
                 [self.view addSubview:self.signInBtn];
                 
-                self.signUpBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 374, 288, 43)];
+                self.signUpBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 354, 288, 43)];
                 UIColor * color6 = [UIColor colorWithRed:216/255.0f green:115/255.0f blue:82/255.0f alpha:1.0f];
                 self.signUpBtn.buttonColor = color6;
                 UIColor * color7 = [UIColor colorWithRed:185/255.0f green:74/255.0f blue:47/255.0f alpha:1.0f];
@@ -151,25 +151,29 @@
                 [self.signUpBtn addTarget:self action:@selector(signUpBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
                 [self.view addSubview:self.signUpBtn];
                 
-                UILabel *termsLbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 435, 295, 30)];
-                termsLbl.textColor = [UIColor whiteColor];
+                UILabel *termsLbl = [[UILabel alloc]initWithFrame:CGRectMake(120, 415, 100, 30)];
                 [termsLbl setFont:[UIFont fontWithName:@"Helvetica" size:10]];
                 NSString *string1 = @"Terms of Service";
-                NSMutableAttributedString* string = [[NSMutableAttributedString alloc]initWithString:string1];
-                [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:10] range:NSMakeRange(0, string.length)];
-                //            [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, string.length)];//TextColor
-                UIColor * color = [UIColor whiteColor];
-                NSNumber* underlineNumber = [NSNumber numberWithInteger:NSUnderlineStyleThick];
-                [string addAttribute:NSUnderlineStyleAttributeName value:underlineNumber range:NSMakeRange(0, string.length)];
+//                NSMutableAttributedString* string = [[NSMutableAttributedString alloc]initWithString:string1];
+//                [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:10] range:NSMakeRange(0, string.length)];
+//            [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, string.length)];//TextColor
+//                UIColor * color = [UIColor whiteColor];
+//                NSNumber* underlineNumber = [NSNumber numberWithInteger:NSUnderlineStyleThick];
+//                [string1 addAttribute:NSUnderlineStyleAttributeName value:underlineNumber range:NSMakeRange(0, string.length)];
                 //Underline color
-                [string addAttribute:NSUnderlineColorAttributeName value:color range:NSMakeRange(0, string.length)];
-                termsLbl. attributedText = string;
-                termsLbl.textAlignment = NSTextAlignmentCenter;
-                termsLbl.adjustsFontSizeToFitWidth = NO;
+                NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSUnderlineStyleAttributeName: @1 };
+                termsLbl.textColor = [UIColor whiteColor];
+                NSAttributedString *myString = [[NSAttributedString alloc] initWithString:string1 attributes:attributes];
+                termsLbl.attributedText = myString;
+                [termsLbl setBackgroundColor:[UIColor clearColor]];
+//                [string addAttribute:NSUnderlineColorAttributeName value:color range:NSMakeRange(0, string.length)];
+//                termsLbl. attributedText = string;
+//                termsLbl.textAlignment = NSTextAlignmentCenter;
+//                termsLbl.adjustsFontSizeToFitWidth = NO;
                 [self.view addSubview:termsLbl];
                 
                 self.termsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [_termsBtn setFrame:CGRectMake(100, 430, 120, 30)];
+                [_termsBtn setFrame:CGRectMake(100, 415, 120, 30)];
                 [_termsBtn setTitle:nil forState:UIControlStateNormal];
                 [_termsBtn setBackgroundColor:[UIColor clearColor]];
                 [_termsBtn addTarget:self action:@selector(termsofservice:) forControlEvents:UIControlEventTouchUpInside];
