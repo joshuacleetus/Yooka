@@ -38,29 +38,20 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES
                                             withAnimation:UIStatusBarAnimationFade];
     
-    _menuObjects = [[NSMutableArray alloc]init];
-    _filteredArray = [[NSMutableArray alloc]init];
-    
-//    UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Add Menu" style:UIBarButtonItemStylePlain target:self action:@selector(addMenu)];
-//    self.navigationItem.rightBarButtonItem = anotherButton;
-    
-//    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-//    [self.view setBackgroundColor:color];
-//    [self.navigationController.navigationBar setBarTintColor:color];
-//    [self.navigationItem setTitle:@"Menu"];
-//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.menuObjects = [[NSMutableArray alloc]init];
+    self.filteredArray = [[NSMutableArray alloc]init];
+    self.searchData = [NSMutableArray new];
     
     UIImageView *whitebg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 160)];
     whitebg.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:whitebg];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
-    titleLabel.textColor = [UIColor grayColor];
-    titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
-    //titleLabel.text = @"LOCATION";
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:titleLabel];
+//    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+//    titleLabel.textColor = [UIColor grayColor];
+//    titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
+//    //titleLabel.text = @"LOCATION";
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [self.view addSubview:titleLabel];
     
     self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.cancelBtn setFrame:CGRectMake(0, 0, 40, 40)];
@@ -72,19 +63,40 @@
     [self.cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cancelBtn];
     
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 240, 40)];
+    _textField.borderStyle = UITextBorderStyleNone;
+    _textField.font = [UIFont fontWithName:@"OpenSans-Regular" size:16];
+    _textField.textColor = [UIColor lightGrayColor];
+    UIColor *color1 = [UIColor lightGrayColor];
+    _textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"  SEARCH" attributes:@{NSForegroundColorAttributeName: color1}];
+    //    UIColor * color3 = [UIColor colorWithRed:221/255.0f green:221/255.0f blue:221/255.0f alpha:1.0f];
+    _textField.backgroundColor = [UIColor whiteColor];
+    _textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    _textField.keyboardType = UIKeyboardTypeDefault;
+    _textField.returnKeyType = UIReturnKeySearch;
+    _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    [_textField addTarget:self
+                   action:@selector(textFieldEditingBegan:)
+         forControlEvents:UIControlEventEditingChanged];
+    [_textField addTarget:self
+                   action:@selector(textFieldDone:)
+         forControlEvents:UIControlEventEditingDidEndOnExit];
+    [self.view addSubview:_textField];
+    
     UIImageView *cancel_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 30, 30)];
     cancel_icon.image = [UIImage imageNamed:@"x_close"];
     [self.view addSubview:cancel_icon];
-
     
-    UIImageView *addBtn2 = [[UIImageView alloc]initWithFrame:CGRectMake(70, 30, 140, 60)];
-    addBtn2.image = [UIImage imageNamed:@"add_to_menu.png"];
-    addBtn2.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:addBtn2];
-    
-    UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(280, 0, 40, 40)];
-    gps_icon.image = [UIImage imageNamed:@"search_button_blue.png"];
+    UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(275, -5, 48, 45)];
+    gps_icon.image = [UIImage imageNamed:@"search_grey.png"];
     [self.view addSubview:gps_icon];
+    
+    UIButton *search_button_top = [UIButton buttonWithType:UIButtonTypeCustom];
+    [search_button_top setFrame:CGRectMake(280, 0, 40, 40)];
+    [search_button_top setBackgroundColor:[UIColor clearColor]];
+    [search_button_top addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:search_button_top];
     
     UIImageView *ver_line = [[UIImageView alloc]initWithFrame:CGRectMake(35, 0, 10, 40)];
     ver_line.image = [UIImage imageNamed:@"horizontal_line.png"];
@@ -102,56 +114,37 @@
     horz_line2.image = [UIImage imageNamed:@"lines.png"];
     [self.view addSubview:horz_line2];
     
+    UIImageView *addBtn2 = [[UIImageView alloc]initWithFrame:CGRectMake(-2, 36, 70, 70)];
+    addBtn2.image = [UIImage imageNamed:@"add_grey.png"];
+    addBtn2.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:addBtn2];
+    
+    UILabel *add_dish_label = [[UILabel alloc]initWithFrame:CGRectMake(65, 39, 255, 64.5)];
+    add_dish_label.textColor = [UIColor whiteColor];
+    add_dish_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:22];
+    add_dish_label.textAlignment = NSTextAlignmentCenter;
+    [add_dish_label setBackgroundColor:[self colorWithHexString:@"c8c9c9"]];
+    [self.view addSubview:add_dish_label];
+    
+    UILabel *add_dish_label2 = [[UILabel alloc]initWithFrame:CGRectMake(100, 39, 220, 65)];
+    [add_dish_label2 setText:@"ADD A DISH"];
+    add_dish_label2.textColor = [UIColor whiteColor];
+    add_dish_label2.font = [UIFont fontWithName:@"OpenSans-Bold" size:20];
+    add_dish_label2.textAlignment = NSTextAlignmentLeft;
+    [add_dish_label2 setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:add_dish_label2];
     
     self.addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.addBtn setFrame:CGRectMake(0, 40, 320, 40)];
-//    [self.addBtn setTitle:@"Add Menu" forState:UIControlStateNormal];
-//    [self.addBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-   // [self.addBtn setBackgroundImage:[[UIImage imageNamed:@"add_to_menu.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [self.addBtn setFrame:CGRectMake(0, 40, 320, 65)];
     [self.addBtn addTarget:self action:@selector(addMenu) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.addBtn];
 
     //NSLog(@"venue id = %@",_venueID);
-    _menuTableView = [[UITableView alloc]initWithFrame:CGRectMake(-20.f, 80.f, 340.f, self.view.frame.size.height-80)];
+    _menuTableView = [[UITableView alloc]initWithFrame:CGRectMake(-20.f, 105.f, 340.f, self.view.frame.size.height-80)];
     _menuTableView.delegate = self;
     _menuTableView.dataSource = self;
     [_menuTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-    //    _locationTableView.backgroundColor = [UIColor blackColor];
-    //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
     [self.view addSubview:_menuTableView];
-    
-    self.menuSearch = [[UISearchBar alloc]initWithFrame:CGRectMake(40.f, 0.f, 235.f, 30.f)];
-    self.menuSearch.showsCancelButton = NO;
-    self.menuSearch.tintColor=[UIColor clearColor];
-    self.menuSearch.barTintColor=[UIColor clearColor];
-    self.menuSearch.translucent=YES;
-    self.menuSearch.backgroundColor=[UIColor clearColor];
-    self.menuSearch.backgroundImage=nil;
-    self.menuSearch.delegate = self;
-    self.menuSearch.searchBarStyle= UISearchBarStyleMinimal;
-    self.menuSearch.placeholder = @"SEARCH";
-    self.menuSearch.autocorrectionType=UITextAutocorrectionTypeNo;
-    self.menuSearch.autocapitalizationType=UITextAutocapitalizationTypeNone;
-    self.menuSearch.clipsToBounds = YES;
-    [self.view addSubview:self.menuSearch];
-    
-    UITextField *txfSearchField = [self.menuSearch valueForKey:@"_searchField"];
-    [txfSearchField setBackgroundColor:[UIColor whiteColor]];
-    [txfSearchField setLeftViewMode:UITextFieldViewModeNever];
-    [txfSearchField setRightViewMode:UITextFieldViewModeNever];
-    [txfSearchField setBackground:[UIImage imageNamed:@"Captionbar.png"]];
-    [txfSearchField setBorderStyle:UITextBorderStyleNone];
-    //txfSearchField.layer.borderWidth = 8.0f;
-    //txfSearchField.layer.cornerRadius = 10.0f;
-    txfSearchField.layer.borderColor = [UIColor clearColor].CGColor;
-    txfSearchField.clearButtonMode=UITextFieldViewModeNever;
-    txfSearchField.clipsToBounds = YES;
-
-    self.menuTableView.tableHeaderView = nil;
-    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.menuSearch contentsController:self];
-    searchDisplayController.delegate = self;
-    searchDisplayController.searchResultsDataSource = self;
-    [searchDisplayController setSearchResultsDelegate:self];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
@@ -171,6 +164,87 @@
         [alert show];
     }
     
+}
+
+- (void)searchButtonClicked:(id)sender
+{
+    [self.textField resignFirstResponder];
+    NSString *s = self.textField.text;
+    if ([s length]==0) {
+        self.searchData = self.menuObjects;
+        [self.menuTableView reloadData];
+    }else{
+        NSPredicate *sPredicate = [NSPredicate predicateWithFormat:@"SELF contains[c] %@",s];
+        NSArray *filtered =  [self.menuObjects filteredArrayUsingPredicate:sPredicate];
+        self.searchData = [NSMutableArray arrayWithArray:filtered];
+        [self.menuTableView reloadData];
+    }
+}
+
+-(IBAction)textFieldEditingBegan:(UITextField *)sender
+{
+    NSString *s = self.textField.text;
+    if ([s length]==0) {
+        self.searchData = self.menuObjects;
+        [self.menuTableView reloadData];
+    }else{
+        NSPredicate *sPredicate = [NSPredicate predicateWithFormat:@"SELF contains[c] %@",s];
+        NSArray *filtered =  [self.menuObjects filteredArrayUsingPredicate:sPredicate];
+        self.searchData = [NSMutableArray arrayWithArray:filtered];
+
+    [self.menuTableView reloadData];
+    }
+}
+
+-(IBAction)textFieldDone:(UITextField *)sender
+{
+    NSString *s = self.textField.text;
+    if ([s length]==0) {
+        self.searchData = self.menuObjects;
+        [self.menuTableView reloadData];
+    }else{
+        NSPredicate *sPredicate = [NSPredicate predicateWithFormat:@"SELF contains[c] %@",s];
+        NSArray *filtered =  [self.menuObjects filteredArrayUsingPredicate:sPredicate];
+        self.searchData = [NSMutableArray arrayWithArray:filtered];
+        [self.menuTableView reloadData];
+    }
+
+}
+
+-(UIColor*)colorWithHexString:(NSString*)hex
+{
+    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+    
+    // String should be 6 or 8 characters
+    if ([cString length] < 6) return [UIColor grayColor];
+    
+    // strip 0X if it appears
+    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
+    
+    if ([cString length] != 6) return  [UIColor grayColor];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.location = 0;
+    range.length = 2;
+    NSString *rString = [cString substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [cString substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [cString substringWithRange:range];
+    
+    // Scan values
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    return [UIColor colorWithRed:((float) r / 255.0f)
+                           green:((float) g / 255.0f)
+                            blue:((float) b / 255.0f)
+                           alpha:1.0f];
 }
 
 -(BOOL)prefersStatusBarHidden
@@ -205,6 +279,7 @@
         if (![self.menuObjects containsObject:entered]) {
             [self.menuObjects insertObject:entered atIndex:0];
         }
+        self.searchData = self.menuObjects;
         [self.menuTableView reloadData];
         [self saveMenu];
     }
@@ -220,35 +295,20 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Check to see whether the normal table or search results table is being displayed and return the count from the appropriate array
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return [self.filteredArray count];
-    } else {
-        return self.menuObjects.count;
+    if (self.searchData.count) {
+        return self.searchData.count;
     }
+    return 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        if (self.filteredArray.count) {
-            return 1;
-        }
-    } else {
-        if (self.menuObjects.count) {
-            return 1;
-        }
-    }
-
-    return 0;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [_menuTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    if (tableView == self.searchDisplayController.searchResultsTableView) {
-//        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    } else {
-//
-//    }
+
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.backgroundColor = [UIColor whiteColor];
@@ -266,38 +326,14 @@
         
     }
     
-//    cell.textLabel.text = self.menuObjects[indexPath.row];
-//    FSVenue *venue = self.nearbyVenues[indexPath.row];
-//    if (venue.location.address) {
-//        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m, %@",
-//        //                                     venue.location.distance,
-//        //                                     venue.location.address];
-//    } else {
-//        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m",
-//        //                                     venue.location.distance];
-//    }
     
     //    ((UIImageView *)cell.backgroundView).image = [UIImage imageNamed:@"check_box.jpeg"];
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        [(UILabel *)[cell.contentView viewWithTag:1] setText:self.filteredArray[indexPath.row]];
-    } else {
-        [(UILabel *)[cell.contentView viewWithTag:1] setText:self.menuObjects[indexPath.row]];
+    if (self.searchData.count) {
+        [(UILabel *)[cell.contentView viewWithTag:1] setText:self.searchData[indexPath.row]];
     }
-    
-    //    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(20,6, 30, 31)];
-    //    imv.image=[UIImage imageNamed:@"check_box.jpeg"];
-    //    [cell.contentView addSubview:imv];
     
     return cell;
 }
-
-//-(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSIndexPath *oldIndex = [locationTableView indexPathForSelectedRow];
-//    [locationTableView cellForRowAtIndexPath:oldIndex].accessoryType = UITableViewCellAccessoryNone;
-//    [locationTableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-//    [locationTableView cellForRowAtIndexPath:indexPath].backgroundColor = [UIColor purpleColor];
-//    return indexPath;
-//}
 
 #pragma mark - Table view delegate
 
@@ -347,22 +383,11 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        //NSLog(@"did select row 2");
-
-                // keep track of the last selected cell
-        self.lastSelected = indexPath;
-        //NSLog(@"index 1 %@", indexPath);
-        _menuSelected = self.filteredArray[indexPath.row];
-        
-    }else{
-        
-//        if (self.lastSelected==indexPath) return; // nothing to do
+    if (self.searchData.count) {
         
         // keep track of the last selected cell
         self.lastSelected = indexPath;
-        //NSLog(@"index 1 %@", indexPath);
-        _menuSelected = self.menuObjects[indexPath.row];
+        _menuSelected = self.searchData[indexPath.row];
     }
     if ([_menuSelected isEqualToString:@"Add a Menu"]) {
         
@@ -406,9 +431,7 @@
                           if (success) {
                               
                                         NSDictionary *dic = result;
-                                        NSLog(@"menu data 1 = %@",dic);
                                         NSString *menus = [dic valueForKeyPath:@"response.menu.menus.count"];
-                                        NSLog(@"menu data 2 = %@",menus);
                               
                               if ([[dic valueForKeyPath:@"response.menu.menus.count"]integerValue]>0) {
                                   
@@ -449,20 +472,16 @@
     KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
     
     KCSQuery* query = [KCSQuery queryOnField:@"_id" withExactMatchForValue:self.venueID];
-//    KCSQuery* query2 = [KCSQuery queryOnField:@"HuntName" withExactMatchForValue:_cachesubscribedHuntNames[j]];
-//    KCSQuery* query3 = [KCSQuery queryOnField:@"postType" usingConditional:kKCSNotEqual forValue:@"started hunt"];
-//    KCSQuery* query4 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query,query2,query3, nil];
     
     [store queryWithQuery:query withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
         if (errorOrNil != nil) {
             //An error happened, just log for now
-            //                         NSLog(@"An error occurred on fetch: %@", errorOrNil);
             [_menuTableView reloadData];
 
         } else {
             
             //got all events back from server -- update table view
-            NSLog(@"featured hunt count = %lu",(unsigned long)objectsOrNil.count);
+
             NSMutableArray *array1 = [NSMutableArray new];
             
             if (objectsOrNil.count>0) {
@@ -470,8 +489,15 @@
                 array1 = [NSMutableArray arrayWithArray:yooka.menu_list];
                 [array1 addObjectsFromArray:self.menuObjects];
                 self.menuObjects = array1;
+                self.searchData = self.menuObjects;
+                
+                NSLog(@"array 1 = %@",self.searchData);
+                
                 [self.menuTableView reloadData];
             }else{
+                self.searchData = self.menuObjects;
+                NSLog(@"array 2 = %@",self.searchData);
+
                 [self.menuTableView reloadData];
             }
             

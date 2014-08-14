@@ -73,13 +73,9 @@
     }];
         
         //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
-        [Flurry setCrashReportingEnabled:NO];
-        
+        [Flurry setCrashReportingEnabled:YES];
         // Replace YOUR_API_KEY with the api key in the downloaded package
         [Flurry startSession:@"GW57CSKCPB35KJ3ZM7XS"];
-    
-//    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-//    _userEmail = [ud objectForKey:@"user_email"];
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LaunchedOnce"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -99,8 +95,7 @@
             
         }else{
 
-            
-            //        return YES;
+//        return YES;
 //            self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 //            
 //            UIViewController *viewController1 = [[YookaHunts2ViewController alloc] initWithNibName:nil bundle:nil];
@@ -145,7 +140,6 @@
             self.window.rootViewController = navigation;
             self.window.backgroundColor = [UIColor whiteColor];
             [self.window makeKeyAndVisible];
-
             
         }
         
@@ -215,12 +209,31 @@
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  
-                 NSLog(@"username = %@",user);
-                 NSLog(@"user email = %@",[user objectForKey:@"email"]);
                  _userName = user.username;
                  _userPicUrl = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", _userName];
-                 NSLog(@"user pic url = %@",_userPicUrl);
-
+                 
+                 if ([user objectForKey:@"birthday"]) {
+                     NSString *birthdate = [user objectForKey:@"birthday"];
+                     NSInteger year = [[birthdate substringFromIndex: [birthdate length] - 4] integerValue];
+                     NSDate *currentDate = [NSDate date];
+                     NSCalendar* calendar = [NSCalendar currentCalendar];
+                     NSDateComponents* components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:currentDate]; // Get necessary date components
+                     [components year]; // gives you year
+                     NSInteger age2 = [components year] - year;
+                     int age = (int)age2;
+                     [Flurry setAge:age];
+                 }
+                 if ([user objectForKey:@"gender"]) {
+                     if ([[user objectForKey:@"gender"] isEqualToString:@"male"]) {
+                         [Flurry setGender:@"m"];
+                     } else if ([[user objectForKey:@"gender"] isEqualToString:@"female"]) {
+                         [Flurry setGender:@"f"];
+                     }
+                 }
+                 
+                 // TODO: Set User ID to Email address for non-FB users
+                 [Flurry setUserID: [user objectForKey:@"email"]];
+                 
                  NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                  [ud setObject:_userPicUrl forKey:@"user_pic_url"];
                  _userFullName = user.name;
@@ -286,8 +299,6 @@
                                                   [self saveUserDetails];
                                               }
                                               
-                                              NSLog(@"logged in");
-                                              NSLog(@"kcsuser = %@",[KCSUser activeUser].username);
                                               [self saveUserImage];
                                               [self userLoggedIn];
                                               return ;

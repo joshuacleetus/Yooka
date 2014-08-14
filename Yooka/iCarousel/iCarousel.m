@@ -83,7 +83,6 @@
 
 @end
 
-
 @interface iCarousel ()
 
 @property (nonatomic, strong) UIView *contentView;
@@ -113,7 +112,6 @@
 NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *self);
 
 @end
-
 
 @implementation iCarousel
 
@@ -419,7 +417,6 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     }
     self.itemViews = newItemViews;
 }
-
 
 #pragma mark -
 #pragma mark View layout

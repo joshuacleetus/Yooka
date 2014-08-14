@@ -10,6 +10,7 @@
 #import "YookaNewsFeedViewController.h"
 #import "YookaAppDelegate.h"
 #import "YookaForgotPasswordViewController.h"
+#import "Flurry.h"
 
 #define kOFFSET_FOR_KEYBOARD 135.0
 #define kOFFSET_FOR_KEYBOARD_1 145.0
@@ -300,6 +301,8 @@
     NSString *username = _username.text;
 //    NSLog(@"username = %@",username);
     NSString *yookaUsername = [username lowercaseString];
+    
+    [Flurry setUserID: yookaUsername];
     
     NSString *yookaPassword = _password.text;
     

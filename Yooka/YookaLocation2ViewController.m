@@ -295,7 +295,7 @@
                                      query:nil
                                      limit:@(100)
                                     intent:intentBrowse
-                                    radius:@(5000)
+                                    radius:@(50000)
                                 categoryId:nil
                                   callback:^(BOOL success, id result){
                                       if (success) {

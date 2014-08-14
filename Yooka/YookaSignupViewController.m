@@ -10,6 +10,7 @@
 #import "YookaBackend.h"
 #import "YookaNewsFeedViewController.h"
 #import "YookaAppDelegate.h"
+#import "Flurry.h"
 
 #define kOFFSET_FOR_KEYBOARD 165.0
 #define kOFFSET_FOR_KEYBOARD_1 255.0
@@ -659,7 +660,8 @@
                         [self saveUserImage];
                     }
                     
-                    
+                    [Flurry setUserID: lowercase];
+
                     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                     [ud setObject:lowercase forKey:@"user_email"];
                     [ud synchronize];

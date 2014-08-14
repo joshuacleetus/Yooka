@@ -25,6 +25,7 @@
 #import "MainViewController.h"
 #import "YookaProfileNewViewController.h"
 #import "YookaClickProfileViewController.h"
+#import "Flurry.h"
 
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 @interface YookaSearchViewController ()
@@ -47,6 +48,7 @@
     [super viewDidLoad];
     
     self.peopleArray = [NSMutableArray new];
+    self.searchArray = [NSMutableArray new];
     
     // Do any additional setup after loading the view.
     
@@ -128,9 +130,18 @@
             _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
             [_textField addTarget:self
                            action:@selector(textFieldDone:)
+                 forControlEvents:UIControlEventEditingChanged];
+            [_textField addTarget:self
+                           action:@selector(searchPeopleTopButtonClicked:)
                  forControlEvents:UIControlEventEditingDidEndOnExit];
             [_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
             [self.view addSubview:_textField];
+            
+            UIButton *search_people_top_button = [UIButton buttonWithType:UIButtonTypeCustom];
+            [search_people_top_button setFrame:CGRectMake(280, 0, 40, 40)];
+            [search_people_top_button setBackgroundColor:[UIColor redColor]];
+            [search_people_top_button addTarget:self action:@selector(searchPeopleTopButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:search_people_top_button];
             
             UIImageView *fb_icon = [[UIImageView alloc]initWithFrame:CGRectMake(10, 53, 20, 20)];
             fb_icon.image = [UIImage imageNamed:@"facebook-icon.png"];
@@ -223,8 +234,17 @@
             [self.location_textField addTarget:self
                                         action:@selector(textFieldDone2:)
                               forControlEvents:UIControlEventEditingDidEndOnExit];
-            [self.location_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingDidBegin];
+            [self.location_textField addTarget:self
+                           action:@selector(textFieldEditingBegan:)
+                 forControlEvents:UIControlEventEditingChanged];
+            [self.location_textField addTarget:self action:@selector(keyboardAppeared:) forControlEvents:UIControlEventEditingChanged];
             [self.locationView addSubview:self.location_textField];
+            
+            UIButton *search_button_top = [UIButton buttonWithType:UIButtonTypeCustom];
+            [search_button_top setFrame:CGRectMake(280, 0, 40, 40)];
+            [search_button_top setBackgroundColor:[UIColor redColor]];
+            [search_button_top addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.locationView addSubview:search_button_top];
             
             //PLACES
             
@@ -657,7 +677,6 @@
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex  {
     
-    NSLog(@"button index = %ld",(long)buttonIndex);
     if (buttonIndex == 1) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
     }
@@ -704,6 +723,8 @@
     [self.inviteButton setHidden:NO];
     [self.locationView setHidden:YES];
     [self.titleLabel setHidden:NO];
+    
+    [Flurry logEvent:@"Search_Show_People_Clicked"];
 }
 
 - (void)showPlaces:(id)sender {
@@ -717,6 +738,8 @@
     [self.inviteButton setHidden:YES];
     [self.locationView setHidden:NO];
     [self.titleLabel setHidden:YES];
+    
+    [Flurry logEvent:@"Search_Show_Places_Clicked"];
 }
 
 - (IBAction)navButtonClicked:(id)sender {
@@ -790,18 +813,20 @@
     [self.tap_button setHidden:NO];
 }
 
--(IBAction)textFieldDone:(id)sender
+- (void)searchPeopleTopButtonClicked:(id)sender
 {
     [self.tap_button setHidden:YES];
     self.peopleArray = [NSMutableArray new];
+    self.searchArray = [NSMutableArray new];
+    [self.textField resignFirstResponder];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
-    
-    NSString *s = [[_textField text]capitalizedString];
+        
+        NSString *s = [[_textField text]capitalizedString];
         
         if ([s length]>0) {
             
@@ -810,7 +835,7 @@
             
             NSArray* firstLastStrings = [s componentsSeparatedByString:@" "];
             
-            [_textField resignFirstResponder];
+            //            [_textField resignFirstResponder];
             
             _userFollowingEmail = [NSMutableArray new];
             _userFollowingPicture = [NSMutableArray new];
@@ -840,11 +865,131 @@
                             [self.searchTableView reloadData];
                             [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
                         }else{
+                            [self.searchArray addObject:@"searching"];
                             [self.searchTableView reloadData];
                             [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
                         }
                     }else{
-                        NSLog(@"no result");
+                        self.peopleArray = [NSMutableArray new];
+                        [self.searchTableView reloadData];
+                        [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                    }
+                    
+                }];
+                
+            }else{
+                
+                _firstName = s;
+                _lastName=nil;
+                
+                _collectionName2 = @"userPicture";
+                _customEndpoint2 = @"NewsFeed";
+                _fieldName2 = nil;
+                _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:s,@"searchName",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
+                //        NSLog(@"user name = %@, j=%d",_userEmail,j);
+                [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
+                    
+                    self.peopleArray = [NSMutableArray new];
+                    
+                    if ([results isKindOfClass:[NSArray class]]){
+                        self.peopleArray = [NSMutableArray arrayWithArray:results];
+                    }
+                    
+                    if (results) {
+                        if (self.peopleArray.count>0) {
+                            [self.searchTableView reloadData];
+                            [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                        }else{
+                            [self.searchArray addObject:@"searching"];
+                            [self.searchTableView reloadData];
+                            [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                        }
+                    }else{
+                        
+                        [self.searchTableView reloadData];
+                        [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                    }
+                    
+                }];
+                
+            }
+            
+        }else{
+            
+            [self Load100Users];
+            
+        }
+        
+    }else{
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+        
+    }
+
+}
+
+-(IBAction)textFieldDone:(id)sender
+{
+    [self.tap_button setHidden:YES];
+    self.peopleArray = [NSMutableArray new];
+    self.searchArray = [NSMutableArray new];
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+    
+    NSString *s = [[_textField text]capitalizedString];
+        
+        if ([s length]>0) {
+            
+            self.peopleArray = [NSMutableArray new];
+            [self.searchTableView reloadData];
+            
+            NSArray* firstLastStrings = [s componentsSeparatedByString:@" "];
+            
+//            [_textField resignFirstResponder];
+            
+            _userFollowingEmail = [NSMutableArray new];
+            _userFollowingPicture = [NSMutableArray new];
+            _userFollowingPictureUrl = [NSMutableArray new];
+            _userFollowingFullName = [NSMutableArray new];
+            
+            if (firstLastStrings.count>1) {
+                
+                _firstName = [[firstLastStrings objectAtIndex:0]capitalizedString];
+                _lastName = [[firstLastStrings objectAtIndex:1]capitalizedString];
+                
+                _collectionName2 = @"userPicture";
+                _customEndpoint2 = @"NewsFeed";
+                _fieldName2 = nil;
+                _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:s,@"searchName",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
+                //        NSLog(@"user name = %@, j=%d",_userEmail,j);
+                [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
+                    
+                    self.peopleArray = [NSMutableArray new];
+                    
+                    if ([results isKindOfClass:[NSArray class]]){
+                        self.peopleArray = [NSMutableArray arrayWithArray:results];
+                    }
+                    
+                    if (results) {
+                        if (self.peopleArray.count>0) {
+                            [self.searchTableView reloadData];
+                            [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                        }else{
+                            [self.searchArray addObject:@"searching"];
+                            [self.searchTableView reloadData];
+                            [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+                        }
+                    }else{
                         self.peopleArray = [NSMutableArray new];
                         [self.searchTableView reloadData];
                         [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
@@ -875,6 +1020,7 @@
                             [self.searchTableView reloadData];
                             [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
                         }else{
+                            [self.searchArray addObject:@"searching"];
                             [self.searchTableView reloadData];
                             [self.searchTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
                         }
@@ -932,7 +1078,7 @@
                                          query:s
                                          limit:nil
                                         intent:intentBrowse
-                                        radius:@(1000)
+                                        radius:@(50000)
                                     categoryId:nil
                                       callback:^(BOOL success, id result){
                                           if (success) {
@@ -942,6 +1088,106 @@
                                               self.nearbyVenues = [converter convertToObjects:venues];
                                               [self.locationTableView reloadData];
                                               
+                                          }
+                                      }];
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+    }
+    
+}
+
+-(IBAction)textFieldEditingBegan:(id)sender {
+    
+    [self.tap_button setHidden:YES];
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        NSString *s = [_location_textField text];
+        
+        if ([CLLocationManager locationServicesEnabled] == YES) {
+            CLLocationManager* manager = [[CLLocationManager alloc] init];
+            //... set up CLLocationManager and start updates
+            _currentLocation = manager.location;
+            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+            
+        }
+        
+        [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude)
+                                     longitude:@(_currentLocation.coordinate.longitude)
+                                         query:s
+                                         limit:nil
+                                        intent:intentBrowse
+                                        radius:@(50000)
+                                    categoryId:nil
+                                      callback:^(BOOL success, id result){
+                                          if (success) {
+                                              NSDictionary *dic = result;
+                                              NSArray *venues = [dic valueForKeyPath:@"response.venues"];
+                                              FSConverter *converter = [[FSConverter alloc]init];
+                                              self.nearbyVenues = [converter convertToObjects:venues];
+                                              [self.locationTableView reloadData];
+                                              
+                                          }
+                                      }];
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+    }
+    
+}
+
+- (void)searchButtonClicked:(id)sender
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    [self.textField resignFirstResponder];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        NSString *s = self.location_textField.text;
+        [self.location_textField resignFirstResponder];
+        
+        //    NSLog(@"search %@",s);
+        if ([CLLocationManager locationServicesEnabled] == YES) {
+            CLLocationManager* manager = [[CLLocationManager alloc] init];
+            //... set up CLLocationManager and start updates
+            _currentLocation = manager.location;
+            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+        }
+        
+        [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude)
+                                     longitude:@(_currentLocation.coordinate.longitude)
+                                         query:s
+                                         limit:@(100)
+                                        intent:intentBrowse
+                                        radius:@(50000)
+                                    categoryId:nil
+                                      callback:^(BOOL success, id result){
+                                          if (success) {
+                                              NSDictionary *dic = result;
+                                              NSArray *venues = [dic valueForKeyPath:@"response.venues"];
+                                              FSConverter *converter = [[FSConverter alloc]init];
+                                              self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
+                                              [_locationTableView reloadData];
                                           }
                                       }];
         
@@ -972,7 +1218,6 @@
         [_userFollowingEmail addObject:user.username];
         NSString *fullName = [NSString stringWithFormat:@"%@ %@",user.givenName,user.surname];
         [_userFollowingFullName addObject:fullName];
-        NSLog(@"%@ %@",_userFollowingEmail,_userFollowingFullName);
         
         if (_userFollowingFullName.count == _results.count) {
             [self getUserPictures];
@@ -1067,6 +1312,12 @@
             
         }
         
+        if (self.peopleArray.count && self.peopleArray.count==0) {
+            
+        }
+        
+
+        
         if (self.peopleArray.count>0) {
             NSString *userFullName = [self.peopleArray[indexPath.row] objectForKey:@"userFullName"];
             
@@ -1116,6 +1367,14 @@
             }
         }else{
             
+            [(UILabel *)[cell.contentView viewWithTag:1] setText:@"        Searching..."];
+            
+            UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10,5, 35, 35)];
+            [imv setBackgroundColor:[UIColor whiteColor]];
+            [cell.contentView addSubview:imv];
+        }
+        
+        if (self.searchArray.count) {
             [(UILabel *)[cell.contentView viewWithTag:1] setText:@"        No users found."];
             
             UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(10,5, 35, 35)];
@@ -1199,7 +1458,6 @@
         if (self.peopleArray.count) {
             _userFullNameSelected = [self.peopleArray[indexPath.row] objectForKey:@"userFullName"];
         }
-        NSLog(@"%@",_userFullNameSelected);
         if (_userFullNameSelected) {
             _userEmailSelected = [self.peopleArray[indexPath.row] objectForKey:@"userEmail"];
             _userPicUrlSelected = [[self.peopleArray[indexPath.row] objectForKey:@"userImage"] objectForKey:@"_downloadURL"];
@@ -1359,6 +1617,8 @@
 
 -(IBAction)ShowFriendDialog:(id)sender
 {
+    
+    [Flurry logEvent:@"Search_Invite_FB_Friends_Button_Clicked"];
     
     if (FBSession.activeSession.isOpen) {
         

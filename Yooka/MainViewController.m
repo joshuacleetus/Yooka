@@ -133,8 +133,10 @@
         activeViewController = self.searchViewController;
     }
     else if ([viewName isEqualToString:@"YookaProfileNewViewController"]) {
+        if (self.profileViewController == nil) {
             self.profileViewController = [[YookaProfileNewViewController alloc]init];
             self.profileViewController.delegate = self;
+        }
         activeViewController = self.profileViewController;
     }
     else if ([viewName isEqualToString:@"YookaRestaurantViewController"]) {
@@ -279,6 +281,7 @@
 
 // Called by NavigationViewController when one of the coloured buttons is tapped
 - (void)didSelectViewWithName:(NSString *)viewName {
+    
     if (activeViewController != nil) {
         [activeViewController.view removeFromSuperview];
         activeViewController = nil;

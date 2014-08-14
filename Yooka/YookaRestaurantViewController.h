@@ -12,6 +12,7 @@
 #import <KinveyKit/KinveyKit.h>
 #import <FacebookSDK.h>
 #import <MapKit/MapKit.h>
+#import "PendulumView.h"
 
 @class FSVenue;
 
@@ -88,6 +89,7 @@
 @property (nonatomic, strong) NSString *fieldName1;
 @property (nonatomic, strong) NSMutableArray *newsFeed;
 
+@property (nonatomic, strong) NSString *cache_toggle;
 @property (nonatomic, strong) NSString *likes;
 @property (nonatomic, strong) NSString *postId;
 @property (nonatomic, strong) NSString *postHuntName;
@@ -206,5 +208,8 @@
 @property (nonatomic, strong) IBOutlet UIPageControl *hunts_pages;
 
 @property (nonatomic, strong) IBOutlet UIView *FeaturedView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityView;
+
+@property (nonatomic, strong) IBOutlet PendulumView *pendulum;
 
 @end

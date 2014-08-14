@@ -27,6 +27,7 @@
 #import "YookaFeaturedHuntViewController.h"
 #import "UIImage+Crop.h"
 #import "LLACircularProgressView.h"
+#import "Flurry.h"
 
 const NSInteger yookaThumbnailWidth3 = 320;
 const NSInteger yookaThumbnailHeight3 = 270;
@@ -291,7 +292,14 @@ const NSInteger yookaThumbnailSpace3 = 5;
     }else{
         hunt_name = [_newsFeed[b] objectForKeyedSubscript:@"HuntName"];
     }
-    NSLog(@"hunt name = %@",hunt_name);
+    
+    [Flurry logEvent:@"Photo_Upload_Saved"];
+
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   hunt_name, @"Hunt_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Newsfeed_Add_Button_Clicked" withParameters:articleParams];
     
     if ([self.subscribedHunts containsObject:hunt_name]) {
         
@@ -466,6 +474,12 @@ const NSInteger yookaThumbnailSpace3 = 5;
 - (void)feat_button_clicked:(id)sender {
     
     NSString * hunt_name=self.sponsored_hunt_names[self.hunts_pages.currentPage];
+    
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   hunt_name, @"Hunt_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Newsfeed_Featured_Button_Clicked" withParameters:articleParams];
     
     if ([self.subscribedHunts containsObject:hunt_name]) {
         
@@ -3344,6 +3358,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
     NSUInteger b = button.tag;
 //    NSLog(@"button %lu pressed",(unsigned long)b);
     
+    [Flurry logEvent:@"Newsfeed_User_Button_Clicked"];
+    
     if (b == 901) {
         //do nothing
         
@@ -3437,6 +3453,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     NSString *venueId = [_newsFeed[b] objectForKey:@"venueId"];
     NSString *venueName = [_newsFeed[b] objectForKey:@"venueName"];
+    
+    [Flurry logEvent:@"Newsfeed_Restaurant_Button_Clicked"];
     
     YookaRestaurantViewController* media = [[YookaRestaurantViewController alloc]init];
     media.venueId = venueId;

@@ -40,13 +40,6 @@
     _nearbyVenues = [NSMutableArray new];
     _filteredArray = [NSMutableArray new];
     _locationObjects = [NSMutableArray new];
-    
-//    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-//    [self.navigationController.navigationBar setBarTintColor:color];
-//    [self.navigationItem setTitle:@"Restaurant"];
-//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-//    self.navigationController.toolbar.translucent = NO;
 
 
 //    http://api.locu.com/v1_0/venue/insight/?api_key=1b9372a2c73e41794633a4a59e77c8716e8cec81&dimension=new+york+city
@@ -56,28 +49,25 @@
     whitebg.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:whitebg];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
-    titleLabel.textColor = [UIColor grayColor];
-    titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
-    //titleLabel.text = @"LOCATION";
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:titleLabel];
+//    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 120, 40)];
+//    titleLabel.textColor = [UIColor grayColor];
+//    titleLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:20.0];
+//    //titleLabel.text = @"LOCATION";
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [self.view addSubview:titleLabel];
     
     self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.cancelBtn setFrame:CGRectMake(0, 0, 40, 40)];
 
     self.cancelBtn.backgroundColor= [UIColor whiteColor];
-    //[self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+//    [self.cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    //            [editProfileBtn setBackgroundImage:[[UIImage imageNamed:@"logoutbtn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [self.cancelBtn addTarget:self action:@selector(cancelBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cancelBtn];
     
     UIImageView *cancel_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 30, 30)];
     cancel_icon.image = [UIImage imageNamed:@"x_close"];
     [self.view addSubview:cancel_icon];
-    
-
     
     _textField = [[UITextField alloc] initWithFrame:CGRectMake(45, 0, 240, 40)];
     _textField.borderStyle = UITextBorderStyleNone;
@@ -92,6 +82,9 @@
     _textField.returnKeyType = UIReturnKeySearch;
     _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    [_textField addTarget:self
+                   action:@selector(textFieldEditingBegan:)
+         forControlEvents:UIControlEventEditingChanged];
     [_textField addTarget:self
                    action:@selector(textFieldDone:)
          forControlEvents:UIControlEventEditingDidEndOnExit];
@@ -126,26 +119,17 @@
 //    [_locationTableView setSeparatorColor:[UIColor whiteColor]];
     [self.view addSubview:_locationTableView];
     
-    
-    
-//    self.locationSearch = [[UISearchBar alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, 44.f)];
-//    self.locationSearch.showsCancelButton = NO;
-//    self.locationSearch.delegate = self;
-//    self.locationSearch.placeholder = @"Search Location";
-//    self.locationSearch.autocorrectionType=UITextAutocorrectionTypeNo;
-//    self.locationSearch.autocapitalizationType=UITextAutocapitalizationTypeNone;
-//    self.locationTableView.tableHeaderView = self.locationSearch;
-//    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.locationSearch contentsController:self];
-//    searchDisplayController.delegate = self;
-//    searchDisplayController.searchResultsDataSource = self;
-//    [searchDisplayController setSearchResultsDelegate:self];
+    UIButton *search_button_top = [UIButton buttonWithType:UIButtonTypeCustom];
+    [search_button_top setFrame:CGRectMake(280, 0, 40, 40)];
+    [search_button_top setBackgroundColor:[UIColor clearColor]];
+    [search_button_top addTarget:self action:@selector(searchButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:search_button_top];
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
-    
         
         if ([CLLocationManager locationServicesEnabled] == YES) {
             
@@ -159,9 +143,7 @@
             _currentLocation = manager.location;
             //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
         }else{
-            
             [self showLocationAlert];
-            
         }
         
     }else{
@@ -170,7 +152,6 @@
                                                        delegate:nil
                                               cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
-        
         [alert show];
     }
     
@@ -211,7 +192,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(IBAction)textFieldDone:(UITextField *)sender
+-(IBAction)textFieldEditingBegan:(UITextField *)sender
 {
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     [networkReachability startNotifier];
@@ -243,7 +224,6 @@
                                           self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
                                           NSLog(@"%@",self.nearbyVenues);
                                           [_locationTableView reloadData];
-                                          
                                       }
                                   }];
         
@@ -257,6 +237,102 @@
         [alert show];
     }
     
+}
+
+-(IBAction)textFieldDone:(UITextField *)sender
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        NSString *s = sender.text;
+        //    NSLog(@"search %@",s);
+        if ([CLLocationManager locationServicesEnabled] == YES) {
+            CLLocationManager* manager = [[CLLocationManager alloc] init];
+            //... set up CLLocationManager and start updates
+            _currentLocation = manager.location;
+            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+        }
+        
+        [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude)
+                                     longitude:@(_currentLocation.coordinate.longitude)
+                                         query:s
+                                         limit:@(100)
+                                        intent:intentBrowse
+                                        radius:@(50000)
+                                    categoryId:nil
+                                      callback:^(BOOL success, id result){
+                                          if (success) {
+                                              NSDictionary *dic = result;
+                                              NSArray *venues = [dic valueForKeyPath:@"response.venues"];
+                                              FSConverter *converter = [[FSConverter alloc]init];
+                                              self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
+                                              NSLog(@"%@",self.nearbyVenues);
+                                              [_locationTableView reloadData];
+                                          }
+                                      }];
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+    }
+    
+}
+
+- (void)searchButtonClicked:(id)sender
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    [networkReachability startNotifier];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    [self.textField resignFirstResponder];
+    
+    if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
+        
+        NSString *s = self.textField.text;
+        //    NSLog(@"search %@",s);
+        if ([CLLocationManager locationServicesEnabled] == YES) {
+            CLLocationManager* manager = [[CLLocationManager alloc] init];
+            //... set up CLLocationManager and start updates
+            _currentLocation = manager.location;
+            //            NSLog(@"current location = %f",_currentLocation.coordinate.longitude);
+        }
+        
+        [Foursquare2 venueSearchNearByLatitude:@(_currentLocation.coordinate.latitude)
+                                     longitude:@(_currentLocation.coordinate.longitude)
+                                         query:s
+                                         limit:@(100)
+                                        intent:intentBrowse
+                                        radius:@(50000)
+                                    categoryId:nil
+                                      callback:^(BOOL success, id result){
+                                          if (success) {
+                                              NSDictionary *dic = result;
+                                              NSArray *venues = [dic valueForKeyPath:@"response.venues"];
+                                              FSConverter *converter = [[FSConverter alloc]init];
+                                              self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
+                                              NSLog(@"%@",self.nearbyVenues);
+                                              [_locationTableView reloadData];
+                                          }
+                                      }];
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No internet connection."
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        
+        [alert show];
+    }
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -356,7 +432,7 @@
         [_descriptionLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
         _descriptionLabel.textColor = [UIColor grayColor];
         _descriptionLabel.textAlignment = NSTextAlignmentLeft;
-        [_descriptionLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16]];
+        [_descriptionLabel setFont:[UIFont fontWithName:@"OpenSans" size:16]];
         // custom views should be added as subviews of the cell's contentView:
         [cell.contentView addSubview:_descriptionLabel];
         
@@ -370,17 +446,20 @@
         // custom views should be added as subviews of the cell's contentView:
         [cell.contentView addSubview:self.detailLabel];
         
-        FSVenue *venue = self.nearbyVenues[indexPath.row];
-        if (venue.location.address) {
-            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@, %@ m",
-                                                                  venue.location.address,
-                                                                  venue.location.distance]];
-            
-            
-        } else {
-            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@ m",
-                                                                  venue.location.distance]];
-        }
+
+
+        
+//        FSVenue *venue = self.nearbyVenues[indexPath.row];
+//        if (venue.location.address) {
+//            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@, %@ m",
+//                                                                  venue.location.address,
+//                                                                  venue.location.distance]];
+//            
+//            
+//        } else {
+//            [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@ m",
+//                                                                  venue.location.distance]];
+//        }
         
 
     }
@@ -388,20 +467,20 @@
     //    cell.textLabel.text = [self.nearbyVenues[indexPath.row] name];
     FSVenue *venue = self.nearbyVenues[indexPath.row];
     if (venue.location.address) {
-        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m, %@",
-        //                                     venue.location.distance,
-        //                                     venue.location.address];
+        [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@, %@ m",
+                                                              venue.location.address,
+                                                              venue.location.distance]];
     } else {
-        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m",
-        //                                     venue.location.distance];
+        
+        [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@m", venue.location.distance]];
     }
     
 
         [(UILabel *)[cell.contentView viewWithTag:1] setText:[self.nearbyVenues[indexPath.row] name]];
     
-//    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(20,6, 30, 31)];
-//    imv.image=[UIImage imageNamed:@"check_box.jpeg"];
-//    [cell.contentView addSubview:imv];
+        // [(UILabel *)[cell.contentView viewWithTag:2] setText:[NSString stringWithFormat:@"%@, %@ m",
+                                                         // venue.location.address,
+                                                         // venue.location.distance]];
     
     return cell;
 }
@@ -480,6 +559,7 @@
                                           FSConverter *converter = [[FSConverter alloc]init];
                                           self.nearbyVenues =[NSMutableArray arrayWithArray:[converter convertToObjects:venues]];
                                           [self.locationTableView reloadData];
+                                          
                                           
                                       }
                                   }];

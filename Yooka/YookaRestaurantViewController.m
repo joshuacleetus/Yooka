@@ -20,6 +20,9 @@
 #import "YookaButton.h"
 #import "YookaBackend.h"
 #import "YookaPostViewController.h"
+#import "LLACircularProgressView.h"
+#import "PendulumView.h"
+#import "Flurry.h"
 
 const NSInteger yookaThumbnailWidth2013 = 320;
 const NSInteger yookaThumbnailHeight2013 = 600;
@@ -27,7 +30,7 @@ const NSInteger yookaImagesPerRow2013 = 1;
 const NSInteger yookaThumbnailSpace2013 = 5;
 
 @interface YookaRestaurantViewController ()
-
+@property (nonatomic, strong) LLACircularProgressView *circularProgressView;
 @end
 
 @implementation YookaRestaurantViewController
@@ -94,8 +97,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     
     self.toggle = @"YES";
     
-    NSLog(@"venue id = %@",_venueId);
-    
     i = 0;
     j = 0;
     k = 0;
@@ -122,177 +123,145 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [_backBtn setFrame:CGRectMake(10, 20, 40, 40)];
     [_backBtn setTitle:@"" forState:UIControlStateNormal];
     [_backBtn setBackgroundColor:[UIColor clearColor]];
-    //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [_backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_backBtn];
     
-//    self.bgImageView2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 215, 320, 60)];
-//    [self.bgImageView2 setImage:[UIImage imageNamed:@"slider_background.png"]];
-//    [self.view addSubview:self.bgImageView2];
-    
-    self.reviewsView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 305)];
+    self.reviewsView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 310)];
     [self.reviewsView setBackgroundColor:[UIColor clearColor]];
     [self.gridScrollView addSubview:self.reviewsView];
     
-    self.detailsView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 530)];
+    self.detailsView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 310)];
     [self.detailsView setBackgroundColor:[UIColor clearColor]];
     [self.gridScrollView addSubview:self.detailsView];
     
-    self.menuView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 305)];
+    self.menuView = [[UIView alloc]initWithFrame:CGRectMake(0, 275, 320, 310)];
     [self.menuView setBackgroundColor:[UIColor clearColor]];
     [self.gridScrollView addSubview:self.menuView];
     
     [self.detailsView setHidden:YES];
     [self.menuView setHidden:YES];
     
+    self.activityView=[[UIActivityIndicatorView alloc]     initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activityView.frame= CGRectMake(135, 275, 55, 55);
+    [self.activityView startAnimating];
+    [self.view addSubview:self.activityView];
     
-    UIImageView *grayline = [[UIImageView alloc]initWithFrame:CGRectMake(0, 319, 320, 1)];
-    [grayline setBackgroundColor:[self colorWithHexString:@"e5e4e4"]];
-    [self.gridScrollView addSubview:grayline];
-    
-    UIImageView *review_bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 106.67, 45)];
+    UIImageView *review_bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0.25, 320.f, 55.f)];
     [review_bg_blue setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
     [self.reviewsView addSubview:review_bg_blue];
     
-
+    UIImageView *highlighted_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0.25, 106.67f, 55.f)];
+    [highlighted_bg setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.10]];
+    [self.reviewsView addSubview:highlighted_bg];
     
-    UILabel *reviews_label = [[UILabel alloc]initWithFrame:CGRectMake(0, 13, 106.67, 20)];
+    UILabel *reviews_label = [[UILabel alloc]initWithFrame:CGRectMake(0, 18.25, 106.67, 20)];
     [reviews_label setText:@"REVIEWS"];
     reviews_label.textColor = [UIColor whiteColor];
-    reviews_label.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    reviews_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     reviews_label.textAlignment = NSTextAlignmentCenter;
     [self.reviewsView addSubview:reviews_label];
     
-    UIImageView *details_bg_white = [[UIImageView alloc]initWithFrame:CGRectMake(106.67, 0, 105.67, 45)];
-    [details_bg_white setBackgroundColor:[UIColor whiteColor]];
-    [self.reviewsView addSubview:details_bg_white];
-    
-    UILabel *details_label = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 13, 105.67, 20)];
+    UILabel *details_label = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 18.25, 105.67, 20)];
     [details_label setText:@"DETAILS"];
-    details_label.textColor = [UIColor lightGrayColor];
-    details_label.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    details_label.textColor = [UIColor whiteColor];
+    details_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     details_label.textAlignment = NSTextAlignmentCenter;
     [self.reviewsView addSubview:details_label];
     
-    UIImageView *menu_bg_white = [[UIImageView alloc]initWithFrame:CGRectMake(214, 0, 105.67, 45)];
-    [menu_bg_white setBackgroundColor:[UIColor whiteColor]];
-    [self.reviewsView addSubview:menu_bg_white];
-    
-    UILabel *menu_label = [[UILabel alloc]initWithFrame:CGRectMake(214, 13, 105.67, 20)];
+    UILabel *menu_label = [[UILabel alloc]initWithFrame:CGRectMake(214, 18.25, 105.67, 20)];
     [menu_label setText:@"MENU"];
-    menu_label.textColor = [UIColor lightGrayColor];
-    menu_label.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    menu_label.textColor = [UIColor whiteColor];
+    menu_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     menu_label.textAlignment = NSTextAlignmentCenter;
     [self.reviewsView addSubview:menu_label];
     
-    UIImageView *review_bg_white = [[UIImageView alloc]initWithFrame:CGRectMake(4, 0, 102.67, 45)];
-    [review_bg_white setBackgroundColor:[UIColor whiteColor]];
-    [self.detailsView addSubview:review_bg_white];
+    UIImageView *details_bg_blue_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0.25, 320, 55.f)];
+    [details_bg_blue_2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+    [self.detailsView addSubview:details_bg_blue_2];
     
-    UIImageView *details_bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(106.67, 0, 105.67, 45)];
-    [details_bg_blue setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-    [self.detailsView addSubview:details_bg_blue];
+    UIImageView *highlighted_bg_2 = [[UIImageView alloc]initWithFrame:CGRectMake(106.67, 0.25, 105.67f, 55.f)];
+    [highlighted_bg_2 setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.10]];
+    [self.detailsView addSubview:highlighted_bg_2];
     
-    UIImageView *menu_bg_white_2 = [[UIImageView alloc]initWithFrame:CGRectMake(213, 0, 105.67, 45)];
-    [menu_bg_white_2 setBackgroundColor:[UIColor whiteColor]];
-    [self.detailsView addSubview:menu_bg_white_2];
-    
-    UILabel *reviews_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(0, 13, 106.67, 20)];
+    UILabel *reviews_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(0, 18.25, 106.67, 20)];
     [reviews_label_2 setText:@"REVIEWS"];
-    reviews_label_2.textColor = [UIColor lightGrayColor];
-    reviews_label_2.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    reviews_label_2.textColor = [UIColor whiteColor];
+    reviews_label_2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     reviews_label_2.textAlignment = NSTextAlignmentCenter;
     [self.detailsView addSubview:reviews_label_2];
     
-    UILabel *details_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 13, 105.67, 20)];
+    UILabel *details_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 18.25, 105.67, 20)];
     [details_label_2 setText:@"DETAILS"];
     details_label_2.textColor = [UIColor whiteColor];
-    details_label_2.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    details_label_2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     details_label_2.textAlignment = NSTextAlignmentCenter;
     [self.detailsView addSubview:details_label_2];
     
-    UILabel *menu_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(214, 13, 105.67, 20)];
+    UILabel *menu_label_2 = [[UILabel alloc]initWithFrame:CGRectMake(214, 18.25, 105.67, 20)];
     [menu_label_2 setText:@"MENU"];
-    menu_label_2.textColor = [UIColor lightGrayColor];
-    menu_label_2.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    menu_label_2.textColor = [UIColor whiteColor];
+    menu_label_2.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     menu_label_2.textAlignment = NSTextAlignmentCenter;
     [self.detailsView addSubview:menu_label_2];
     
-    UIImageView *grayline2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 322+85, 320, 1.3)];
-    [grayline2 setBackgroundColor:[self colorWithHexString:@"e5e4e4"]];
-    [self.detailsView addSubview:grayline2];
+    UIImageView *menu_bg_blue_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0.25, 320, 55)];
+    [menu_bg_blue_2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+    [self.menuView addSubview:menu_bg_blue_2];
     
-    UIImageView *grayline3 = [[UIImageView alloc]initWithFrame:CGRectMake(160, 140+85, 1.3, 68)];
-    [grayline3 setBackgroundColor:[self colorWithHexString:@"e5e4e4"]];
-    [self.detailsView addSubview:grayline3];
+    UIImageView *highlighted_bg_3 = [[UIImageView alloc]initWithFrame:CGRectMake(106.67+105.67, 0.25, 106.67f, 55.f)];
+    [highlighted_bg_3 setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.10]];
+    [self.menuView addSubview:highlighted_bg_3];
     
-    UIImageView *grayline4 = [[UIImageView alloc]initWithFrame:CGRectMake(160, 260+85, 1.3, 63)];
-    [grayline4 setBackgroundColor:[self colorWithHexString:@"e5e4e4"]];
-    [self.detailsView addSubview:grayline4];
-    
-    
-    UIImageView *review_bg_white_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105.67, 45)];
-    [review_bg_white_2 setBackgroundColor:[UIColor whiteColor]];
-    [self.menuView addSubview:review_bg_white_2];
-    
-    UIImageView *details_bg_white_2 = [[UIImageView alloc]initWithFrame:CGRectMake(107.67, 0, 105.67, 45)];
-    [details_bg_white_2 setBackgroundColor:[UIColor whiteColor]];
-    [self.menuView addSubview:details_bg_white_2];
-    
-    UIImageView *menu_bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(213, 0, 106.67, 45)];
-    [menu_bg_blue setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-    [self.menuView addSubview:menu_bg_blue];
-    
-    UILabel *reviews_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(0, 13, 106.67, 20)];
+    UILabel *reviews_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(0, 18.25, 106.67, 20)];
     [reviews_label_3 setText:@"REVIEWS"];
-    reviews_label_3.textColor = [UIColor lightGrayColor];
-    reviews_label_3.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    reviews_label_3.textColor = [UIColor whiteColor];
+    reviews_label_3.font = [UIFont fontWithName:@"OpenSans-Bold" size:12];
     reviews_label_3.textAlignment = NSTextAlignmentCenter;
     [self.menuView addSubview:reviews_label_3];
     
-    UILabel *details_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 13, 105.67, 20)];
+    UILabel *details_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(106.67, 18.25, 105.67, 20)];
     [details_label_3 setText:@"DETAILS"];
-    details_label_3.textColor = [UIColor lightGrayColor];
-    details_label_3.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    details_label_3.textColor = [UIColor whiteColor];
+    details_label_3.font = [UIFont fontWithName:@"OpenSans-Bold" size:13];
     details_label_3.textAlignment = NSTextAlignmentCenter;
     [self.menuView addSubview:details_label_3];
     
-    UILabel *menu_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(214, 13, 105.67, 20)];
+    UILabel *menu_label_3 = [[UILabel alloc]initWithFrame:CGRectMake(214, 18.25, 105.67, 20)];
     [menu_label_3 setText:@"MENU"];
     menu_label_3.textColor = [UIColor whiteColor];
-    menu_label_3.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13];
+    menu_label_3.font = [UIFont fontWithName:@"OpenSans-Bold" size:13];
     menu_label_3.textAlignment = NSTextAlignmentCenter;
     [self.menuView addSubview:menu_label_3];
     
-    UIImageView *bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(0, 88+85, 320, 45)];
+    UIImageView *bg_blue = [[UIImageView alloc]initWithFrame:CGRectMake(0, 88+95, 320, 45)];
     [bg_blue setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
     [self.detailsView addSubview:bg_blue];
     
-    UIImageView *white_line = [[UIImageView alloc]initWithFrame:CGRectMake(160, 88+85, 1, 45)];
+    UIImageView *white_line = [[UIImageView alloc]initWithFrame:CGRectMake(160, 88+95, 1, 45)];
     [white_line setBackgroundColor:[UIColor whiteColor]];
     [self.detailsView addSubview:white_line];
     
-    UIImageView *phone = [[UIImageView alloc]initWithFrame:CGRectMake(68, 95+85, 28, 28)];
+    UIImageView *phone = [[UIImageView alloc]initWithFrame:CGRectMake(68, 95+95, 28, 28)];
     [phone setImage:[UIImage imageNamed:@"phone2.png"]];
     [self.detailsView addSubview:phone];
     
-    UIImageView *clock = [[UIImageView alloc]initWithFrame:CGRectMake( 230, 95+85, 30, 30)];
+    UIImageView *clock = [[UIImageView alloc]initWithFrame:CGRectMake( 230, 95+95, 30, 30)];
     [clock setImage:[UIImage imageNamed:@"clock2.png"]];
     [self.detailsView addSubview:clock];
     
-    UIImageView *bg_blue_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 208+85, 320, 45)];
+    UIImageView *bg_blue_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 208+95, 320, 45)];
     [bg_blue_2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
     [self.detailsView addSubview:bg_blue_2];
     
-    UIImageView *white_line_2 = [[UIImageView alloc]initWithFrame:CGRectMake(160, 208+85, 1, 45)];
+    UIImageView *white_line_2 = [[UIImageView alloc]initWithFrame:CGRectMake(160, 208+95, 1, 45)];
     [white_line_2 setBackgroundColor:[UIColor whiteColor]];
     [self.detailsView addSubview:white_line_2];
     
-    UIImageView *wallet= [[UIImageView alloc]initWithFrame:CGRectMake(65, 211+85, 35, 33)];
+    UIImageView *wallet= [[UIImageView alloc]initWithFrame:CGRectMake(65, 211+95, 35, 33)];
     [wallet setImage:[UIImage imageNamed:@"credit_card.png"]];
     [self.detailsView addSubview:wallet];
     
-    UIImageView *gps= [[UIImageView alloc]initWithFrame:CGRectMake(225, 210+85, 30, 30)];
+    UIImageView *gps= [[UIImageView alloc]initWithFrame:CGRectMake(228, 210+97, 27, 35)];
     [gps setImage:[UIImage imageNamed:@"pin_white.png"]];
     [self.detailsView addSubview:gps];
     
@@ -323,85 +292,37 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     self.menuButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     [self.gridScrollView addSubview:self.menuButton];
     
-
     self.locationId = self.venueId;
-
     
-    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0+45, 320, 130)];
+    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 55, 320, 130)];
     //Always center the dot and zoom in to an apropriate zoom level when position changes
     //        [_mapView setUserTrackingMode:MKUserTrackingModeFollow];
     self.mapView.delegate = self;
     [self.detailsView addSubview:self.mapView];
-
-    
-//    CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, self.reviewScrollView.frame.size.height);
-//    
-//    self.reviewScrollView=[[UIScrollView alloc] initWithFrame:screenRect];
-//    self.reviewScrollView.contentSize= self.view.bounds.size;
-//    self.reviewScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.reviewsView.frame.size.height);
-//    [self.reviewsView addSubview:self.reviewScrollView];
-//    [self.reviewScrollView setContentSize:CGSizeMake(320, 500)];
-//    [self.reviewScrollView setBackgroundColor:[self colorWithHexString:@"f3f3f3"]];
-    
-//    CGRect screenRect2 = CGRectMake(0.f, 0.f, 320.f, self.detailsView.frame.size.height);
-//    
-//    self.detailScrollView = [[UIScrollView alloc] initWithFrame:screenRect2];
-//    self.detailScrollView.contentSize = self.view.bounds.size;
-//    self.detailScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.detailsView.frame.size.height);
-//    [self.detailsView addSubview:self.detailScrollView];
-//    [self.detailScrollView setContentSize:CGSizeMake(320, 500)];
-//    [self.detailScrollView setBackgroundColor:[self colorWithHexString:@"f3f3f3"]];
-//    
-//    CGRect screenRect3 = CGRectMake(0.f, 0.f, 320.f, self.menuView.frame.size.height);
-//    
-//    self.menuScrollView = [[UIScrollView alloc] initWithFrame:screenRect3];
-//    self.menuScrollView.contentSize = self.view.bounds.size;
-//    self.menuScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.menuView.frame.size.height);
-//    [self.menuView addSubview:self.menuScrollView];
-//    [self.menuScrollView setContentSize:CGSizeMake(320, 500)];
-//    [self.menuScrollView setBackgroundColor:[self colorWithHexString:@"f3f3f3"]];
     
     [self setupNewsFeed];
     
-//    self.telephonesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-//    [self.telephonesImageView setBackgroundColor:[self colorWithHexString:@"43444F"]];
-//    [self.detailsView addSubview:self.telephonesImageView];
-//    
-//    self.clockImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 50, 320, 50)];
-//    [self.clockImageView setBackgroundColor:[self colorWithHexString:@"595960"]];
-//    [self.detailsView addSubview:self.clockImageView];
-//    
-//    self.priceImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 100, 320, 50)];
-//    [self.priceImageView setBackgroundColor:[self colorWithHexString:@"43444F"]];
-//    [self.detailsView addSubview:self.priceImageView];
-    
     [self getRestaurantDetails];
     
-    self.menuTableView = [[UITableView alloc]initWithFrame:CGRectMake(-20.f, 320.f, 340.f, self.gridScrollView.frame.size.height)];
+    self.menuTableView = [[UITableView alloc]initWithFrame:CGRectMake(-20.f, 330.f, 340.f, self.gridScrollView.frame.size.height)];
     self.menuTableView.delegate = self;
     self.menuTableView.dataSource = self;
     [self.menuTableView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-    //    self.menuTableView.backgroundColor = [self colorWithHexString:@"43444F"];
     [self.menuTableView setSeparatorColor:[UIColor lightGrayColor]];
     self.menuTableView.scrollEnabled = NO;
     [self.gridScrollView addSubview:_menuTableView];
     
     [self.menuTableView setHidden:YES];
     
-    //    self.menuSearch = [[UISearchBar alloc]initWithFrame:CGRectMake(0.f, 0.f, 320.f, 44.f)];
-    //    self.menuSearch.showsCancelButton = NO;
-    //    self.menuSearch.delegate = self;
-    //    self.menuSearch.placeholder = @"Search Menu";
-    //    self.menuSearch.autocorrectionType=UITextAutocorrectionTypeNo;
-    //    self.menuSearch.autocapitalizationType=UITextAutocapitalizationTypeNone;
-    //    self.menuTableView.tableHeaderView = self.menuSearch;
-    //    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.menuSearch contentsController:self];
-    //    searchDisplayController.delegate = self;
-    //    searchDisplayController.searchResultsDataSource = self;
-    //    [searchDisplayController setSearchResultsDelegate:self];
-    
     [self getMenuForVenue];
     
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.mapView removeFromSuperview];
+    self.mapView = nil;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -411,7 +332,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     NSInteger page = lround(fractionalPage);
     if (scrollView == self.topScrollView) {
         self.hunts_pages.currentPage = page;
-        
     }
 
 }
@@ -428,10 +348,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         
         if (errorOrNil != nil) {
             //An error happened, just log for now
-            //            NSLog(@"An error occurred on fetch: %@", errorOrNil);
-            //            _unsubscribedHunts = _featuredHunts;
-            //            [self modifyFeaturedHunts];
-            
             //            NSLog(@"try 1");
             
         } else {
@@ -441,13 +357,9 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 [self getRestaurantImages];
                 
             } else {
-                
 
                 YookaBackend *yooka = objectsOrNil[0];
                 self.teampic_url = yooka.popuppic;
-//                NSString *fsq_venue_id = yooka.fsq_venue_id;
-//                NSLog(@"rest pic url = %@",yooka.teampic);
-                
                 [self.venuePicUrls addObject:self.teampic_url];
 
                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:self.teampic_url]
@@ -480,11 +392,9 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [Foursquare2 venueGetPhotos:_venueId limit:@5 offset:nil callback:^(BOOL success, id result){
         
         if (success) {
-            NSLog(@"%@",result);
+//            NSLog(@"%@",result);
             NSDictionary *dic = result;
             self.venuePics = [dic valueForKeyPath:@"response.photos.items"];
-            
-            
             [self getRestaurantImagesUrl];
         }
         
@@ -535,21 +445,8 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         [_backBtn setFrame:CGRectMake(10, 20, 40, 40)];
         [_backBtn setTitle:@"" forState:UIControlStateNormal];
         [_backBtn setBackgroundColor:[UIColor clearColor]];
-        //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
         [_backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
         [self.gridScrollView addSubview:_backBtn];
-        
-//        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 20, 270, 22)];
-//        titleLabel.textColor = [UIColor whiteColor];
-//        [titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:20]];
-//        titleLabel.text = [NSString stringWithFormat:@"%@",[self.selectedRestaurantName uppercaseString]];
-//        titleLabel.textAlignment = NSTextAlignmentCenter;
-//        titleLabel.adjustsFontSizeToFitWidth = YES;
-//        titleLabel.numberOfLines = 0;
-//        [titleLabel sizeToFit];
-//        titleLabel.layer.masksToBounds = NO;
-//        titleLabel.backgroundColor = [UIColor clearColor];
-//        [self.view addSubview:titleLabel];
 
     }
     
@@ -589,9 +486,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                  
              }
          }];
-        
-        
-        
     }
 }
 
@@ -629,6 +523,15 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.detailsImageView setHidden:YES];
     [self.menuImageView setHidden:YES];
     
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.huntTitle, @"Hunt_Name",
+                                   self.selectedRestaurantName,@"Venue_Name",
+                                   self.locationId,@"yooka_location_id",
+                                   self.venueId, @"fsq_venue_id",
+                                   nil];
+    
+    [Flurry logEvent:@"Venue_Profile_Review_Button_Clicked" withParameters:articleParams];
+    
     [self.reviewsView setHidden:NO];
     [self.detailsView setHidden:YES];
     [self.menuView setHidden:YES];
@@ -644,6 +547,15 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.detailsImageView setHidden:NO];
     [self.menuImageView setHidden:YES];
     
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.huntTitle, @"Hunt_Name",
+                                   self.selectedRestaurantName,@"Venue_Name",
+                                   self.locationId,@"yooka_location_id",
+                                   self.venueId, @"fsq_venue_id",
+                                   nil];
+    
+    [Flurry logEvent:@"Venue_Profile_Details_Button_Clicked" withParameters:articleParams];
+    
     [self.reviewsView setHidden:YES];
     [self.detailsView setHidden:NO];
     [self.menuView setHidden:YES];
@@ -657,6 +569,15 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.reviewsImageView setHidden:YES];
     [self.detailsImageView setHidden:YES];
     [self.menuImageView setHidden:NO];
+    
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.huntTitle, @"Hunt_Name",
+                                   self.selectedRestaurantName,@"Venue_Name",
+                                   self.locationId,@"yooka_location_id",
+                                   self.venueId, @"fsq_venue_id",
+                                   nil];
+    
+    [Flurry logEvent:@"Venue_Profile_Menu_Button_Clicked" withParameters:articleParams];
     
     [self.reviewsView setHidden:YES];
     [self.detailsView setHidden:YES];
@@ -763,41 +684,64 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 _newsFeed = [NSMutableArray arrayWithArray:results];
                 if (_newsFeed && _newsFeed.count) {
                     
+                    [self.activityView stopAnimating];
                     
                     [self fillPictures];
                     
                 }else{
                     
-                    if (!self.newsFeed.count){
-                        UIImageView *header_strip2 = [[UIImageView alloc]initWithFrame:CGRectMake(35, 45, 250, 170)];
+                        [self.activityView stopAnimating];
+                        
+                        UIImageView *header_strip2 = [[UIImageView alloc]initWithFrame:CGRectMake(55, 60, 210, 150)];
                         [header_strip2 setImage:[UIImage imageNamed:@"doggy.png"]];
-                        [header_strip2 setBackgroundColor:[UIColor clearColor]];
+                        [header_strip2 setBackgroundColor:[UIColor whiteColor]];
                         [self.reviewsView addSubview:header_strip2];
                         
-                        UILabel* share_label = [[UILabel alloc] initWithFrame:CGRectMake(0, 185, 320, 30)];
+                        UILabel* share_label = [[UILabel alloc] initWithFrame:CGRectMake(0, 195, 320, 30)];
                         share_label.text = [NSString stringWithFormat:@"SHARE YOUR EXPERIENCE"];
-                        //share_label.textColor = [self colorWithHexString:@"e5e4e4"];
-                        share_label.textColor = [UIColor lightGrayColor];
-                        [share_label setFont:[UIFont fontWithName:@"OpenSans-Bold" size:20]];
+                        share_label.textColor = [self colorWithHexString:@"c7c7c7"];
+                        [share_label setFont:[UIFont fontWithName:@"OpenSans-ExtraBold" size:18]];
                         share_label.textAlignment = NSTextAlignmentCenter;
                         [self.reviewsView addSubview:share_label];
                         
-                        
-                        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 245, 320, 1)];
+                        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 239, 320, 1)];
                         lineView.backgroundColor = [self colorWithHexString:@"e5e4e4"];
                         [self.reviewsView addSubview:lineView];
                         
                         if ([KCSUser activeUser].email) {
-                            self.uploadButton = [[UIButton alloc]initWithFrame:CGRectMake(133, 247, 43, 43)];
-                            [self.uploadButton setImage:[UIImage imageNamed:@"camera_blue.png"] forState:UIControlStateNormal];
+                            
+                            self.uploadButton = [[UIButton alloc]initWithFrame:CGRectMake(83, 247, 143, 43)];
+                            //[self.uploadButton setImage:[UIImage imageNamed:@"camera_blue.png"] forState:UIControlStateNormal];
                             [self.uploadButton addTarget:self action:@selector(uploadBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                            //self.uploadButton.tag = b;
                             [self.reviewsView addSubview:self.uploadButton];
+                            
+                            UIImageView *camera = [[UIImageView alloc]initWithFrame:CGRectMake(58, 247, 79, 41)];
+                            [camera setImage:[UIImage imageNamed:@"camera2.png"]];
+                            [camera setBackgroundColor:[UIColor whiteColor]];
+                            [self.reviewsView addSubview:camera];
+                            
+//                            NSLog(@"subscribed hunts");
+                            UILabel *shareLabel = [[UILabel alloc]initWithFrame:CGRectMake(117, 533, 125, 20)];
+                            NSString *string5 = @"TAKE A PICTURE!";
+                            if (string5) {
+                                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string5];
+                                float spacing = 1.4f;
+                                [attributedString addAttribute:NSKernAttributeName
+                                                         value:@(spacing)
+                                                         range:NSMakeRange(0, [string5 length])];
+                                shareLabel.attributedText = attributedString;
+                            }
+                            shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
+                            shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
+                            [self.view addSubview:shareLabel];
+                            
+                            UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(237, 538, 30, 10)];
+                            arrow.backgroundColor=[UIColor clearColor];
+                            arrow.image = [UIImage imageNamed:@"upload_share_arrow.png"];
+                            [self.view addSubview:arrow];
+                            
                         }
                         
-                    }
-                    
-                    
                     
                 }
                 
@@ -834,38 +778,40 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     YookaPostViewController *media = [[YookaPostViewController alloc]init];
     media.venueID = self.venueID;
     media.venueSelected = self.selectedRestaurantName;
-    //media.huntName = _huntTitle;
-    //media.huntCount = [NSString stringWithFormat:@"%d",[self.my_hunt_count intValue]+1];
-    //media.totalHuntCount = _hunt_count;
     [self presentViewController:media animated:NO completion:nil];
     
 }
 
+- (void)tick:(float)percent {
+    NSLog(@" percent : %f",percent);
+    
+    CGFloat progress = percent;
+    [self.circularProgressView setProgress:(progress <= 1.00f ? progress : 0.0f) animated:YES];
+}
+
 - (void)fillPictures
 {
-
-    
     
     if (i==self.newsFeed.count) {
     }
     if (i<self.newsFeed.count) {
         
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                 (row*400)+55,
+                                                                 (row*325)+55,
                                                                  yookaThumbnailWidth2013,
-                                                                 yookaThumbnailHeight2013)];
+                                                                 325)];
             
-            contentSize += (yookaThumbnailHeight2013);
+            contentSize += (325);
             button.tag = i;
 //            [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-            [button setBackgroundColor:[UIColor clearColor]];
+            [button setBackgroundColor:[self colorWithHexString:@"f0f0f0"]];
             row++;
         
-            [self.gridScrollView setContentSize:CGSizeMake(320, contentSize)];
+            self.reviewsView.frame = CGRectMake(0, 275, 320, contentSize-5);
+        
+            [self.gridScrollView setContentSize:CGSizeMake(320, contentSize-20)];
             [self.reviewsView addSubview:button];
             [self.thumbnails addObject:button];
-        
-
         
         NSString *dishName = [self.newsFeed[i] objectForKey:@"dishName"];
         NSString *venueName = [self.newsFeed[i] objectForKey:@"venueName"];
@@ -876,7 +822,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         NSString *hunt_name = [self.newsFeed[i] objectForKeyedSubscript:@"HuntName"];
         NSString *picUrl = [[self.newsFeed[i] objectForKey:@"dishImage"] objectForKey:@"_downloadURL"];
         
-                
                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:picUrl]
                                                                     options:0
                                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize)
@@ -888,40 +833,60 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                      if (image && finished)
                      {
                          
-                         // do something with image
-                         UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(14, 40, 286, 280)];
+                         UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 55, 305, 210)];
+                         [buttonImage setBackgroundColor:[UIColor clearColor]];
+                         buttonImage.contentMode = UIViewContentModeScaleAspectFill;
+                         //buttonImage.layer.cornerRadius = 5.0;
+                         buttonImage.clipsToBounds = YES;
+                         buttonImage.opaque = YES;
+                         UIImageView *whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 10, 305, 45)];
+                         [whitebox setBackgroundColor:[UIColor whiteColor]];
+                         whitebox.layer.shadowRadius = 0;
+                         whitebox.layer.shadowOpacity = 1;
+                         whitebox.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                         whitebox.layer.masksToBounds = NO;
+                         whitebox.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                         [button addSubview:whitebox];
+                         
+                         UIImageView *whitebox2 = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 260, 305, 50)];
+                         [whitebox2 setBackgroundColor:[UIColor whiteColor]];
+                         whitebox2.layer.shadowRadius = 0;
+                         whitebox2.layer.shadowOpacity = 1;
+                         whitebox2.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                         whitebox2.layer.masksToBounds = NO;
+                         whitebox2.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                         [button addSubview:whitebox2];
+                         
                          buttonImage.image = image;
                          [button addSubview:buttonImage];
                          
-                         UIImageView *header_strip = [[UIImageView alloc]initWithFrame:CGRectMake(10, -1.5, 290, 46.5)];
-                         [header_strip setImage:[UIImage imageNamed:@"Header_strip.png"]];
-                         [button addSubview:header_strip];
+                         UIImageView *transparent_view = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 175+45, 305, 45)];
+                         transparent_view.backgroundColor = [[self colorWithHexString:@"4c4a4a"] colorWithAlphaComponent:0.5f];
+                         [button addSubview:transparent_view];
                          
-                         UIImageView *white_bg = [[UIImageView alloc]initWithFrame:CGRectMake(14, 320, 286, 70)];
-                         [white_bg setBackgroundColor:[UIColor whiteColor]];
-                         [button addSubview:white_bg];
-                         
-                         UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 325, 270, 25)];
-                         dishLabel.textColor = [UIColor lightGrayColor];
-                         [dishLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
+                         UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 231, 300, 25)];
+                         dishLabel.textColor = [UIColor whiteColor];
+                         [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
                          dishLabel.text = [dishName uppercaseString];
                          dishLabel.textAlignment = NSTextAlignmentLeft;
-                         dishLabel.adjustsFontSizeToFitWidth = NO;
-                         dishLabel.clipsToBounds = YES;
+                         dishLabel.adjustsFontSizeToFitWidth = YES;
                          dishLabel.layer.masksToBounds = NO;
                          dishLabel.backgroundColor = [UIColor clearColor];
                          [button addSubview:dishLabel];
+
+                         UILabel *captionLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 215+50, 190, 25)];
+                         captionLabel2.textColor = [UIColor lightGrayColor];
+                         [captionLabel2 setFont:[UIFont fontWithName:@"OpenSans" size:10.f]];
+                         captionLabel2.text = [NSString stringWithFormat:@"Comments:"];
+                         [button addSubview:captionLabel2];
                          
-                         UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 342, 270, 25)];
+                         UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 230+50, 190, 25)];
                          captionLabel.textColor = [UIColor lightGrayColor];
-                         [captionLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:11]];
+                         [captionLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:10.f]];
                          captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
                          captionLabel.textAlignment = NSTextAlignmentLeft;
-                         captionLabel.clipsToBounds = YES;
-//                         captionLabel.adjustsFontSizeToFitWidth = YES;
-//                         captionLabel.numberOfLines = 0;
-//                         [captionLabel sizeToFit];
-                         captionLabel.layer.masksToBounds = NO;
+                         captionLabel.adjustsFontSizeToFitWidth = YES;
+                         captionLabel.frame=CGRectMake(20, 230+50, 190, 25);
                          captionLabel.backgroundColor = [UIColor clearColor];
                          [button addSubview:captionLabel];
                          
@@ -929,7 +894,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                          NSDate *now = [NSDate date];
                          NSString *str;
                          NSMutableString *myString = [NSMutableString string];
-                         
                          NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
                          if (secondsBetween<60) {
                              int duration = secondsBetween;
@@ -948,7 +912,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                  str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
                                  [myString appendString:str];
                              }
-
                          }else if (secondsBetween<604800){
                              int duration = secondsBetween / 86400;
                              if (duration==1) {
@@ -958,7 +921,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                  str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
                                  [myString appendString:str];
                              }
-
                          }else {
                              int duration = secondsBetween / 604800;
                              if(duration==1) {
@@ -969,37 +931,46 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                              [myString appendString:str];
                          }
                          
-//                         UIImageView *clockView = [[UIImageView alloc]initWithFrame:CGRectMake(6, 360, 20, 28)];
-//                         clockView.image = [UIImage imageNamed:@"timestamp_clock.png"];
-//                         [button addSubview:clockView];
-                         
-                         UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(25, 365, 150, 12)];
-                         time_label.text = [NSString stringWithFormat:@"🕔 %@ ago",myString];
+                         UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(253, 13, 50, 12)];
+                         time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
                          time_label.textColor = [UIColor lightGrayColor];
-                         [time_label setFont:[UIFont fontWithName:@"Montserrat-Regular" size:9]];
-                         time_label.textAlignment = NSTextAlignmentLeft;
+                         [time_label setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                         time_label.textAlignment = NSTextAlignmentRight;
                          [button addSubview:time_label];
+
+                         self.circularProgressView = [[LLACircularProgressView alloc] init];
+                         self.circularProgressView.frame = CGRectMake(220, 280, 30, 30);
+                         self.circularProgressView.center = CGPointMake(240, 288);
+                         [self.circularProgressView setBackgroundColor:[UIColor clearColor]];
+                         [button addSubview:self.circularProgressView];
                          
-                         UIImageView *rateView = [[UIImageView alloc]initWithFrame:CGRectMake(235, 290, 25, 20)];
-                         rateView.image = [UIImage imageNamed:@"rating.png"];
-                         [button addSubview:rateView];
-                         
-                         UILabel *rateLabel = [[UILabel alloc]initWithFrame:CGRectMake(262, 293, 35, 15)];
-                         rateLabel.textColor = [UIColor whiteColor];
-                         rateLabel.backgroundColor=[UIColor clearColor];
-                         [rateLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:12]];
                          if ([post_vote isEqualToString:@"YAY"]) {
-                             rateLabel.text = [NSString stringWithFormat:@"100%%"];
+                             float percent = 1.f;
+                             [self tick:percent];
+                             
+                             UILabel *rate_label = [[UILabel alloc]initWithFrame:CGRectMake(215, 283, 50, 10)];
+                             [rate_label setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:7.0]];
+                             [rate_label setTextColor:[self colorWithHexString:@"a7a7a7"]];
+                             rate_label.textAlignment = NSTextAlignmentCenter;
+                             [rate_label setText:@"100%"];
+                             [button addSubview:rate_label];
+                             
                          }else{
-                             rateLabel.text = [NSString stringWithFormat:@"0%%"];
+                             float percent = 0.f;
+                             [self tick:percent];
+                             UILabel *rate_label = [[UILabel alloc]initWithFrame:CGRectMake(215, 283, 50, 10)];
+                             [rate_label setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:7.0]];
+                             [rate_label setTextColor:[self colorWithHexString:@"a7a7a7"]];
+                             rate_label.textAlignment = NSTextAlignmentCenter;
+                             [rate_label setText:@"0%"];
+                             [button addSubview:rate_label];
                          }
-                         rateLabel.textAlignment = NSTextAlignmentLeft;
-                         rateLabel.adjustsFontSizeToFitWidth = YES;
-                         [button addSubview:rateLabel];
+                         
                          i++;
                          if (i==self.newsFeed.count) {
                              [self loadImages2];
                          }
+                         
                          [self fillPictures];
                          
                      }
@@ -1011,57 +982,58 @@ const NSInteger yookaThumbnailSpace2013 = 5;
 
 - (void)loadImages2
 {
-    //    NSLog(@"load images");
+
     if (j<_newsFeed.count) {
 
         NSString *venueName = [_newsFeed[j] objectForKey:@"venueName"];
         NSString *venueAddress = [_newsFeed[j] objectForKey:@"venueAddress"];
         NSString *venueState = [_newsFeed[j] objectForKey:@"venueState"];
         
-        
         UIButton* button = [self.thumbnails objectAtIndex:j];
         
+        if (venueName){
+            
+            UIButton *rest_arrow = [UIButton buttonWithType:UIButtonTypeCustom];
+            [rest_arrow  setFrame:CGRectMake(80, 10, 220, 45)];
+            [rest_arrow setBackgroundColor:[UIColor clearColor]];
+            rest_arrow.tag = j;
+            [button addSubview:rest_arrow];
+            
+        }
 
-        
         if(venueAddress){
-            UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 15, 200, 20)];
-            venueLabel.textColor = [UIColor whiteColor];
-            [venueLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:8]];
-            venueLabel.text = [NSString stringWithFormat:@"%@, %@",[venueAddress uppercaseString],[venueState uppercaseString]];
+            UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 37, 200, 20)];
+            venueLabel.textColor = [UIColor lightGrayColor];
+            [venueLabel setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+            venueLabel.text = [NSString stringWithFormat:@"%@, %@",venueAddress,venueState];
             venueLabel.textAlignment = NSTextAlignmentLeft;
             venueLabel.adjustsFontSizeToFitWidth = YES;
             [venueLabel setBackgroundColor:[UIColor clearColor]];
             [button addSubview:venueLabel];
         }
+        else{
+            
+        }
         
         NSString *userId = [_newsFeed[j] objectForKey:@"userEmail"];
         
-
-            
-            //            NSString *venueName = [_newsFeed[j] objectForKey:@"venueName"];
-            
             [[SDImageCache sharedImageCache] queryDiskCacheForKey:userId done:^(UIImage *image, SDImageCacheType cacheType)
              {
                  if(image){
                      
-                     //                     UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 4.5, 5, 34, 39)];
-                     //                     buttonImage3.image = [UIImage imageNamed:@"regular_timeline_imagesize.png"];
-                     //                     [button addSubview:buttonImage3];
-                     
-                     UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 14, 2, 35, 35)];
+                     UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 12, 10, 55, 55)];
                      buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
                      [buttonImage4.layer setBorderWidth:2.0];
+                     buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
                      [buttonImage4.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-                     [buttonImage4 setContentMode:UIViewContentModeScaleAspectFit];
+                     [buttonImage4 setContentMode:UIViewContentModeScaleAspectFill];
                      buttonImage4.clipsToBounds = YES;
-                     buttonImage4.image = nil;
-                     buttonImage4.opaque = YES;
-                     
                      buttonImage4.image = image;
+                     buttonImage4.opaque = YES;
                      [button addSubview:buttonImage4];
                      
                      UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                     [user_button  setFrame:CGRectMake(14, 2, 35, 35)];
+                     [user_button  setFrame:CGRectMake(12, 5, 55, 55)];
                      [user_button setBackgroundColor:[UIColor clearColor]];
                      user_button.tag = j;
                      [user_button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
@@ -1069,28 +1041,56 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                      
                      NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                      NSString *userFullName = [ud objectForKey:userId];
-                     NSLog(@"user id = %@",userId);
-                     NSLog(@"user full name = %@",userFullName);
                      
                      if (userFullName) {
                          
-                         UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 5, 230, 15)];
+                         NSString *userFullName = [_newsFeed[j] objectForKey:@"userFullName"];
+                         UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 180, 220, 30)];
                          userLabel.textColor = [UIColor whiteColor];
-                         userLabel.textAlignment = NSTextAlignmentLeft;
-                         userLabel.clipsToBounds = YES;
-                         userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.0];
-                         if ([_newsFeed[j] objectForKey:@"postType"]) {
-                             NSLog(@"type yes");
-                             userLabel.text = [[_newsFeed[j] objectForKey:@"postCaption"] uppercaseString];
+                         userLabel.adjustsFontSizeToFitWidth = YES;
+                         userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                         
+                         UILabel *userLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(25, 241, 300, 25)];
+                         userLabel2.textColor = [UIColor whiteColor];
+                         userLabel2.adjustsFontSizeToFitWidth = YES;
+                         
+                         userLabel2.font = [UIFont fontWithName:@"OpenSans-Semibold" size:7.0];
+                         
+                         NSArray *items = [userFullName componentsSeparatedByString:@" "];
+                         NSString *first_name = items[0];
+                         
+                         UILabel *wentto = [[UILabel alloc]initWithFrame:CGRectMake(80, 10, 200, 20)];
+                         wentto.textColor = [UIColor lightGrayColor];
+                         [wentto setFont:[UIFont fontWithName:@"OpenSans" size:8]];
+                         wentto.text = [NSString stringWithFormat:@"%@ went to:",first_name];
+                         wentto.textAlignment = NSTextAlignmentLeft;
+                         wentto.adjustsFontSizeToFitWidth = YES;
+                         [wentto setBackgroundColor:[UIColor clearColor]];
+                         [button addSubview:wentto];
+                         
+                         UILabel *venueName2 = [[UILabel alloc]initWithFrame:CGRectMake(80, 23, 200, 20)];
+                         venueName2.textColor = [UIColor lightGrayColor];
+                         [venueName2 setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:11]];
+                         venueName2.text = [NSString stringWithFormat:@"%@",venueName];
+                         venueName2.text=[venueName2.text uppercaseString];
+                         venueName2.textAlignment = NSTextAlignmentLeft;
+                         venueName2.adjustsFontSizeToFitWidth = YES;
+                         [venueName2 setBackgroundColor:[UIColor clearColor]];
+                         [button addSubview:venueName2];
+                         
+                         if(venueAddress){
+                             UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 37, 200, 20)];
+                             venueLabel.textColor = [UIColor lightGrayColor];
+                             [venueLabel setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                             venueLabel.text = [NSString stringWithFormat:@"%@, %@",venueAddress,venueState];
+                             venueLabel.textAlignment = NSTextAlignmentLeft;
+                             venueLabel.adjustsFontSizeToFitWidth = YES;
+                             [venueLabel setBackgroundColor:[UIColor clearColor]];
+                             [button addSubview:venueLabel];
+                         }
+                         else{
                              
-                         }else{
-                             
-                             NSLog(@"type no");
-                             userLabel.text = [NSString stringWithFormat:@"%@ IS AT %@",[userFullName uppercaseString],[venueName uppercaseString]];                         }
-                         [userLabel setBackgroundColor:[UIColor clearColor]];
-//                         userLabel.adjustsFontSizeToFitWidth = YES;
-                         //                     userLabel.numberOfLines = 0;
-                         [button addSubview:userLabel];
+                         }
                          
                          j++;
                          if (j == _newsFeed.count) {
@@ -1126,22 +1126,54 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                      [ud setObject:userPicUrl forKey:userId2];
                                      [ud synchronize];
                                      
-                         UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 5, 230, 15)];
-                                     userLabel.textColor = [UIColor whiteColor];
-                                     userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.0];
-                                     if ([_newsFeed[j] objectForKey:@"postType"]) {
-                                         NSLog(@"type yes");
-                                         userLabel.text = [[_newsFeed[j] objectForKey:@"postCaption"]uppercaseString];
-                                         
-                                     }else{
-                                         NSLog(@"type no");
-                                         userLabel.text = [NSString stringWithFormat:@"%@ IS AT %@",[userFullName uppercaseString],[venueName uppercaseString]];
-                                     }
-                                     userLabel.textAlignment = NSTextAlignmentLeft;
-                                     userLabel.adjustsFontSizeToFitWidth = YES;
-                                     //                     userLabel.numberOfLines = 0;
-                                     [button addSubview:userLabel];
                                      
+                                     UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 180, 220, 30)];
+                                     userLabel.textColor = [UIColor whiteColor];
+                                     userLabel.adjustsFontSizeToFitWidth = YES;
+                                     userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                                     
+                                     UILabel *userLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(25, 241, 300, 25)];
+                                     userLabel2.textColor = [UIColor whiteColor];
+                                     userLabel2.adjustsFontSizeToFitWidth = YES;
+                                     
+                                     userLabel2.font = [UIFont fontWithName:@"OpenSans-Semibold" size:7.0];
+                                     
+                                     NSArray *items = [userFullName componentsSeparatedByString:@" "];
+                                     NSString *first_name = items[0];
+                                     
+                                     
+                                     UILabel *wentto = [[UILabel alloc]initWithFrame:CGRectMake(80, 10, 200, 20)];
+                                     wentto.textColor = [UIColor lightGrayColor];
+                                     [wentto setFont:[UIFont fontWithName:@"OpenSans" size:8]];
+                                     wentto.text = [NSString stringWithFormat:@"%@ went to:",first_name];
+                                     wentto.textAlignment = NSTextAlignmentLeft;
+                                     wentto.adjustsFontSizeToFitWidth = YES;
+                                     [wentto setBackgroundColor:[UIColor clearColor]];
+                                     [button addSubview:wentto];
+                                     
+                                     UILabel *venueName2 = [[UILabel alloc]initWithFrame:CGRectMake(80, 23, 200, 20)];
+                                     venueName2.textColor = [UIColor lightGrayColor];
+                                     [venueName2 setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:11]];
+                                     venueName2.text = [NSString stringWithFormat:@"%@",venueName];
+                                     venueName2.text=[venueName2.text uppercaseString];
+                                     venueName2.textAlignment = NSTextAlignmentLeft;
+                                     venueName2.adjustsFontSizeToFitWidth = YES;
+                                     [venueName2 setBackgroundColor:[UIColor clearColor]];
+                                     [button addSubview:venueName2];
+                                     
+                                     if(venueAddress){
+                                         UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 37, 200, 20)];
+                                         venueLabel.textColor = [UIColor lightGrayColor];
+                                         [venueLabel setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                                         venueLabel.text = [NSString stringWithFormat:@"%@, %@",venueAddress,venueState];
+                                         venueLabel.textAlignment = NSTextAlignmentLeft;
+                                         venueLabel.adjustsFontSizeToFitWidth = YES;
+                                         [venueLabel setBackgroundColor:[UIColor clearColor]];
+                                         [button addSubview:venueLabel];
+                                     }
+                                     else{
+                                         
+                                     }
                                      
                                      j++;
                                      if (j == _newsFeed.count) {
@@ -1179,16 +1211,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                          
                      }
                      
-                     //                [_gridScrollView addSubview:button];
-                     //
-                     //                 j++;
-                     //                 if (j == _newsFeed.count) {
-                     //
-                     //                     [self loadlikes];
-                     //                 }
-                     //
-                     //                 [self loadImages2];
-                     
                  }else{
                      
                      //                 NSLog(@"no cache");
@@ -1196,9 +1218,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                      _customEndpoint2 = @"NewsFeed";
                      _fieldName2 = @"_id";
                      _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:userId,@"userEmail",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
-                     
-                     //        [[button subviews]
-                     //         makeObjectsPerformSelector:@selector(removeFromSuperview)];
                      
                      [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
                          if ([results isKindOfClass:[NSArray class]]) {
@@ -1217,19 +1236,15 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                  
                                  if (userPicUrl) {
                                      
-                                     //                                     UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 4.5, 5, 34, 39)];
-                                     //                                     buttonImage3.image = [UIImage imageNamed:@"regular_timeline_imagesize.png"];
-                                     //                                     [button addSubview:buttonImage3];
                                      
-                                     UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 14, 2, 35, 35)];
+                                     UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 12, 10, 55, 55)];
                                      buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
                                      [buttonImage4.layer setBorderWidth:2.0];
                                      [buttonImage4.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-                                     [buttonImage4 setContentMode:UIViewContentModeScaleAspectFit];
+                                     [buttonImage4 setContentMode:UIViewContentModeScaleAspectFill];
                                      buttonImage4.clipsToBounds = YES;
                                      buttonImage4.image = nil;
                                      buttonImage4.opaque = YES;
-                                     
 
                                      
                                      [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:userPicUrl]
@@ -1249,25 +1264,53 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                               [button addSubview:buttonImage4];
                                               
                                               UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                                              [user_button  setFrame:CGRectMake(14, 2, 35, 35)];
+                                              [user_button  setFrame:CGRectMake(12, 5, 55, 55)];
                                               [user_button setBackgroundColor:[UIColor clearColor]];
                                               user_button.tag = j;
                                               [user_button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
                                               [button addSubview:user_button];
                                               
-                         UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 5, 230, 15)];
+                                              UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 180, 220, 30)];
                                               userLabel.textColor = [UIColor whiteColor];
-                                              userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.0];
-                                              if ([_newsFeed[j] objectForKey:@"postType"]) {
-                                                  userLabel.text = [[_newsFeed[j] objectForKey:@"postCaption"]uppercaseString];
+                                              userLabel.adjustsFontSizeToFitWidth = YES;
+                                              userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                                              
+                                              UILabel *userLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(25, 241, 300, 25)];
+                                              userLabel2.textColor = [UIColor whiteColor];
+                                              userLabel2.adjustsFontSizeToFitWidth = YES;
+                                              
+                                              userLabel2.font = [UIFont fontWithName:@"OpenSans-Semibold" size:7.0];
+                                              
+                                              NSArray *items = [userFullName componentsSeparatedByString:@" "];
+                                              NSString *first_name = items[0];
+                                              
+                                                  UILabel *wentto = [[UILabel alloc]initWithFrame:CGRectMake(80, 10, 200, 20)];
+                                                  wentto.textColor = [UIColor lightGrayColor];
+                                                  [wentto setFont:[UIFont fontWithName:@"OpenSans" size:8]];
+                                                  wentto.text = [NSString stringWithFormat:@"%@ went to:",first_name];
+                                                  wentto.textAlignment = NSTextAlignmentLeft;
+                                                  wentto.adjustsFontSizeToFitWidth = YES;
+                                                  [wentto setBackgroundColor:[UIColor clearColor]];
+                                                  [button addSubview:wentto];
                                                   
-                                              }else{
+                                                  UILabel *venueName2 = [[UILabel alloc]initWithFrame:CGRectMake(80, 23, 200, 20)];
+                                                  venueName2.textColor = [UIColor lightGrayColor];
+                                                  [venueName2 setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:11]];
+                                                  venueName2.text = [NSString stringWithFormat:@"%@",venueName];
+                                                  venueName2.text=[venueName2.text uppercaseString];
+                                                  venueName2.textAlignment = NSTextAlignmentLeft;
+                                                  venueName2.adjustsFontSizeToFitWidth = YES;
+                                                  [venueName2 setBackgroundColor:[UIColor clearColor]];
+                                                  [button addSubview:venueName2];
                                                   
-                                                  userLabel.text = [NSString stringWithFormat:@"%@ IS AT %@",[userFullName uppercaseString],[venueName uppercaseString]];
-                                              }
+                                              
                                               userLabel.textAlignment = NSTextAlignmentLeft;
                                               userLabel.adjustsFontSizeToFitWidth = YES;
                                               [button addSubview:userLabel];
+                                              
+                                              userLabel2.textAlignment = NSTextAlignmentLeft;
+                                              //userLabel2.adjustsFontSizeToFitWidth = YES;
+                                              [button addSubview:userLabel2];
                                               
                                               j++;
                                               if (j == _newsFeed.count) {
@@ -1307,7 +1350,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                      [self loadImages2];
                                      
                                  }
-                                 
                                  
                              }else{
                                  //                    NSLog(@"fail 1");
@@ -1376,55 +1418,59 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             
                             if([myArray containsObject:[KCSUser activeUser].email]){
                                 
-                                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(205, 210, 35, 35)];
-                                likesImageView.image = [UIImage imageNamed:@"Heart_fill.png"];
+                                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(250, 225+45, 40, 40)];
+                                likesImageView.image = [UIImage imageNamed:@"full_heart.png"];
                                 [likesImageView setTag:220];
                                 [button addSubview:likesImageView];
                                 
-                                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 220, 18, 15)];
-                                likesLabel.textColor = [UIColor whiteColor];
+                                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                                likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
                                 likesLabel.backgroundColor=[UIColor clearColor];
-                                [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:14]];
+                                //[likesLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:1]];
+                                likesLabel.font=[UIFont fontWithName:@"OpenSans" size:10];
                                 likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
                                 likesLabel.textAlignment = NSTextAlignmentLeft;
-                                likesLabel.adjustsFontSizeToFitWidth = YES;
+                                //likesLabel.adjustsFontSizeToFitWidth = YES;
                                 [likesLabel setTag:221];
                                 [button addSubview:likesLabel];
                                 
                                 UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                                [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
+                                [like_button  setFrame:CGRectMake(260, 220+45, 50, 35)];
                                 [like_button setBackgroundColor:[UIColor clearColor]];
                                 like_button.tag = k;
                                 [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
                                 [button addSubview:like_button];
+
                                 k++;
                                 
                                 [self loadlikes];
                                 
                             }else{
                                 
-                                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(205, 210, 35, 35)];
+                                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(259, 224+45, 37, 37)];
                                 likesImageView.backgroundColor=[UIColor clearColor];
                                 [likesImageView setTag:220];
-                                likesImageView.image = [UIImage imageNamed:@"Wheart.png"];
+                                likesImageView.image = [UIImage imageNamed:@"Before_like.png"];
                                 [button addSubview:likesImageView];
                                 
-                                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 220, 18, 15)];
-                                likesLabel.textColor = [UIColor whiteColor];
+                                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                                likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
                                 likesLabel.backgroundColor=[UIColor clearColor];
-                                [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:14]];
+                                //[likesLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:1]];
+                                likesLabel.font=[UIFont fontWithName:@"OpenSans" size:10];
                                 likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
                                 likesLabel.textAlignment = NSTextAlignmentLeft;
-                                likesLabel.adjustsFontSizeToFitWidth = YES;
+                                //likesLabel.adjustsFontSizeToFitWidth = YES;
                                 [likesLabel setTag:221];
                                 [button addSubview:likesLabel];
-                                
+
                                 UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                                [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
+                                [like_button  setFrame:CGRectMake(260, 220+45, 50, 35)];
                                 [like_button setBackgroundColor:[UIColor clearColor]];
                                 like_button.tag = k;
                                 [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
                                 [button addSubview:like_button];
+                                
                                 k++;
                                 
                                 [self loadlikes];
@@ -1435,19 +1481,20 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             
                             _likes = @"0";
                             
-                            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(205, 210, 35, 35)];
+                            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(259, 224+45, 37, 37)];
                             likesImageView.backgroundColor=[UIColor clearColor];
                             [likesImageView setTag:220];
-                            likesImageView.image = [UIImage imageNamed:@"Wheart.png"];
+                            likesImageView.image = [UIImage imageNamed:@"Before_like.png"];
                             [button addSubview:likesImageView];
                             
-                            UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 220, 18, 15)];
-                            likesLabel.textColor = [UIColor whiteColor];
+                            UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                            likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
                             likesLabel.backgroundColor=[UIColor clearColor];
-                            [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:14]];
+                            //[likesLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:1]];
+                            likesLabel.font=[UIFont fontWithName:@"OpenSans" size:10];
                             likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
                             likesLabel.textAlignment = NSTextAlignmentLeft;
-                            likesLabel.adjustsFontSizeToFitWidth = YES;
+                            //likesLabel.adjustsFontSizeToFitWidth = YES;
                             [likesLabel setTag:221];
                             [button addSubview:likesLabel];
                             
@@ -1455,11 +1502,12 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             [_likersData addObject:[NSNull null]];
                             
                             UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                            [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
+                            [like_button  setFrame:CGRectMake(260, 220+45, 50, 35)];
                             [like_button setBackgroundColor:[UIColor clearColor]];
                             like_button.tag = k;
                             [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
                             [button addSubview:like_button];
+                            
                             k++;
                             
                             [self loadlikes];
@@ -1472,28 +1520,31 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                         [_likesData addObject:_likes];
                         [_likersData addObject:[NSNull null]];
                         
-                        UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(205, 210, 35, 35)];
+                        UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(259, 224+45, 37, 37)];
                         likesImageView.backgroundColor=[UIColor clearColor];
-                        likesImageView.image = [UIImage imageNamed:@"Wheart.png"];
+                        [likesImageView setTag:220];
+                        likesImageView.image = [UIImage imageNamed:@"Before_like.png"];
                         [likesImageView setTag:220];
                         [button addSubview:likesImageView];
                         
-                        UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 220, 18, 15)];
-                        likesLabel.textColor = [UIColor whiteColor];
+                        UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                        likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
                         likesLabel.backgroundColor=[UIColor clearColor];
-                        [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:14]];
+                        //[likesLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:1]];
+                        likesLabel.font=[UIFont fontWithName:@"OpenSans" size:10];
                         likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
                         likesLabel.textAlignment = NSTextAlignmentLeft;
-                        likesLabel.adjustsFontSizeToFitWidth = YES;
+                        //likesLabel.adjustsFontSizeToFitWidth = YES;
                         [likesLabel setTag:221];
                         [button addSubview:likesLabel];
                         
                         UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                        [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
+                        [like_button  setFrame:CGRectMake(260, 220+45, 50, 35)];
                         [like_button setBackgroundColor:[UIColor clearColor]];
                         like_button.tag = k;
                         [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
                         [button addSubview:like_button];
+                        
                         k++;
                         
                         [self loadlikes];
@@ -1507,28 +1558,30 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     [_likesData addObject:_likes];
                     [_likersData addObject:[NSNull null]];
                     
-                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(205, 210, 35, 35)];
+                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(259, 224+45, 37, 37)];
                     likesImageView.backgroundColor=[UIColor clearColor];
-                    likesImageView.image = [UIImage imageNamed:@"Wheart.png"];
                     [likesImageView setTag:220];
+                    likesImageView.image = [UIImage imageNamed:@"Before_like.png"];
                     [button addSubview:likesImageView];
                     
-                    UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 220, 18, 15)];
-                    likesLabel.textColor = [UIColor whiteColor];
+                    UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                    likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
                     likesLabel.backgroundColor=[UIColor clearColor];
-                    [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:14]];
+                    //[likesLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:1]];
+                    likesLabel.font=[UIFont fontWithName:@"OpenSans" size:10];
                     likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
                     likesLabel.textAlignment = NSTextAlignmentLeft;
-                    likesLabel.adjustsFontSizeToFitWidth = YES;
+                    //likesLabel.adjustsFontSizeToFitWidth = YES;
                     [likesLabel setTag:221];
                     [button addSubview:likesLabel];
                     
                     UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
+                    [like_button  setFrame:CGRectMake(260, 220+45, 50, 35)];
                     [like_button setBackgroundColor:[UIColor clearColor]];
                     like_button.tag = k;
                     [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
                     [button addSubview:like_button];
+                    
                     k++;
                     
                     [self loadlikes];
@@ -1539,6 +1592,202 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         }
     
 }
+
+- (void)tapTwice2:(id)sender
+{
+    
+    
+    
+    UIButton* button1 = sender;
+    NSUInteger b = button1.tag;
+    
+    _postLikers = [NSMutableArray new];
+    
+    NSString *kinveyId = [_newsFeed[b] objectForKey:@"_id"];
+    UIButton* button = [self.thumbnails objectAtIndex:b];
+    
+    [[button viewWithTag:220] removeFromSuperview];
+    [[button viewWithTag:220] removeFromSuperview];
+    
+   [self.cache_toggle isEqualToString:@"NO"];
+    
+    if ([self.cache_toggle isEqualToString:@"YES"]) {
+       // _postId = self.newsfeed_kinvey_id[b];
+    }else{
+        _postId = [_newsFeed[b] objectForKey:@"_id"];
+    }
+
+    KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"LikesDB" ofClass:[YookaBackend class]];
+    KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
+    
+    [store loadObjectWithID:_postId withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        if (errorOrNil == nil) {
+            if (objectsOrNil && objectsOrNil.count) {
+                
+                YookaBackend *backendObject = objectsOrNil[0];
+                _postLikers = [NSMutableArray arrayWithArray:backendObject.likers];
+                _postLikes = backendObject.likes;
+                
+                if ([_postLikes intValue]==0) {
+                    _likeStatus = @"NO";
+                }
+                
+                if (!(_postLikers == (id)[NSNull null])) {
+                    if ([_postLikers containsObject:[KCSUser activeUser].email]) {
+                        _likeStatus = @"YES";
+                    }else{
+                        _likeStatus = @"NO";
+                    }
+                }else{
+                    _likeStatus = @"NO";
+                    //        NSLog(@"try try try");
+                }
+                
+                if ([_likeStatus isEqualToString:@"YES"]) {
+                    
+                    int post_likes = [_postLikes intValue];
+                    post_likes = post_likes-1;
+                    _postLikes = [NSString stringWithFormat:@"%d",post_likes];
+                    
+                    if (_postLikers==(id)[NSNull null]) {
+                        //                        [_likersData replaceObjectAtIndex:view.tag withObject:[NSNull null]];
+                    }else{
+                        [_postLikers removeObject:[KCSUser activeUser].email];
+                    }
+                    
+                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(259, 224+45, 37, 37)];
+                    likesImageView.backgroundColor=[UIColor clearColor];
+                    [likesImageView setTag:220];
+                    likesImageView.image = [UIImage imageNamed:@"Before_like.png"];
+                    [button addSubview:likesImageView];
+                    
+                    UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                    likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
+                    likesLabel.backgroundColor=[UIColor whiteColor];
+                    [likesLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
+                    likesLabel.text = [NSString stringWithFormat:@"%@",_postLikes];
+                    likesLabel.textAlignment = NSTextAlignmentLeft;
+                    //likesLabel.adjustsFontSizeToFitWidth = YES;
+                    [likesLabel setTag:221];
+                    [button addSubview:likesLabel];
+                    
+                    //                [self saveSelectedPost];
+                    [self saveLikes];
+                    _likeStatus = @"NO";
+                    
+                }else{
+                    
+                    if (_postLikers == (id)[NSNull null]) {
+                        //            NSLog(@"post likers 2 = %@",_postLikers);
+                        _postLikers = [NSMutableArray arrayWithObject:[KCSUser activeUser].email];
+                        //                        [_likersData replaceObjectAtIndex:view.tag withObject:_postLikers];
+                        
+                    }else{
+                        //            NSLog(@"post likers 3 = %@",_postLikers);
+                        
+                        [_postLikers addObject:[KCSUser activeUser].email];
+                        //                        [_likersData replaceObjectAtIndex:view.tag withObject:_postLikers];
+                        
+                    }
+                    
+                    int post_likes = [_postLikes intValue];
+                    post_likes=post_likes+1;
+                    _postLikes = [NSString stringWithFormat:@"%d",post_likes];
+                    //                    [_likesData replaceObjectAtIndex:view.tag withObject:_postLikes];
+                    
+                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(250, 225+45, 40, 40)];
+                    likesImageView.image = [UIImage imageNamed:@"full_heart.png"];
+                    [likesImageView setTag:220];
+                    [button addSubview:likesImageView];
+                    
+                    UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                    likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
+                    likesLabel.backgroundColor=[UIColor whiteColor];
+                    [likesLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
+                    likesLabel.text = [NSString stringWithFormat:@"%@",_postLikes];
+                    likesLabel.textAlignment = NSTextAlignmentLeft;
+                    //likesLabel.adjustsFontSizeToFitWidth = YES;
+                    [likesLabel setTag:221];
+                    [button addSubview:likesLabel];
+                    
+                    //                [self saveSelectedPost];
+                    [self saveLikes];
+                    _likeStatus = @"YES";
+                    
+                }
+                
+            }else{
+                
+                _postLikes = @"0";
+                
+                _likeStatus = @"NO";
+                //                NSLog(@"likes = %@",_postLikes);
+                
+                _postLikers = [NSMutableArray arrayWithObject:[KCSUser activeUser].email];
+                
+                int post_likes = [_postLikes intValue];
+                post_likes=post_likes+1;
+                _postLikes = [NSString stringWithFormat:@"%d",post_likes];
+                
+                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(250, 225+45, 40, 40)];
+                likesImageView.image = [UIImage imageNamed:@"full_heart.png"];
+                [likesImageView setTag:220];
+                [button addSubview:likesImageView];
+                
+                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+                likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
+                likesLabel.backgroundColor=[UIColor whiteColor];
+                [likesLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
+                likesLabel.text = [NSString stringWithFormat:@"%@",_postLikes];
+                likesLabel.textAlignment = NSTextAlignmentLeft;
+                //likesLabel.adjustsFontSizeToFitWidth = YES;
+                [likesLabel setTag:221];
+                [button addSubview:likesLabel];
+                
+                //                [self saveSelectedPost];
+                [self saveLikes];
+                _likeStatus = @"YES";
+                
+            }
+            
+        }else{
+            
+            _postLikes = @"0";
+            
+            _likeStatus = @"NO";
+            //            NSLog(@"likes = %@",_postLikes);
+            
+            _postLikers = [NSMutableArray arrayWithObject:[KCSUser activeUser].email];
+            
+            int post_likes = [_postLikes intValue];
+            post_likes=post_likes+1;
+            _postLikes = [NSString stringWithFormat:@"%d",post_likes];
+            
+            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(250, 225+45, 40, 40)];
+            likesImageView.image = [UIImage imageNamed:@"full_heart.png"];
+            [likesImageView setTag:220];
+            [button addSubview:likesImageView];
+            
+            UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(290, 235+45, 18, 15)];
+            likesLabel.textColor = [self colorWithHexString:@"f38686"]; //heartcolor //green:18af80
+            likesLabel.backgroundColor=[UIColor whiteColor];
+            [likesLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
+            likesLabel.text = [NSString stringWithFormat:@"%@",_postLikes];
+            likesLabel.textAlignment = NSTextAlignmentLeft;
+            //likesLabel.adjustsFontSizeToFitWidth = YES;
+            [likesLabel setTag:221];
+            [button addSubview:likesLabel];
+            
+            //                [self saveSelectedPost];
+            [self saveLikes];
+            _likeStatus = @"YES";
+            
+        }
+        
+    } withProgressBlock:nil];
+    
+}
+
 
 - (void)buttonAction:(id)sender
 {
@@ -1559,7 +1808,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         self.detailsModalView.backgroundColor = [UIColor whiteColor];
         [button addSubview:self.detailsModalView];
         self.toggle = @"NO";
-        
         
         if (button.frame.size.width==145){
             
@@ -1656,10 +1904,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         [button addSubview:self.detailsModalView];
         self.toggle = @"NO";
         
-
-        
-        
-        
         if (button.frame.size.width==145){
             
             self.linkButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1731,6 +1975,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     }else{
         
         
+        
     }
     
 }
@@ -1767,16 +2012,12 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     
     _postId = [_newsFeed[b] objectForKey:@"_id"];
     
-
-    
     if ([button viewWithTag:5]!=nil) {
-        
  
         UIView* removeButton = [button viewWithTag:5];
         [removeButton removeFromSuperview];
         
     }else{
-
         
         UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
         likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
@@ -1800,8 +2041,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     _likeStatus = @"NO";
                 }
                 
-
-                
                 if (!(_postLikers == (id)[NSNull null])) {
                     if ([_postLikers containsObject:_myEmail]) {
                         _likeStatus = @"YES";
@@ -1817,7 +2056,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 
                 if ([_likeStatus isEqualToString:@"YES"]) {
                     
-                    NSLog(@"try 1");
+//                    NSLog(@"try 1");
                     
                     int post_likes = [_postLikes intValue];
                     post_likes = post_likes-1;
@@ -1828,16 +2067,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     }else{
                         [_postLikers removeObject:_myEmail];
                     }
-                    
-                    //        NSLog(@"likes data 2 = %@",_likesData);
-                    //        NSLog(@"likers data 2 = %@",_likersData);
-                    
-                    //                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 100, 20)];
-                    //                    likesImageView.image = [UIImage imageNamed:@"heartempty.png"];
-                    //                    [button addSubview:likesImageView];
-                    
-                    //                    NSLog(@"view = %@",[button subviews]);
-                    
                     
                     UIView* removeButton2 = [button viewWithTag:6];
                     [removeButton2 removeFromSuperview];
@@ -1857,7 +2086,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     
                 }else{
                     
-                    NSLog(@"try 2");
+//                    NSLog(@"try 2");
                     
                     if (_postLikers == (id)[NSNull null]) {
                         //            NSLog(@"post likers 2 = %@",_postLikers);
@@ -1875,15 +2104,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     int post_likes = [_postLikes intValue];
                     post_likes=post_likes+1;
                     _postLikes = [NSString stringWithFormat:@"%d",post_likes];
-                    //                    [_likesData replaceObjectAtIndex:view.tag withObject:_postLikes];
-                    
-                    //        NSLog(@"likes data 2 = %@",_likesData);
-                    //        NSLog(@"likers data 2 = %@",_likersData);
-                    
-                    //                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                    //                    likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                    //                    likesImageView.tag = 5;
-                    //                    [button addSubview:likesImageView];
                     
                     UIView* removeButton2 = [button viewWithTag:6];
                     [removeButton2 removeFromSuperview];
@@ -1897,7 +2117,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                     likesLabel.tag = 6;
                     [button addSubview:likesLabel];
                     
-                    //                [self saveSelectedPost];
+//                [self saveSelectedPost];
                     [self saveLikes];
                     _likeStatus = @"YES";
                     
@@ -1919,14 +2139,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 post_likes=post_likes+1;
                 _postLikes = [NSString stringWithFormat:@"%d",post_likes];
                 
-                NSLog(@"likes data 2 = %@",_likesData);
-                NSLog(@"likers data 2 = %@",_likersData);
-                
-                //                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                //                likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                //                likesImageView.tag = 5;
-                //                [button addSubview:likesImageView];
-                
                 UIView* removeButton2 = [button viewWithTag:6];
                 [removeButton2 removeFromSuperview];
                 
@@ -1939,7 +2151,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 likesLabel.tag = 6;
                 [button addSubview:likesLabel];
                 
-                //                [self saveSelectedPost];
+//                [self saveSelectedPost];
                 [self saveLikes];
                 _likeStatus = @"YES";
                 
@@ -1947,25 +2159,25 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             
         }else{
             
-            //            NSLog(@"try 4");
+//            NSLog(@"try 4");
             
             _postLikes = @"0";
             
             _likeStatus = @"NO";
-            //            NSLog(@"likes = %@",_postLikes);
+//            NSLog(@"likes = %@",_postLikes);
             
             _postLikers = [NSMutableArray arrayWithObject:_myEmail];
             int post_likes = [_postLikes intValue];
             post_likes=post_likes+1;
             _postLikes = [NSString stringWithFormat:@"%d",post_likes];
             
-            //        NSLog(@"likes data 2 = %@",_likesData);
-            //        NSLog(@"likers data 2 = %@",_likersData);
+//        NSLog(@"likes data 2 = %@",_likesData);
+//        NSLog(@"likers data 2 = %@",_likersData);
             
-            //            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-            //            likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-            //            likesImageView.tag = 5;
-            //            [button addSubview:likesImageView];
+//            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
+//            likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
+//            likesImageView.tag = 5;
+//            [button addSubview:likesImageView];
             
             UIView* removeButton2 = [button viewWithTag:6];
             [removeButton2 removeFromSuperview];
@@ -1979,7 +2191,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             likesLabel.tag = 6;
             [button addSubview:likesLabel];
             
-            //                [self saveSelectedPost];
+//                [self saveSelectedPost];
             [self saveLikes];
             _likeStatus = @"YES";
             
@@ -2013,7 +2225,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         } else {
             //save was successful
             if (objectsOrNil && objectsOrNil.count) {
-                //                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
+            //                NSLog(@"Successfully saved event (id='%@').", [objectsOrNil[0] kinveyObjectId]);
                 
             }
         }
@@ -2025,14 +2237,10 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     
     p=1;
     
-    NSLog(@"comment button touched");
     UIButton* button1 = sender;
     NSUInteger b = button1.tag;
-    NSLog(@"comment button %lu pressed",(unsigned long)b);
     
     self.toggle = @"NO";
-    
-    NSLog(@"remove");
     
     [self.detailsModalView removeFromSuperview];
     [self.linkButton removeFromSuperview];
@@ -2048,7 +2256,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [button addSubview:self.captionModalView];
     
     NSString *caption = [self.newsFeed[b] objectForKey:@"caption"];
-    NSLog(@"caption = %@",caption);
     
     if (button.frame.size.width==145){
         
@@ -2070,8 +2277,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         [captionLabel setTag:10];
         [self.captionModalView addSubview:captionLabel];
         
-
-        
         NSString *userId = [_newsFeed[b] objectForKey:@"userEmail"];
         NSString *userId2 = [NSString stringWithFormat:@"%@%@",userId,userId];
         NSString *userId3 = [NSString stringWithFormat:@"%@%@",userId,userId2];
@@ -2079,7 +2284,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         NSData* imageData = [ud objectForKey:userId3];
         UIImage *image = [UIImage imageWithData:imageData];
-        
         
         if (image) {
             UIImageView *userView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 10, 60, 60)];
@@ -2151,311 +2355,14 @@ const NSInteger yookaThumbnailSpace2013 = 5;
 
 - (void)getUserLikes:(NSUInteger)num{
     
-    //    if (n<self.newsFeed.count) {
-    NSString *kinveyId = [_newsFeed[num] objectForKey:@"_id"];
-    //        NSLog(@"kinveyId = %@",kinveyId);
-    
-    UIButton* button = [self.thumbnails objectAtIndex:num];
-    
-    KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"LikesDB" ofClass:[YookaBackend class]];
-    KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
-    
-    [store loadObjectWithID:kinveyId withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-        if (errorOrNil == nil) {
-            if (objectsOrNil && objectsOrNil.count) {
-                
-                YookaBackend *backendObject = objectsOrNil[0];
-                NSMutableArray *myArray = [NSMutableArray arrayWithArray:backendObject.likers];
-                _likes = backendObject.likes;
-                
-                if ([_likes integerValue]>0) {
-                    
-                    [_likesData addObject:_likes];
-                    [_likersData addObject:myArray];
-                    
-                    if([myArray containsObject:self.myEmail]){
-                        
-                        UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                        likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                        likesImageView.tag = 5;
-                        [button addSubview:likesImageView];
-                        
-                        UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 110, 30, 20)];
-                        likesLabel.textColor = [UIColor whiteColor];
-                        [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                        likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
-                        likesLabel.textAlignment = NSTextAlignmentCenter;
-                        likesLabel.adjustsFontSizeToFitWidth = YES;
-                        likesLabel.tag = 6;
-                        [button addSubview:likesLabel];
-                        
-                        //                            n++;
-                        //                            [self getUserLikes];
-                        
-                    }else{
-                        
-                        //                            UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                        //                            likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                        //                            [button addSubview:likesImageView];
-                        
-                        UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 110, 30, 20)];
-                        likesLabel.textColor = [UIColor whiteColor];
-                        [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                        likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
-                        likesLabel.textAlignment = NSTextAlignmentCenter;
-                        likesLabel.adjustsFontSizeToFitWidth = YES;
-                        likesLabel.tag = 6;
-                        [button addSubview:likesLabel];
-                        
-                        //                            UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                        //                            [like_button  setFrame:CGRectMake(255, 260, 50, 45)];
-                        //                            [like_button setBackgroundColor:[UIColor clearColor]];
-                        //                            like_button.tag = k;
-                        //                            [like_button addTarget:self action:@selector(likeBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                        //                            [button addSubview:like_button];
-                        
-                        //                            n++;
-                        //                            [self getUserLikes];
-                        
-                    }
-                    
-                }else{
-                    
-                    _likes = @"0";
-                    
-                    //                        UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                    //                        likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                    //                        [button addSubview:likesImageView];
-                    
-                    UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 110, 30, 20)];
-                    likesLabel.textColor = [UIColor whiteColor];
-                    [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                    likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
-                    likesLabel.textAlignment = NSTextAlignmentCenter;
-                    likesLabel.adjustsFontSizeToFitWidth = YES;
-                    likesLabel.tag = 6;
-                    [button addSubview:likesLabel];
-                    
-                    [_likesData addObject:@"0"];
-                    [_likersData addObject:[NSNull null]];
-                    
-                    //                        n++;
-                    //                        [self getUserLikes];
-                    
-                }
-                
-            }else{
-                
-                _likes = @"0";
-                
-                //                    UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 20, 20)];
-                //                    likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-                //                    [button addSubview:likesImageView];
-                
-                UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 110, 30, 20)];
-                likesLabel.textColor = [UIColor whiteColor];
-                [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:10]];
-                likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
-                likesLabel.textAlignment = NSTextAlignmentCenter;
-                likesLabel.adjustsFontSizeToFitWidth = YES;
-                likesLabel.tag = 6;
-                [button addSubview:likesLabel];
-                
-                [_likesData addObject:@"0"];
-                [_likersData addObject:[NSNull null]];
-                
-                
-            }
-            
-        } else {
-            
-            //                                            NSLog(@"error occurred: %@", errorOrNil);
-            _likes = @"0";
-            
-            //                UIImageView *likesImageView = [[UIImageView alloc]initWithFrame:CGRectMake(100, 110, 100, 20)];
-            //                likesImageView.image = [UIImage imageNamed:@"smallheart.png"];
-            //                likesImageView.tag = 5;
-            //                [button addSubview:likesImageView];
-            
-            UILabel *likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 110, 100, 20)];
-            likesLabel.textColor = [UIColor whiteColor];
-            [likesLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:15]];
-            likesLabel.text = [NSString stringWithFormat:@"%@",_likes];
-            likesLabel.textAlignment = NSTextAlignmentCenter;
-            likesLabel.adjustsFontSizeToFitWidth = YES;
-            likesLabel.tag = 6;
-            [button addSubview:likesLabel];
-            
-            [_likesData addObject:@"0"];
-            [_likersData addObject:[NSNull null]];
-            
-            
-        }
-    } withProgressBlock:nil];
-    
-    //    }
-    
 }
 
 - (void)getUserImage:(NSUInteger)b{
     
-    NSString *picUrl = self.user_pic_urls[b];
-    NSString *userId = [self.newsFeed[b] objectForKey:@"userEmail"];
-    NSString *userId2 = [NSString stringWithFormat:@"%@%@",userId,userId];
-    NSString *userId3 = [NSString stringWithFormat:@"%@%@",userId,userId2];
-    
-    UIButton* button = [self.thumbnails objectAtIndex:b];
-    
-    [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:picUrl]
-                                                        options:0
-                                                       progress:^(NSInteger receivedSize, NSInteger expectedSize)
-     {
-         // progression tracking code
-     }
-                                                      completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-     {
-         if (image && finished)
-         {
-             
-             // do something with image
-             
-             if (button.frame.size.width==145){
-                 
-                 UIImageView *userView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 10, 60, 60)];
-                 userView.layer.cornerRadius = userView.frame.size.height / 2;
-                 [userView.layer setBorderWidth:2.0];
-                 [userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-                 [userView setContentMode:UIViewContentModeScaleAspectFill];
-                 [userView setClipsToBounds:YES];
-                 [userView setImage:image];
-                 [button addSubview:userView];
-                 
-             }else{
-                 
-                 UIImageView *userView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 80, 50, 50)];
-                 userView.layer.cornerRadius = userView.frame.size.height / 2;
-                 [userView.layer setBorderWidth:2.0];
-                 [userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-                 [userView setContentMode:UIViewContentModeScaleAspectFill];
-                 [userView setClipsToBounds:YES];
-                 [userView setImage:image];
-                 [button addSubview:userView];
-                 
-             }
-             
-             
-             
-             
-             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-             [defaults setObject:UIImagePNGRepresentation(image) forKey:userId3];
-             [defaults synchronize];
-             
-             
-         }
-     }];
     
 }
 
 - (void)getUserDetails:(NSUInteger)num{
-    
-    NSLog(@"m1=%lu",(unsigned long)num);
-    //    if (==self.newsFeed.count) {
-    
-    //    }
-    //    if (m<self.newsFeed.count) {
-    NSLog(@"m2=%lu",(unsigned long)num);
-    NSLog(@"newsfeed count=%lu",(unsigned long)self.newsFeed.count);
-    
-    NSString *userId = [_newsFeed[num] objectForKey:@"userEmail"];
-    
-    NSLog(@"user id = %@",userId);
-    
-    _collectionName2 = @"userPicture";
-    _customEndpoint2 = @"NewsFeed";
-    _fieldName2 = @"_id";
-    _dict2 = [[NSDictionary alloc]initWithObjectsAndKeys:userId,@"userEmail",_collectionName2,@"collectionName",_fieldName2,@"fieldName", nil];
-    
-    //        [[button subviews]
-    //         makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    [KCSCustomEndpoints callEndpoint:_customEndpoint2 params:_dict2 completionBlock:^(id results, NSError *error){
-        if ([results isKindOfClass:[NSArray class]]) {
-            NSArray *results_array = [NSArray arrayWithArray:results];
-            if (results_array && results_array.count) {
-                
-                NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
-                NSString *userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
-                NSString *userFullName = [results[0] objectForKey:@"userFullName"];
-                
-                [self.user_full_names addObject:userFullName];
-                [self.user_pic_urls addObject:userPicUrl];
-                
-                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-                [ud setObject:userFullName forKey:userId];
-                NSString *userId2 = [NSString stringWithFormat:@"%@%@",userId,userId];
-                [ud setObject:userPicUrl forKey:userId2];
-                [ud synchronize];
-                
-                UIButton* button = [self.thumbnails objectAtIndex:num];
-                
-                if (button.frame.size.width==145){
-                    
-                    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 110, 100, 20)];
-                    nameLabel.textColor = [UIColor whiteColor];
-                    [nameLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:12]];
-                    nameLabel.text = [userFullName uppercaseString];
-                    nameLabel.textAlignment = NSTextAlignmentLeft;
-                    //                        nameLabel.adjustsFontSizeToFitWidth = YES;
-                    nameLabel.numberOfLines = 0;
-                    [button addSubview:nameLabel];
-                    
-                }else{
-                    
-                    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 160, 150, 20)];
-                    nameLabel.textColor = [UIColor whiteColor];
-                    [nameLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:12]];
-                    nameLabel.text = [userFullName uppercaseString];
-                    nameLabel.textAlignment = NSTextAlignmentLeft;
-                    //                        nameLabel.adjustsFontSizeToFitWidth = YES;
-                    nameLabel.numberOfLines = 0;
-                    [button addSubview:nameLabel];
-                    
-                }
-                
-                NSLog(@"TRY 1");
-                
-                //                    m++;
-                //                    [self getUserDetails];
-                
-            }else{
-                
-                NSLog(@"TRY 2");
-                
-                
-                [self.user_full_names addObject:@""];
-                [self.user_pic_urls addObject:@""];
-                
-                //                    m++;
-                //                    [self getUserDetails];
-                
-            }
-            
-        }else{
-            
-            NSLog(@"TRY 3");
-            
-            
-            [self.user_full_names addObject:@""];
-            [self.user_pic_urls addObject:@""];
-            
-            //                m++;
-            //                [self getUserDetails];
-            
-        }
-        
-    }];
-    
-    //    }
     
 }
 
@@ -2463,20 +2370,14 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     
     p=0;
     
-
-    
     [self.detailsModalView removeFromSuperview];
     
     YookaButton *b3 = (YookaButton*)sender;
     
-    NSLog(@"close button touched");
     UIButton* button1 = sender;
     NSUInteger b = button1.tag;
-    NSLog(@"close button %lu pressed",(unsigned long)b);
-    
     
     UIButton* button = [self.thumbnails objectAtIndex:b3.fourthTag];
-    NSLog(@"button subviews = %@",[button subviews]);
     UIView* removeCaption = [button viewWithTag:10];
     UIView* removeProfile = [button viewWithTag:11];
    // UIView* removeButton = [[button subviews]objectAtIndex:4];
@@ -2484,16 +2385,13 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     UIView* removeCloseButton = [button viewWithTag:9];
 
     [removeCloseButton removeFromSuperview];
-    //[removeButton removeFromSuperview];
+//    [removeButton removeFromSuperview];
     [removeProfile removeFromSuperview];
     [removeCaption removeFromSuperview];
     
     self.toggle = @"NO";
     [self.captionModalView removeFromSuperview];
-    //[self.detailsModalView removeFromSuperview];
-    NSLog(@"close button %lu pressed",(unsigned long)b3.secondTag);
     [self buttonAction2: (NSUInteger) b3.secondTag];
-    
     
 }
 
@@ -2543,12 +2441,11 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             customPinView.rightCalloutAccessoryView = rightButton;
             
             return customPinView;
-        }
-        else
-        {
+            
+        }else{
             pinView.annotation = annotation;
         }
-        return pinView;
+            return pinView;
     }
     else if ([annotation isKindOfClass:[SFAnnotation class]])   // for City of San Francisco
     {
@@ -2563,7 +2460,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             annotationView.canShowCallout = YES;
             
             
-            UIImage *flagImage = [UIImage imageNamed:@"pin.png"];
+            UIImage *flagImage = [UIImage imageNamed:@"blue_pin.png"];
             // size the flag down to the appropriate size
             CGRect resizeRect;
             
@@ -2577,7 +2474,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             //            if (resizeRect.size.height > maxSize.height)
             //                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
             
-            resizeRect = CGRectMake(0.f, 0.f, 30.f, 45.f);
+            resizeRect = CGRectMake(0.f, 0.f, 35.f, 45.f);
             
             resizeRect.origin = CGPointMake(0.0, 0.0);
             UIGraphicsBeginImageContext(resizeRect.size);
@@ -2599,7 +2496,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             //                [annotationView addSubview:tagLabel];
             
             // offset the flag annotation so that the flag pole rests on the map coordinate
-            annotationView.centerOffset = CGPointMake( annotationView.centerOffset.x + annotationView.image.size.width/2, annotationView.centerOffset.y - annotationView.image.size.height/2 );
+            annotationView.centerOffset = CGPointMake( (annotationView.centerOffset.x + annotationView.image.size.width/2)-20.f, (annotationView.centerOffset.y - annotationView.image.size.height/2)+15.f );
             
             return annotationView;
         }
@@ -2653,8 +2550,8 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     }
     
     MKCoordinateRegion region;
-    region.center.latitude = topLeftCoord.latitude - (topLeftCoord.latitude - bottomRightCoord.latitude) * 0.5;
-    region.center.longitude = topLeftCoord.longitude + (bottomRightCoord.longitude - topLeftCoord.longitude) * 0.5;
+    region.center.latitude = topLeftCoord.latitude - (topLeftCoord.latitude - bottomRightCoord.latitude) * 0.5f;
+    region.center.longitude = topLeftCoord.longitude + (bottomRightCoord.longitude - topLeftCoord.longitude) * 0.5f;
     region.span.latitudeDelta = fabs(topLeftCoord.latitude - bottomRightCoord.latitude) * 1.85; // Add a little extra space on the sides
     region.span.longitudeDelta = fabs(bottomRightCoord.longitude - topLeftCoord.longitude) * 1.85; // Add a little extra space on the sides
     
@@ -2729,33 +2626,27 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         
         if (success) {
             
-            CGRect screenRect5 = CGRectMake(161.f, 132.f+85, 155.f, 78.f);
+            CGRect screenRect5 = CGRectMake(161.f, 132.f+85+11, 155.f, 75.f);
             UIScrollView *timeScrollview=[[UIScrollView alloc] initWithFrame:screenRect5];
             [timeScrollview setContentSize:CGSizeMake(155,78.f)];
-            timeScrollview.frame = CGRectMake(161.f, 132.f+85, 155.f, 78.f);
+            timeScrollview.frame = CGRectMake(161.f, 132.f+85+11, 155.f, 75.f);
             [timeScrollview setBackgroundColor:[UIColor clearColor]];
             timeScrollview.showsHorizontalScrollIndicator = NO;
             [self.detailsView addSubview:timeScrollview];
             
             NSDictionary *dic = result;
-            NSLog(@"venue dic 1");
             if ([dic valueForKeyPath:@"response.venue.attributes.groups"]) {
-                NSLog(@"price data = %@",[dic valueForKeyPath:@"response.venue.attributes.groups"]);
                 NSArray *attributes_array = [dic valueForKeyPath:@"response.venue.attributes.groups"];
                 if (attributes_array.count>0) {
-                    NSLog(@"attributes = %@",[attributes_array[0] objectForKey:@"summary"]);
                     NSString *price_string = [attributes_array[0] objectForKey:@"summary"];
                     NSArray *array1 = [dic valueForKeyPath:@"response.venue.hours.timeframes.days"];
-                    NSLog(@"array 1 = %@",array1);
-                    
                     NSArray *array2 = [dic valueForKeyPath:@"response.venue.hours.timeframes.open.renderedTime"];
-                    NSLog(@"array 2 = %@",array2);
                     
                     if (array1.count>0) {
                         for (int a=0; a<array1.count; a++) {
                             
                             self.hoursLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, (a*35)+5, 150, 15)];
-                            UIFont *font = [UIFont fontWithName:@"Montserrat-Regular" size:11.0];
+                            UIFont *font = [UIFont fontWithName:@"OpenSans-Bold" size:11.0];
                             self.hoursLabel.textAlignment = NSTextAlignmentLeft;
                             NSString* string1 = [[array1[a] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] uppercaseString];
                             NSMutableAttributedString* string = [[NSMutableAttributedString alloc]initWithString:string1];
@@ -2777,7 +2668,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             [timeScrollview addSubview:self.hoursLabel];
                             
                             UILabel *time_label = [[UILabel alloc]initWithFrame:CGRectMake(10, (a*35)+20, 150, 15)];
-                            time_label.font = [UIFont fontWithName:@"OpenSans" size:10.0];
+                            time_label.font = [UIFont fontWithName:@"OpenSans-Semibold" size:10.0];
                             time_label.textAlignment = NSTextAlignmentLeft;
                             NSArray *array_string = array2[a];
                             time_label.text = [array_string[0] uppercaseString];
@@ -2788,7 +2679,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             
                         }
                         
-                        self.priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 255+85, 270, 50)];
+                        self.priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 255+85+5, 270, 50)];
                         self.priceLabel.font = [UIFont fontWithName:@"OpenSans" size:14.0];
                         self.priceLabel.textAlignment = NSTextAlignmentLeft;
                         self.priceLabel.textColor = [UIColor lightGrayColor];
@@ -2832,7 +2723,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             _latitude = [NSString stringWithFormat:@"%@",[dic valueForKeyPath:@"response.venue.location.lat"]];
             _longitude = [NSString stringWithFormat:@"%@",[dic valueForKeyPath:@"response.venue.location.lng"]];
             
-            
             // set Span
             // start off by default in San Francisco
             MKCoordinateRegion newRegion;
@@ -2850,10 +2740,8 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             
             [self addAnnotation];
             
-            
-            
-            UILabel *call_title = [[UILabel alloc]initWithFrame:CGRectMake(15, 140+85, 150, 20)];
-            UIFont *font = [UIFont fontWithName:@"OpenSans" size:14.0];
+            UILabel *call_title = [[UILabel alloc]initWithFrame:CGRectMake(15, 140+85+5, 150, 20)];
+            UIFont *font = [UIFont fontWithName:@"OpenSans-Bold" size:14.0];
             call_title.textAlignment = NSTextAlignmentLeft;
             NSString* string12 = @"CALL";
             NSMutableAttributedString* string13 = [[NSMutableAttributedString alloc]initWithString:string12];
@@ -2874,8 +2762,8 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             [self.detailsView addSubview:call_title];
             
             if ([dic valueForKeyPath:@"response.venue.contact.formattedPhone"]) {
-                self.phoneLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(13, 165+85, 150, 20)];
-                self.phoneLabel2.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                self.phoneLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(13, 165+85+5, 150, 20)];
+                self.phoneLabel2.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:12.0];
                 self.phoneLabel2.textAlignment = NSTextAlignmentLeft;
                 NSString *string = [dic valueForKeyPath:@"response.venue.contact.formattedPhone"];
                 self.phoneLabel2.text = string;
@@ -2884,16 +2772,15 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                 [self.detailsView addSubview:self.phoneLabel2];
                 
                 UIButton *call_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                [call_button setFrame:CGRectMake(5, 180, 150, 110)];
+                [call_button setFrame:CGRectMake(5, 185, 150, 110)];
                 [call_button setBackgroundColor:[UIColor clearColor]];
-                //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
                 [call_button addTarget:self action:@selector(phoneCallAction) forControlEvents:UIControlEventTouchUpInside];
                 [self.detailsView addSubview:call_button];
                 
             }
             
-            UILabel *location_title = [[UILabel alloc]initWithFrame:CGRectMake(170, 247+85, 220, 39)];
-            UIFont *font2 = [UIFont fontWithName:@"OpenSans-SemiBold" size:11.0];
+            UILabel *location_title = [[UILabel alloc]initWithFrame:CGRectMake(170, 247+85+7, 220, 39)];
+            UIFont *font2 = [UIFont fontWithName:@"OpenSans-Bold" size:11.0];
             location_title.textAlignment = NSTextAlignmentLeft;
             NSString* string10 = @"LOCATION";
             NSMutableAttributedString* string11 = [[NSMutableAttributedString alloc]initWithString:string10];
@@ -2912,8 +2799,8 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             location_title.textColor = [UIColor grayColor];            
             [self.detailsView addSubview:location_title];
             
-            self.addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(170, 275+85, 220, 39)];
-            self.addressLabel.font = [UIFont fontWithName:@"OpenSans" size:11.0];
+            self.addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(170, 275+85+5, 220, 39)];
+            self.addressLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:11.0];
             self.addressLabel.textAlignment = NSTextAlignmentLeft;
             self.addressLabel.text = [NSString stringWithFormat:@"%@\n%@, %@",_venueAddress,_venueCity,_venuePostalCode];
             self.addressLabel.textColor = [UIColor grayColor];
@@ -2947,10 +2834,14 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         contentSize3 = 320+(int)(50*self.filteredArray.count);
         return [self.filteredArray count];
         
-    } else {
+    } else if(self.menuObjects.count){
         contentSize3 = 320+(int)(50*self.menuObjects.count);
         return self.menuObjects.count;
-    }}
+    }
+    
+    return 1;
+
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -2962,7 +2853,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             return 1;
         }    }
     
-    return 0;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -2981,7 +2872,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
         _descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(40.0, 0.0, 260.0, 40.0)];
         [_descriptionLabel setTag:1];
         [_descriptionLabel setBackgroundColor:[UIColor clearColor]]; // transparent label background
-        _descriptionLabel.textColor = [UIColor lightGrayColor];
+        _descriptionLabel.textColor = [UIColor grayColor];
         _descriptionLabel.textAlignment = NSTextAlignmentLeft;
         [_descriptionLabel setFont:[UIFont fontWithName:@"OpenSans" size:17]];
         // custom views should be added as subviews of the cell's contentView:
@@ -2989,22 +2880,16 @@ const NSInteger yookaThumbnailSpace2013 = 5;
 
     }
     
-    //    cell.textLabel.text = self.menuObjects[indexPath.row];
-    //    FSVenue *venue = self.nearbyVenues[indexPath.row];
-    //    if (venue.location.address) {
-    //        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m, %@",
-    //        //                                     venue.location.distance,
-    //        //                                     venue.location.address];
-    //    } else {
-    //        //        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@m",
-    //        //                                     venue.location.distance];
-    //    }
-    
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        [(UILabel *)[cell.contentView viewWithTag:1] setText:self.filteredArray[indexPath.row]];
-    } else {
-        [(UILabel *)[cell.contentView viewWithTag:1] setText:self.menuObjects[indexPath.row]];
+    if (self.menuObjects.count) {
+        if (tableView == self.searchDisplayController.searchResultsTableView) {
+            [(UILabel *)[cell.contentView viewWithTag:1] setText:self.filteredArray[indexPath.row]];
+        } else {
+            [(UILabel *)[cell.contentView viewWithTag:1] setText:self.menuObjects[indexPath.row]];
+        }
+    }else{
+        [(UILabel *)[cell.contentView viewWithTag:1] setText:@"No menu here."];
     }
+
     
     //    UIImageView *imv = [[UIImageView alloc]initWithFrame:CGRectMake(20,6, 30, 31)];
     //    imv.image=[UIImage imageNamed:@"check_box.jpeg"];
@@ -3120,7 +3005,6 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                              [_menuObjects addObject:tmp];
                                          [scanner scanString:@"\"" intoString:NULL];
                                      }
-                                     
                                          [self getYookaMenuForVenue];
                                  }else{
                                      [self getYookaMenuForVenue];

@@ -106,6 +106,7 @@
 @property (nonatomic, strong) NSString *fieldName2;
 
 @property (nonatomic, strong) NSString *myEmail;
+@property (nonatomic, strong) NSString *myEmail2;
 @property (nonatomic, strong) NSString *myURL;
 
 @property (nonatomic, strong) NSMutableArray *cachesubscribedHuntNames;

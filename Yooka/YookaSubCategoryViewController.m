@@ -14,6 +14,7 @@
 #import "UIImage+Scale.h"
 #import "UIImage+Crop.h"
 #import "UIImage+Screenshot.h"
+#import "Flurry.h"
 
 @interface YookaSubCategoryViewController ()
 
@@ -173,7 +174,7 @@
              
              self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
              self.titleLabel.textColor = [UIColor whiteColor];
-             self.titleLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15];
+             self.titleLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15];
              NSString *string = [self.subCategoryName uppercaseString];
              if (string) {
                  NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
@@ -367,19 +368,10 @@
         
         NSString *hunt_pic_url = [_huntDict6 objectForKey:hunt_name];
         
-        SDWebImageManager *manager = [SDWebImageManager sharedManager];
-        [manager downloadWithURL:[NSURL URLWithString:hunt_pic_url]
-                         options:0
-                        progress:^(NSInteger receivedSize, NSInteger expectedSize)
+        [[SDImageCache sharedImageCache] queryDiskCacheForKey:hunt_pic_url done:^(UIImage *image, SDImageCacheType cacheType)
          {
-             // progression tracking code
-         }
-                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
-         {
-             if (image)
-             {
-
-                
+             if (image) {
+                 
                  UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 1, 160, 157)];
                  buttonImage.image = image;
                  buttonImage.contentMode = UIViewContentModeScaleToFill;
@@ -397,7 +389,7 @@
                  
                  NSString *string = [hunt_name uppercaseString];
                  huntLabel.textColor = [self colorWithHexString:@"9a8e92"];
-    
+                 
                  if (string) {
                      NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
                      float spacing = 1.2f;
@@ -416,7 +408,7 @@
                  ver_bg3.backgroundColor = [self colorWithHexString:@"f8f8f8"];
                  [button addSubview:ver_bg3];
                  
-                
+                 
                  
                  [self.gridScrollView addSubview:button];
                  [self.thumbnails addObject:button];
@@ -428,19 +420,87 @@
                      [self getMyHuntCounts];
                  }
                  [self getSubCatHuntPics];
-                 
-                 
-             }else{
-                 i++;
-                 if (i==self.subCategoryArray.count) {
-                     [self getMyHuntCounts];
-                 }
-                 [self.gridScrollView addSubview:button];
-                 [self.thumbnails addObject:button];
-                 [self getSubCatHuntPics];
 
+             }else{
+                 
+                 SDWebImageManager *manager = [SDWebImageManager sharedManager];
+                 [manager downloadWithURL:[NSURL URLWithString:hunt_pic_url]
+                                  options:0
+                                 progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                  {
+                      // progression tracking code
+                  }
+                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+                  {
+                      if (image)
+                      {
+                          [[SDImageCache sharedImageCache] storeImage:image forKey:hunt_pic_url];
+                          
+                          UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 1, 160, 157)];
+                          buttonImage.image = image;
+                          buttonImage.contentMode = UIViewContentModeScaleToFill;
+                          [buttonImage setBackgroundColor:[UIColor clearColor]];
+                          [button addSubview:buttonImage];
+                          
+                          UIView *huntLabel_bg2 = [[UIView alloc]initWithFrame:CGRectMake(0, 140, 160, 30)];
+                          huntLabel_bg2.backgroundColor = [self colorWithHexString:@"f8f8f8"];
+                          [button addSubview:huntLabel_bg2];
+                          
+                          UILabel *huntLabel = [[UILabel alloc]initWithFrame:CGRectMake(9, 139, 150, 33)];
+                          
+                          huntLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:11.f];
+                          huntLabel.textAlignment = NSTextAlignmentLeft;
+                          
+                          NSString *string = [hunt_name uppercaseString];
+                          huntLabel.textColor = [self colorWithHexString:@"9a8e92"];
+                          
+                          if (string) {
+                              NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+                              float spacing = 1.2f;
+                              [attributedString addAttribute:NSKernAttributeName
+                                                       value:@(spacing)
+                                                       range:NSMakeRange(0, [string length])];
+                              huntLabel.attributedText = attributedString;
+                          }
+                          [button addSubview:huntLabel];
+                          
+                          UIView *ver_bg2 = [[UIView alloc]initWithFrame:CGRectMake(159, 0, 1, 140)];
+                          ver_bg2.backgroundColor = [self colorWithHexString:@"f8f8f8"];
+                          [button addSubview:ver_bg2];
+                          
+                          UIView *ver_bg3 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 1, 140)];
+                          ver_bg3.backgroundColor = [self colorWithHexString:@"f8f8f8"];
+                          [button addSubview:ver_bg3];
+                          
+                          
+                          
+                          [self.gridScrollView addSubview:button];
+                          [self.thumbnails addObject:button];
+                          
+                          [_gridScrollView setContentSize:CGSizeMake(320, contentSize)];
+                          
+                          i++;
+                          if (i==self.subCategoryArray.count) {
+                              [self getMyHuntCounts];
+                          }
+                          [self getSubCatHuntPics];
+                          
+                          
+                      }else{
+                          i++;
+                          if (i==self.subCategoryArray.count) {
+                              [self getMyHuntCounts];
+                          }
+                          [self.gridScrollView addSubview:button];
+                          [self.thumbnails addObject:button];
+                          [self getSubCatHuntPics];
+                          
+                      }
+                  }];
+                 
              }
          }];
+        
 
     }
     
@@ -458,7 +518,14 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     self.subscribedHunts=[defaults objectForKey:@"subscribedHuntNames"];
-
+    
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.categoryName,@"Category_Name",
+                                   self.subCategoryName, @"Sub_Category_Name",
+                                   self.subCategoryArray[b],@"Hunt_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Sub_Category_Hunt_Clicked" withParameters:articleParams];
     
     if ([self.subscribedHunts containsObject:self.subCategoryArray[b]]) {
         

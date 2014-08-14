@@ -13,6 +13,7 @@
 #import "UIImage+Scale.h"
 #import "UIImage+Crop.h"
 #import "UIImage+Screenshot.h"
+#import "Flurry.h"
 
 @interface YookaCategoryViewController ()
 
@@ -199,44 +200,27 @@
         button.userInteractionEnabled = YES;
         
         [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        //        [button addGestureRecognizer:tapOnce]; //remove the other button action which calls method `button`
-        //        [button addGestureRecognizer:tapTwice];
-        //        [button addGestureRecognizer:tapTrice];
         
-        SDWebImageManager *manager = [SDWebImageManager sharedManager];
-        [manager downloadWithURL:[NSURL URLWithString:yooka.subcatPicUrl]
-                         options:0
-                        progress:^(NSInteger receivedSize, NSInteger expectedSize)
+        [[SDImageCache sharedImageCache] queryDiskCacheForKey:yooka.subcatPicUrl done:^(UIImage *image, SDImageCacheType cacheType)
          {
-             // progression tracking code
-         }
-                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
-         {
-             if (image)
-             {
-                 // do something with image
+             if (image) {
+                 
                  //set image
                  UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
                  subcatImage.layer.cornerRadius = subcatImage.frame.size.height / 2;
-                 //subcatImage.layer.cornerRadius = subcatImage.frame.size.width / 2;
                  [subcatImage setContentMode:UIViewContentModeScaleAspectFill];
                  [subcatImage setClipsToBounds:YES];
-                 //UIImage *scaledImage = [image scaleToSize:CGSizeMake(30, 30)];
-                //subcatImage.image = scaledImage;
+                 
                  subcatImage.image = image;
                  [subcatImage setBackgroundColor:[UIColor clearColor]];
-
                  [button addSubview:subcatImage];
                  
-//                 UIImageView *notification_icon = [[UIImageView alloc]initWithFrame:CGRectMake(-5, -5, 25, 35)];
-//                 [notification_icon setImage:[UIImage imageNamed:@"notification.png"]];
-//                 [subcatImage addSubview:notification_icon];
+                 [[SDImageCache sharedImageCache] storeImage:image forKey:yooka.subcatPicUrl];
                  
                  //set arrow
                  UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 23, 21, 29)];
                  [arrow setImage:[UIImage imageNamed:@"next_information.png"]];
                  [button addSubview:arrow];
-
                  
                  UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 20, 200, 20)];
                  subCatLabel.textColor = [UIColor lightGrayColor];
@@ -272,8 +256,78 @@
                  
                  [self fillSubCats];
                  
+             }else{
+                 
+                 SDWebImageManager *manager = [SDWebImageManager sharedManager];
+                 [manager downloadWithURL:[NSURL URLWithString:yooka.subcatPicUrl]
+                                  options:0
+                                 progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                  {
+                      // progression tracking code
+                  }
+                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+                  {
+                      if (image)
+                      {
+                          // do something with image
+                          //set image
+                          UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
+                          subcatImage.layer.cornerRadius = subcatImage.frame.size.height / 2;
+                          [subcatImage setContentMode:UIViewContentModeScaleAspectFill];
+                          [subcatImage setClipsToBounds:YES];
+                          
+                          subcatImage.image = image;
+                          [subcatImage setBackgroundColor:[UIColor clearColor]];
+                          [button addSubview:subcatImage];
+                          
+                          [[SDImageCache sharedImageCache] storeImage:image forKey:yooka.subcatPicUrl];
+                          
+                          //set arrow
+                          UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 23, 21, 29)];
+                          [arrow setImage:[UIImage imageNamed:@"next_information.png"]];
+                          [button addSubview:arrow];
+                          
+                          
+                          UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 20, 200, 20)];
+                          subCatLabel.textColor = [UIColor lightGrayColor];
+                          [subCatLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:18]];
+                          subCatLabel.text = [yooka.subcatName uppercaseString];
+                          subCatLabel.textAlignment = NSTextAlignmentLeft;
+                          subCatLabel.adjustsFontSizeToFitWidth = NO;
+                          [subCatLabel setBackgroundColor:[UIColor clearColor]];
+                          [button addSubview:subCatLabel];
+                          
+                          UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(72, 43, 200, 10)];
+                          countLabel.textColor = [UIColor lightGrayColor];
+                          [countLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:10]];
+                          countLabel.text = [NSString stringWithFormat:@"%lu ITEMS",(unsigned long)[yooka.subcatHuntNames count]];
+                          countLabel.textAlignment = NSTextAlignmentLeft;
+                          countLabel.adjustsFontSizeToFitWidth = NO;
+                          [countLabel setBackgroundColor:[UIColor clearColor]];
+                          [button addSubview:countLabel];
+                          
+                          [button setBackgroundColor:[UIColor clearColor]];
+                          
+                          UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 69, self.view.bounds.size.width, 1)];
+                          lineView.backgroundColor = [self colorWithHexString:@"f5f5f5"];
+                          [button addSubview:lineView];
+                          
+                          [self.gridScrollView addSubview:button];
+                          [self.thumbnails addObject:button];
+                          
+                          [_gridScrollView setContentSize:CGSizeMake(320, contentSize)];
+                          
+                          item++;
+                          i++;
+                          
+                          [self fillSubCats];
+                          
+                      }
+                  }];
+                 
              }
          }];
+        
         
     }
 }
@@ -284,8 +338,17 @@
     NSUInteger b = button.tag;
     NSLog(@"button %lu pressed",(unsigned long)b);
     
+
+    
     YookaBackend *yooka = self.featuredHunts[b];
     NSLog(@"subcat hunt name = %@",yooka.subcatPicUrl);
+    
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.categoryName,@"Category_Name",
+                                   yooka.subcatName, @"Sub_Category_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Sub_Category_Clicked" withParameters:articleParams];
     
     CATransition *transition = [CATransition animation];
     transition.duration = 0.35;

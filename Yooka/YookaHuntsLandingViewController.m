@@ -25,6 +25,7 @@
 #import "MainViewController.h"
 #import "YookaFeaturedHuntViewController.h"
 #import "LRGlowingButton.h"
+#import "Flurry.h"
 
 @interface YookaHuntsLandingViewController ()<iCarouselDataSource, iCarouselDelegate>
 
@@ -51,7 +52,7 @@
 
 - (void)dealloc
 {
-	//it's a good idea to set these to nil here to avoid
+    //it's a good idea to set these to nil here to avoid
 	//sending messages to a deallocated viewcontroller
 	_carousel.delegate = nil;
 	_carousel.dataSource = nil;
@@ -98,10 +99,8 @@
         NSLog(@"evening");
     }
     
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-    
     if (INTERFACE_IS_PHONE) {
-        if (screenSize.height > 480.0f) {
+        if (isiPhone5) {
             
             self.myEmail = [KCSUser activeUser].email;
             
@@ -130,11 +129,12 @@
 
             //create carousel
             self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 300)];
-            self.carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            self.carousel.autoresizingMask = UIViewAutoresizingNone;
             self.carousel.type = iCarouselTypeWheel;
             self.carousel.delegate = self;
             self.carousel.dataSource = self;
             self.carousel.backgroundColor = [UIColor clearColor];
+            self.carousel.clipsToBounds = YES; //This is main point
             //add carousel to view
             [self.view addSubview:self.carousel];
             
@@ -164,7 +164,7 @@
             
             self.myEmail = [KCSUser activeUser].email;
             
-            self.bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+            self.bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
             [self.bgImageView setImage:[UIImage imageNamed:@"yooka_front.png"]];
             [self.view addSubview:self.bgImageView];
             
@@ -179,7 +179,7 @@
             [self.view addSubview:self.navButton];
             
             self.navButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
-            [self.navButton3  setFrame:CGRectMake(0, 0, 60, 80)];
+            [self.navButton3  setFrame:CGRectMake(0, 0, 60, 60)];
             [self.navButton3 setBackgroundColor:[UIColor clearColor]];
             [self.navButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [self.navButton3 addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -188,16 +188,17 @@
             [self.view addSubview:self.navButton3];
             
             //create carousel
-            self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 300)];
+            self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 200)];
             self.carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             self.carousel.type = iCarouselTypeWheel;
             self.carousel.delegate = self;
             self.carousel.dataSource = self;
             self.carousel.backgroundColor = [UIColor clearColor];
+            self.carousel.clipsToBounds = YES; //This is main point
             //add carousel to view
             [self.view addSubview:self.carousel];
             
-            self.categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(65, 525, 190, 50)];
+            self.categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(65, 435, 190, 50)];
             self.categoryLabel.textColor = [UIColor whiteColor];
             self.categoryLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:19.0];
             [self.categoryLabel setTextAlignment:NSTextAlignmentCenter];
@@ -212,7 +213,7 @@
             
             self.hunts_pages.backgroundColor = [UIColor clearColor];
             
-            UIImageView *arrowview = [[UIImageView alloc]initWithFrame:CGRectMake(140, 507, 40, 40)];
+            UIImageView *arrowview = [[UIImageView alloc]initWithFrame:CGRectMake(140, 420, 40, 40)];
             arrowview.image = [UIImage imageNamed:@"arrow_landing.png"];
             [self.view addSubview:arrowview];
             
@@ -235,7 +236,7 @@
 
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     if (INTERFACE_IS_PHONE) {
-        if (screenSize.height > 480.0f) {
+        if (isiPhone5) {
             
             self.topScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 60, 320, 150)];
             [self.topScrollView setBackgroundColor:[UIColor clearColor]];
@@ -270,6 +271,37 @@
             
         }else{
             
+            self.topScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 60, 320, 150)];
+            [self.topScrollView setBackgroundColor:[UIColor clearColor]];
+            self.topScrollView.delegate = self;
+            [self.view addSubview:self.topScrollView];
+            
+            [self.topScrollView setPagingEnabled:YES];
+            self.topScrollView.showsHorizontalScrollIndicator = NO;
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            self.cache_sponsored_hunt_names = [defaults objectForKey:@"sponsoredHunts"];
+            self.cachesubscribedHuntNames = [defaults objectForKey:@"subscribedHuntNames"];
+            self.cacheUnSubscribedHuntNames = [defaults objectForKey:@"unsubscribedHuntNames"];
+            //            NSLog(@"cache sponsored hunt names = %@",self.cache_sponsored_hunt_names);
+            if (self.cache_sponsored_hunt_names) {
+                self.sponsored_hunt_names = self.cache_sponsored_hunt_names;
+                self.subscribedHuntNames = self.cachesubscribedHuntNames;
+                self.unSubscribedHuntNames = self.cacheUnSubscribedHuntNames;
+                
+                if (self.sponsored_hunt_names.count == 0) {
+                    [self.sponsored_hunt_names addObject:@"MORE HUNTS COMING"];
+                    [self fillFeauturedHunts];
+                }else{
+                    [self fillFeauturedHunts];
+                }
+                
+                [self getFeaturedHunts2];
+                
+            }else{
+                [self getFeaturedHunts];
+            }
+            
         }
     }
     
@@ -277,14 +309,10 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    float scrollViewHeight = scrollView.frame.size.height;
-    float scrollContentSizeHeight = scrollView.contentSize.height;
+//    float scrollViewHeight = scrollView.frame.size.height;
+//    float scrollContentSizeHeight = scrollView.contentSize.height;
     float scrollOffset = scrollView.contentOffset.x;
     
-    if (scrollView == self.topScrollView) {
-        NSLog(@"scroll offset = %f",scrollOffset);
-    }
-
     CGFloat pageWidth = scrollView.frame.size.width;
     float fractionalPage = scrollView.contentOffset.x / pageWidth;
     NSInteger page = lround(fractionalPage);
@@ -365,7 +393,7 @@
             self.navButton2.tag = 1;
             self.navButton3.tag = 1;
             [_delegate movePanelToOriginalPosition];
-            [self.carousel setHidden:NO];
+//            [self.carousel setHidden:NO];
             
             break;
         }
@@ -375,7 +403,7 @@
             self.navButton2.tag = 0;
             self.navButton3.tag = 0;
             [_delegate movePanelRight];
-            [self.carousel setHidden:YES];
+//            [self.carousel setHidden:YES];
             [self.navButton2 setHidden:NO];
             
             break;
@@ -450,86 +478,126 @@
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
-    //    UILabel *label = nil;
-    
-    //create new view if no view is available for recycling
-    //    if (view == nil)
-    //    {
-    //        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100.0f, 100.0f)];
-    //        ((UIImageView *)view).image = [UIImage imageNamed:@"house_placeholder.png"];
-    //        view.contentMode = UIViewContentModeCenter;
-    //        label = [[UILabel alloc] initWithFrame:view.bounds];
-    //        label.backgroundColor = [UIColor clearColor];
-    //        label.textAlignment = NSTextAlignmentCenter;
-    //        label.font = [label.font fontWithSize:50];
-    //        label.tag = 1;
-    //        [view addSubview:label];
-    //    }
-    //    else
-    //    {
-    //        //get a reference to the label in the recycled view
-    //        label = (UILabel *)[view viewWithTag:1];
-    //    }
-    
     LRGlowingButton *button = (LRGlowingButton *)view;
-	if (button == nil)
-	{
-		//no button available to recycle, so create new one
-//		UIImage *image = [UIImage imageNamed:@"house_placeholder.png"];
-		button = [LRGlowingButton buttonWithType:UIButtonTypeCustom];
-		button.frame = CGRectMake(0.0f, 0.0f, 150.f, 350.f);
-		[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [button setBackgroundColor:[UIColor clearColor]];
-//		[button setBackgroundImage:image forState:UIControlStateNormal];
-//		button.titleLabel.font = [button.titleLabel.font fontWithSize:30];
-        button.glowsWhenHighlighted = NO;
-        //button.highlightedGlowColor = [self colorWithHexString:@"3ac0ec"];
-		[button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        
-//        UIImageView *building = [[UIImageView alloc]initWithFrame:CGRectMake(20, 60, 120, 200)];
-//        [building setImage:[UIImage imageNamed:@"building.png"]];
-//        [button addSubview:building];
-        
 
-	}
-    
-    UILabel *category_name = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, 150, 35)];
-    category_name.textColor = [UIColor whiteColor];
-    category_name.font = [UIFont fontWithName:@"OpenSans" size:25.0];
-    category_name.textAlignment = NSTextAlignmentCenter;
-    [button addSubview:category_name];
-	
-	//set category images
-    if (index==0) {
-        [self.categoryLabel setText:@"EAT"];
+    if (isiPhone5) {
         
-        self.eat = [[UIImageView alloc]initWithFrame:CGRectMake(-185, -165, 530, 550)];
-        [self.eat setImage:[UIImage imageNamed:@"resturant.png"]];
-        [button addSubview:self.eat];
+        if (button == nil)
+        {
+            //no button available to recycle, so create new one
+            //		UIImage *image = [UIImage imageNamed:@"house_placeholder.png"];
+            button = [LRGlowingButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(0.0f, 0.0f, 150.f, 350.f);
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button setBackgroundColor:[UIColor clearColor]];
+            //		[button setBackgroundImage:image forState:UIControlStateNormal];
+            //		button.titleLabel.font = [button.titleLabel.font fontWithSize:30];
+            button.glowsWhenHighlighted = NO;
+            //button.highlightedGlowColor = [self colorWithHexString:@"3ac0ec"];
+            [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //        UIImageView *building = [[UIImageView alloc]initWithFrame:CGRectMake(20, 60, 120, 200)];
+            //        [building setImage:[UIImage imageNamed:@"building.png"]];
+            //        [button addSubview:building];
+            
+        }
         
-    }else if (index==1){
+        UILabel *category_name = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, 150, 35)];
+        category_name.textColor = [UIColor whiteColor];
+        category_name.font = [UIFont fontWithName:@"OpenSans" size:25.0];
+        category_name.textAlignment = NSTextAlignmentCenter;
+        [button addSubview:category_name];
         
-        self.drink = [[UIImageView alloc]initWithFrame:CGRectMake(-193, -105, 530, 530)];
-        [self.drink setImage:[UIImage imageNamed:@"tavern.png"]];
-        [button addSubview:self.drink];
-
-    }else if (index==2){
+        //set category images
+        if (index==0) {
+            [self.categoryLabel setText:@"EAT"];
+            
+            self.eat = [[UIImageView alloc]initWithFrame:CGRectMake(-185, -165, 530, 550)];
+            [self.eat setImage:[UIImage imageNamed:@"resturant.png"]];
+            [button addSubview:self.eat];
+            
+        }else if (index==1){
+            
+            self.drink = [[UIImageView alloc]initWithFrame:CGRectMake(-193, -105, 530, 530)];
+            [self.drink setImage:[UIImage imageNamed:@"tavern.png"]];
+            [button addSubview:self.drink];
+            
+        }else if (index==2){
+            
+            self.play = [[UIImageView alloc]initWithFrame:CGRectMake(-169, -55, 500, 450)];
+            [self.play setImage:[UIImage imageNamed:@"ferriswheel.png"]];
+            [self.play setBackgroundColor:[UIColor clearColor]];
+            [button addSubview:self.play];
+            
+        }else if (index==3){
+            
+            self.yooka = [[UIImageView alloc]initWithFrame:CGRectMake(-120, -15, 450, 430)];
+            [self.yooka setImage:[UIImage imageNamed:@"Yooka_building.png"]];
+            [button addSubview:self.yooka];
+            
+        }
         
-        self.play = [[UIImageView alloc]initWithFrame:CGRectMake(-169, -55, 500, 450)];
-        [self.play setImage:[UIImage imageNamed:@"ferriswheel.png"]];
-        [self.play setBackgroundColor:[UIColor clearColor]];
-        [button addSubview:self.play];
-
-    }else if (index==3){
+    }else{
         
-        self.yooka = [[UIImageView alloc]initWithFrame:CGRectMake(-120, -15, 450, 430)];
-        [self.yooka setImage:[UIImage imageNamed:@"Yooka_building.png"]];
-        [button addSubview:self.yooka];
-
+        if (button == nil)
+        {
+            //no button available to recycle, so create new one
+            //		UIImage *image = [UIImage imageNamed:@"house_placeholder.png"];
+            button = [LRGlowingButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(0.0f, 0.0f, 150.f, 250.f);
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button setBackgroundColor:[UIColor clearColor]];
+            //		[button setBackgroundImage:image forState:UIControlStateNormal];
+            //		button.titleLabel.font = [button.titleLabel.font fontWithSize:30];
+            button.glowsWhenHighlighted = NO;
+            //button.highlightedGlowColor = [self colorWithHexString:@"3ac0ec"];
+            [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //        UIImageView *building = [[UIImageView alloc]initWithFrame:CGRectMake(20, 60, 120, 200)];
+            //        [building setImage:[UIImage imageNamed:@"building.png"]];
+            //        [button addSubview:building];
+            
+        }
+        
+        UILabel *category_name = [[UILabel alloc]initWithFrame:CGRectMake(0, 5, 150, 35)];
+        category_name.textColor = [UIColor whiteColor];
+        category_name.font = [UIFont fontWithName:@"OpenSans" size:25.0];
+        category_name.textAlignment = NSTextAlignmentCenter;
+        [button addSubview:category_name];
+        
+        //set category images
+        if (index==0) {
+            [self.categoryLabel setText:@"EAT"];
+            
+            self.eat = [[UIImageView alloc]initWithFrame:CGRectMake(-185, -165, 530, 450)];
+            [self.eat setImage:[UIImage imageNamed:@"resturant.png"]];
+            [button addSubview:self.eat];
+            
+        }else if (index==1){
+            
+            self.drink = [[UIImageView alloc]initWithFrame:CGRectMake(-193, -105, 530, 430)];
+            [self.drink setImage:[UIImage imageNamed:@"tavern.png"]];
+            [button addSubview:self.drink];
+            
+        }else if (index==2){
+            
+            self.play = [[UIImageView alloc]initWithFrame:CGRectMake(-119, -55, 400, 350)];
+            [self.play setImage:[UIImage imageNamed:@"ferriswheel.png"]];
+            [self.play setBackgroundColor:[UIColor clearColor]];
+            [button addSubview:self.play];
+            
+        }else if (index==3){
+            
+            self.yooka = [[UIImageView alloc]initWithFrame:CGRectMake(-120, -15, 450, 300)];
+            [self.yooka setImage:[UIImage imageNamed:@"Yooka_building.png"]];
+            [button addSubview:self.yooka];
+            
+        }
+        
     }
     
-	return button;
-    
+    return button;
+
 }
 
 - (void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel{
@@ -623,6 +691,8 @@
     //                      otherButtonTitles:nil] show];
     
     [self.topScrollView removeFromSuperview];
+    
+
 
     CATransition *transition = [CATransition animation];
     transition.duration = 0.35;
@@ -651,6 +721,11 @@
     }
     media.subscribedHunts = self.cachesubscribedHuntNames;
     media.unsubscribedHunts = self.cacheUnSubscribedHuntNames;
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   media.categoryName, @"Category_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Category_Clicked" withParameters:articleParams];
     [self presentViewController:media animated:NO completion:nil];
     
 }
@@ -897,11 +972,6 @@
         _cacheFeaturedHuntNames = _featuredHuntNames;
         [self checkSubscribedHunts2];
         
-//        NSLog(@"eat array = %@",self.eatArray);
-//        NSLog(@"drink array = %@",self.drinkArray);
-//        NSLog(@"play array = %@",self.playArray);
-//        NSLog(@"yooka array = %@",self.yookaArray);
-        
     }
     
 }
@@ -918,10 +988,6 @@
         if (errorOrNil != nil) {
             //An error happened, just log for now
 //            NSLog(@"An error occurred on fetch: %@", errorOrNil);
-            //            _unsubscribedHunts = _featuredHunts;
-            //            [self modifyFeaturedHunts];
-            
-            //            NSLog(@"try 1");
             
         } else {
             //got all events back from server -- update table view
@@ -929,7 +995,7 @@
 //                NSLog(@"try 2002");
                 _subscribedHuntNames = [NSMutableArray arrayWithArray:@[]];
                 _unSubscribedHunts = _featuredHunts;
-                //                NSLog(@"unsubscribed hunts = %@",objectsOrNil);
+//                NSLog(@"unsubscribed hunts = %@",objectsOrNil);
                 if (_unSubscribedHunts.count == _featuredHunts.count) {
                     
                 }
@@ -1274,8 +1340,8 @@
                                      [self.FeaturedView setFrame:CGRectMake(0.0f, 0.0f, 320.0f, 350.0f)];
                                  }
                                  completion:^(BOOL finished){
-                                     if(finished)
-                                         [self scrollblimpautomatically];
+//                                     if(finished)
+//                                         [self scrollblimpautomatically];
                                      // do any stuff here if you want
                                  }];
                 
@@ -1367,10 +1433,19 @@
     
 //    NSLog(@"sponsored hunt names = %@",self.sponsored_hunt_names);
     
+    // Capture author info &  user status
+
+    
     if ([self.sponsored_hunt_names[b] isEqualToString:@"MORE HUNTS COMING"]) {
 
     }else{
         [self.topScrollView removeFromSuperview];
+        
+        NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       self.sponsored_hunt_names[b], @"Sponsored_Hunt_Name",
+                                       nil];
+        
+        [Flurry logEvent:@"Featured_Hunt_Clicked" withParameters:articleParams];
 
         YookaFeaturedHuntViewController *media = [[YookaFeaturedHuntViewController alloc]init];
         media.huntTitle = self.sponsored_hunt_names[b];
@@ -1775,7 +1850,7 @@
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan) {
         if(velocity.x > 0) {
             _showPanel = YES;
-            [self.carousel setHidden:YES];
+            [self.carousel setHidden:NO];
             
         }
         else {

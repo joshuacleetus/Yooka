@@ -37,7 +37,7 @@
 @property (nonatomic, strong) NSMutableArray *userFollowingPictureUrl;
 
 @property (nonatomic, strong) NSMutableArray *peopleArray;
-
+@property (nonatomic, strong) NSMutableArray *searchArray;
 
 @property (nonatomic, strong) IBOutlet UITableView *searchTableView;
 @property (strong, nonatomic) IBOutlet UITextField *textField;

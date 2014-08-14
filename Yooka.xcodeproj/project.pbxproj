@@ -12,7 +12,6 @@
 		03D1847618A8683A007A26BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03D1847518A8683A007A26BA /* UIKit.framework */; };
 		03D1847C18A8683A007A26BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03D1847A18A8683A007A26BA /* InfoPlist.strings */; };
 		03D1847E18A8683A007A26BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D1847D18A8683A007A26BA /* main.m */; };
-		03D1848218A8683A007A26BA /* YookaAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D1848118A8683A007A26BA /* YookaAppDelegate.m */; };
 		03D1848518A8683A007A26BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03D1848318A8683A007A26BA /* Main.storyboard */; };
 		03D1848818A8683A007A26BA /* YookaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D1848718A8683A007A26BA /* YookaViewController.m */; };
 		03D1848A18A8683A007A26BA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03D1848918A8683A007A26BA /* Images.xcassets */; };
@@ -275,12 +274,9 @@
 		7947AF6019918552002458F2 /* white_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF5F19918552002458F2 /* white_menu.png */; };
 		7947AF621991855E002458F2 /* yooka_front.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF611991855E002458F2 /* yooka_front.png */; };
 		7947AF6419918578002458F2 /* YookaCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6319918578002458F2 /* YookaCategoryViewController.m */; };
-		7947AF661991858A002458F2 /* YookaFeaturedHuntViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF651991858A002458F2 /* YookaFeaturedHuntViewController.m */; };
 		7947AF6C199185CE002458F2 /* YookaNewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */; };
-		7947AF70199185ED002458F2 /* YookaRestaurantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */; };
 		7947AF7319918F3B002458F2 /* blue_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF7119918F3B002458F2 /* blue_pin.png */; };
 		7947AF7419918F3B002458F2 /* grey_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 7947AF7219918F3B002458F2 /* grey_pin.png */; };
-		7947AF7A19919945002458F2 /* YookaSubCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7947AF7919919945002458F2 /* YookaSubCategoryViewController.m */; };
 		7949BD2F18F9D25E002F56E3 /* splashscreen01.png in Resources */ = {isa = PBXBuildFile; fileRef = 7949BD2E18F9D25E002F56E3 /* splashscreen01.png */; };
 		7949BD3218F9D26C002F56E3 /* huntscreenshot1a.png in Resources */ = {isa = PBXBuildFile; fileRef = 7949BD3018F9D26C002F56E3 /* huntscreenshot1a.png */; };
 		7949BD3318F9D26C002F56E3 /* landingscreenshot01a.png in Resources */ = {isa = PBXBuildFile; fileRef = 7949BD3118F9D26C002F56E3 /* landingscreenshot01a.png */; };
@@ -292,6 +288,9 @@
 		7949BD4618FB8CD9002F56E3 /* iphone4landingscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 7949BD4418FB8CD9002F56E3 /* iphone4landingscreen.png */; };
 		7949BD4718FB8CD9002F56E3 /* iphone5landingscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 7949BD4518FB8CD9002F56E3 /* iphone5landingscreen.png */; };
 		794C08D518D8DCF80033BA7C /* YookaHuntSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 794C08D418D8DCF80033BA7C /* YookaHuntSearchViewController.m */; };
+		794C74071996C87F00ED84A6 /* PendulumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 794C74061996C87F00ED84A6 /* PendulumView.m */; };
+		794C74091997170700ED84A6 /* search_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 794C74081997170700ED84A6 /* search_grey.png */; };
+		794C740B1997171A00ED84A6 /* add_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 794C740A1997171A00ED84A6 /* add_grey.png */; };
 		7951773D1950972100797912 /* search_bar_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 7951773C1950972100797912 /* search_bar_new.png */; };
 		7951773F19509D3000797912 /* add_to_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 7951773E19509D2F00797912 /* add_to_menu.png */; };
 		795E11E81954B01D00BF76E2 /* postcard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 795E11E71954B01D00BF76E2 /* postcard.jpg */; };
@@ -337,7 +336,6 @@
 		796E5D1B18E231B500EAFBB5 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 796E5D1918E231B500EAFBB5 /* Montserrat-Regular.ttf */; };
 		796E5D1E18E2496800EAFBB5 /* heartempty.png in Resources */ = {isa = PBXBuildFile; fileRef = 796E5D1C18E2496800EAFBB5 /* heartempty.png */; };
 		796E5D1F18E2496800EAFBB5 /* heartfilled.png in Resources */ = {isa = PBXBuildFile; fileRef = 796E5D1D18E2496800EAFBB5 /* heartfilled.png */; };
-		797B1C241911914900A7EC5D /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 797B1C231911914900A7EC5D /* libFlurry_5.0.0.a */; };
 		79805D00196ED3FB00009304 /* hang_bars.png in Resources */ = {isa = PBXBuildFile; fileRef = 79805CFF196ED3FB00009304 /* hang_bars.png */; };
 		79805D07196EF8E900009304 /* back_artisse_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 79805D06196EF8E800009304 /* back_artisse_1.png */; };
 		79805D09196F069F00009304 /* back_artisse_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 79805D08196F069F00009304 /* back_artisse_2.png */; };
@@ -395,6 +393,10 @@
 		79AA1B9C18E5E93600142733 /* bluecircle.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AA1B9B18E5E93600142733 /* bluecircle.png */; };
 		79AA1BA018E5F0AC00142733 /* CoreTextArcView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AA1B9F18E5F0AC00142733 /* CoreTextArcView.m */; };
 		79AC6935197EB2BB006603A8 /* pin_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AC6934197EB2BB006603A8 /* pin_artisse.png */; };
+		79AD2249199A978500731151 /* YookaHuntVenuesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD2248199A978500731151 /* YookaHuntVenuesViewController.m */; };
+		79AD224B199AA3E800731151 /* YookaPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD224A199AA3E800731151 /* YookaPostViewController.m */; };
+		79AD224D199AA41200731151 /* YookaRestaurantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD224C199AA41200731151 /* YookaRestaurantViewController.m */; };
+		79AD224F199AA43F00731151 /* YookaFeaturedHuntViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AD224E199AA43F00731151 /* YookaFeaturedHuntViewController.m */; };
 		79AD874D191011A200F22840 /* 1splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AD874C191011A200F22840 /* 1splash.png */; };
 		79ADCF5819927B8100C79506 /* arrow_landing.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADCF5719927B8100C79506 /* arrow_landing.png */; };
 		79ADF25E198D8CEA004C1585 /* homescreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 79ADF25D198D8CEA004C1585 /* homescreen.png */; };
@@ -413,7 +415,6 @@
 		79B0AA18198C35BD00B43167 /* logoout_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B0AA17198C35BD00B43167 /* logoout_artisse.png */; };
 		79B0AA23198D548200B43167 /* UserFollowersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0AA20198D548200B43167 /* UserFollowersViewController.m */; };
 		79B0AA24198D548200B43167 /* UserFollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0AA22198D548200B43167 /* UserFollowingViewController.m */; };
-		79B1518A1975AE9E002222DD /* YookaLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B151891975AE9E002222DD /* YookaLocationViewController.m */; };
 		79B1518C1975AEB2002222DD /* YookaMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1518B1975AEB2002222DD /* YookaMenuViewController.m */; };
 		79B151931975D2A2002222DD /* LRGlowingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B151921975D2A2002222DD /* LRGlowingButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79B151991975D6A2002222DD /* MultiplePulsingHaloLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B151961975D6A2002222DD /* MultiplePulsingHaloLayer.m */; };
@@ -436,13 +437,18 @@
 		79B153E019772BD8002222DD /* profile_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153DF19772BD8002222DD /* profile_artisse.png */; };
 		79B153E219772BE0002222DD /* search_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153E119772BE0002222DD /* search_artisse.png */; };
 		79B153E419772BE7002222DD /* upload_artisse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B153E319772BE7002222DD /* upload_artisse.png */; };
-		79B1A7A81994180900CC9A62 /* YookaClickProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */; };
-		79B1A7AC1994182B00CC9A62 /* YookaHuntVenuesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */; };
-		79B1A7AE1994183C00CC9A62 /* YookaProfileNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */; };
-		79B1A7B01994185000CC9A62 /* YookaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */; };
 		79B1A7B21994186800CC9A62 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B11994186800CC9A62 /* NavigationViewController.m */; };
 		79B1A7B419941A8D00CC9A62 /* YookaHuntsLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */; };
-		79B1A7B61995279700CC9A62 /* YookaPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7B51995279700CC9A62 /* YookaPostViewController.m */; };
+		79B1A7BC199556A300CC9A62 /* YookaLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B1A7BB199556A300CC9A62 /* YookaLocationViewController.m */; };
+		79B1A7C019958E8100CC9A62 /* arrow_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B1A7BF19958E8100CC9A62 /* arrow_white.png */; };
+		79B1A7C219958E8A00CC9A62 /* pin_blue_hole.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B1A7C119958E8A00CC9A62 /* pin_blue_hole.png */; };
+		79B1A7C419958E9200CC9A62 /* medal-.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B1A7C319958E9200CC9A62 /* medal-.png */; };
+		79B4B8CB19996E1200F803AF /* YookaClickProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B4B8CA19996E1200F803AF /* YookaClickProfileViewController.m */; };
+		79B4B8CF19996E8800F803AF /* YookaProfileNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B4B8CE19996E8800F803AF /* YookaProfileNewViewController.m */; };
+		79B4B8D119996EA200F803AF /* YookaSubCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B4B8D019996EA200F803AF /* YookaSubCategoryViewController.m */; };
+		79B4B8D719997B9A00F803AF /* libFlurry_5.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B4B8D619997B9A00F803AF /* libFlurry_5.2.0.a */; };
+		79B4B8DB1999C19C00F803AF /* YookaAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B4B8DA1999C19C00F803AF /* YookaAppDelegate.m */; };
+		79B4B8DD1999C1AF00F803AF /* YookaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B4B8DC1999C1AF00F803AF /* YookaSearchViewController.m */; };
 		79B5D4CC1981BFE000495A63 /* YookaMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */; };
 		79B5D4DF1982AAD800495A63 /* doggy.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B5D4DE1982AAD800495A63 /* doggy.png */; };
 		79B943C018E7912C0037D574 /* commentdropbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 79B943BE18E7912C0037D574 /* commentdropbox.png */; };
@@ -632,7 +638,6 @@
 		03D1847D18A8683A007A26BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		03D1847F18A8683A007A26BA /* Yooka-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Yooka-Prefix.pch"; sourceTree = "<group>"; };
 		03D1848018A8683A007A26BA /* YookaAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YookaAppDelegate.h; sourceTree = "<group>"; };
-		03D1848118A8683A007A26BA /* YookaAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YookaAppDelegate.m; sourceTree = "<group>"; };
 		03D1848418A8683A007A26BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		03D1848618A8683A007A26BA /* YookaViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YookaViewController.h; sourceTree = "<group>"; };
 		03D1848718A8683A007A26BA /* YookaViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YookaViewController.m; sourceTree = "<group>"; };
@@ -668,7 +673,6 @@
 		03D184BE18A972BD007A26BA /* close_pop_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close_pop_up@2x.png"; sourceTree = "<group>"; };
 		03D184BF18A972BD007A26BA /* take_picture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = take_picture.png; sourceTree = "<group>"; };
 		03D184C018A972BD007A26BA /* take_picture@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "take_picture@2x.png"; sourceTree = "<group>"; };
-		03D184C118A972BD007A26BA /* profile_icons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_icons.png; sourceTree = "<group>"; };
 		03D184C218A972BD007A26BA /* profile_icons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profile_icons@2x.png"; sourceTree = "<group>"; };
 		03D184C318A972BD007A26BA /* profile_like_out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_like_out.png; sourceTree = "<group>"; };
 		03D184C418A972BD007A26BA /* profile_like_out@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profile_like_out@2x.png"; sourceTree = "<group>"; };
@@ -939,12 +943,9 @@
 		7947AF5F19918552002458F2 /* white_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = white_menu.png; sourceTree = "<group>"; };
 		7947AF611991855E002458F2 /* yooka_front.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yooka_front.png; sourceTree = "<group>"; };
 		7947AF6319918578002458F2 /* YookaCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaCategoryViewController.m; sourceTree = "<group>"; };
-		7947AF651991858A002458F2 /* YookaFeaturedHuntViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaFeaturedHuntViewController.m; sourceTree = "<group>"; };
 		7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaNewsFeedViewController.m; sourceTree = "<group>"; };
-		7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaRestaurantViewController.m; sourceTree = "<group>"; };
 		7947AF7119918F3B002458F2 /* blue_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_pin.png; sourceTree = "<group>"; };
 		7947AF7219918F3B002458F2 /* grey_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grey_pin.png; sourceTree = "<group>"; };
-		7947AF7919919945002458F2 /* YookaSubCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSubCategoryViewController.m; sourceTree = "<group>"; };
 		7949BD2E18F9D25E002F56E3 /* splashscreen01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splashscreen01.png; sourceTree = "<group>"; };
 		7949BD3018F9D26C002F56E3 /* huntscreenshot1a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = huntscreenshot1a.png; sourceTree = "<group>"; };
 		7949BD3118F9D26C002F56E3 /* landingscreenshot01a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = landingscreenshot01a.png; sourceTree = "<group>"; };
@@ -957,6 +958,10 @@
 		7949BD4518FB8CD9002F56E3 /* iphone5landingscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone5landingscreen.png; sourceTree = "<group>"; };
 		794C08D318D8DCF80033BA7C /* YookaHuntSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaHuntSearchViewController.h; sourceTree = "<group>"; };
 		794C08D418D8DCF80033BA7C /* YookaHuntSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntSearchViewController.m; sourceTree = "<group>"; };
+		794C74051996C87F00ED84A6 /* PendulumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PendulumView.h; sourceTree = "<group>"; };
+		794C74061996C87F00ED84A6 /* PendulumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PendulumView.m; sourceTree = "<group>"; };
+		794C74081997170700ED84A6 /* search_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_grey.png; sourceTree = "<group>"; };
+		794C740A1997171A00ED84A6 /* add_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_grey.png; sourceTree = "<group>"; };
 		7951773C1950972100797912 /* search_bar_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_bar_new.png; sourceTree = "<group>"; };
 		7951773E19509D2F00797912 /* add_to_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_to_menu.png; sourceTree = "<group>"; };
 		795E11E71954B01D00BF76E2 /* postcard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = postcard.jpg; sourceTree = "<group>"; };
@@ -1009,8 +1014,6 @@
 		796E5D1918E231B500EAFBB5 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		796E5D1C18E2496800EAFBB5 /* heartempty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartempty.png; sourceTree = "<group>"; };
 		796E5D1D18E2496800EAFBB5 /* heartfilled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartfilled.png; sourceTree = "<group>"; };
-		797B1C221911914900A7EC5D /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		797B1C231911914900A7EC5D /* libFlurry_5.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.0.0.a; sourceTree = "<group>"; };
 		79805CFF196ED3FB00009304 /* hang_bars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hang_bars.png; sourceTree = "<group>"; };
 		79805D01196EE14800009304 /* YookaNewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaNewsFeedViewController.h; sourceTree = "<group>"; };
 		79805D06196EF8E800009304 /* back_artisse_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_artisse_1.png; sourceTree = "<group>"; };
@@ -1061,7 +1064,6 @@
 		799720AA196397E1007B830C /* building.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = building.png; sourceTree = "<group>"; };
 		799720AC1963B5FC007B830C /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		799720AD1963B5FC007B830C /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
-		799841FA198849C30069C9C1 /* YookaClickProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YookaClickProfileViewController.h; sourceTree = "<group>"; };
 		799841FD198950C60069C9C1 /* YookaNewNewsfeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaNewNewsfeedViewController.h; sourceTree = "<group>"; };
 		799841FE198950C60069C9C1 /* YookaNewNewsfeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaNewNewsfeedViewController.m; sourceTree = "<group>"; };
 		799842001989872D0069C9C1 /* feed_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feed_placeholder.png; sourceTree = "<group>"; };
@@ -1083,6 +1085,10 @@
 		79AA1B9E18E5F0AC00142733 /* CoreTextArcView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextArcView.h; sourceTree = "<group>"; };
 		79AA1B9F18E5F0AC00142733 /* CoreTextArcView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextArcView.m; sourceTree = "<group>"; };
 		79AC6934197EB2BB006603A8 /* pin_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin_artisse.png; sourceTree = "<group>"; };
+		79AD2248199A978500731151 /* YookaHuntVenuesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntVenuesViewController.m; sourceTree = "<group>"; };
+		79AD224A199AA3E800731151 /* YookaPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaPostViewController.m; sourceTree = "<group>"; };
+		79AD224C199AA41200731151 /* YookaRestaurantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaRestaurantViewController.m; sourceTree = "<group>"; };
+		79AD224E199AA43F00731151 /* YookaFeaturedHuntViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaFeaturedHuntViewController.m; sourceTree = "<group>"; };
 		79AD874C191011A200F22840 /* 1splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1splash.png; sourceTree = "<group>"; };
 		79ADCF5719927B8100C79506 /* arrow_landing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_landing.png; sourceTree = "<group>"; };
 		79ADF25D198D8CEA004C1585 /* homescreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homescreen.png; sourceTree = "<group>"; };
@@ -1105,7 +1111,6 @@
 		79B0AA20198D548200B43167 /* UserFollowersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFollowersViewController.m; sourceTree = "<group>"; };
 		79B0AA21198D548200B43167 /* UserFollowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserFollowingViewController.h; sourceTree = "<group>"; };
 		79B0AA22198D548200B43167 /* UserFollowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFollowingViewController.m; sourceTree = "<group>"; };
-		79B151891975AE9E002222DD /* YookaLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaLocationViewController.m; sourceTree = "<group>"; };
 		79B1518B1975AEB2002222DD /* YookaMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaMenuViewController.m; sourceTree = "<group>"; };
 		79B151911975D2A2002222DD /* LRGlowingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRGlowingButton.h; sourceTree = "<group>"; };
 		79B151921975D2A2002222DD /* LRGlowingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRGlowingButton.m; sourceTree = "<group>"; };
@@ -1136,16 +1141,23 @@
 		79B153DF19772BD8002222DD /* profile_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_artisse.png; sourceTree = "<group>"; };
 		79B153E119772BE0002222DD /* search_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_artisse.png; sourceTree = "<group>"; };
 		79B153E319772BE7002222DD /* upload_artisse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload_artisse.png; sourceTree = "<group>"; };
-		79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaClickProfileViewController.m; sourceTree = "<group>"; };
-		79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntVenuesViewController.m; sourceTree = "<group>"; };
-		79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaProfileNewViewController.m; sourceTree = "<group>"; };
-		79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSearchViewController.m; sourceTree = "<group>"; };
 		79B1A7B11994186800CC9A62 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaHuntsLandingViewController.m; sourceTree = "<group>"; };
-		79B1A7B51995279700CC9A62 /* YookaPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaPostViewController.m; sourceTree = "<group>"; };
+		79B1A7BB199556A300CC9A62 /* YookaLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaLocationViewController.m; sourceTree = "<group>"; };
+		79B1A7BF19958E8100CC9A62 /* arrow_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_white.png; sourceTree = "<group>"; };
+		79B1A7C119958E8A00CC9A62 /* pin_blue_hole.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin_blue_hole.png; sourceTree = "<group>"; };
+		79B1A7C319958E9200CC9A62 /* medal-.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "medal-.png"; sourceTree = "<group>"; };
+		79B4B8C4199953AD00F803AF /* YookaRestaurantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaRestaurantViewController.h; sourceTree = "<group>"; };
+		79B4B8C719995E7A00F803AF /* YookaClickProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaClickProfileViewController.h; sourceTree = "<group>"; };
+		79B4B8CA19996E1200F803AF /* YookaClickProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaClickProfileViewController.m; sourceTree = "<group>"; };
+		79B4B8CE19996E8800F803AF /* YookaProfileNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaProfileNewViewController.m; sourceTree = "<group>"; };
+		79B4B8D019996EA200F803AF /* YookaSubCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSubCategoryViewController.m; sourceTree = "<group>"; };
+		79B4B8D519997B9A00F803AF /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		79B4B8D619997B9A00F803AF /* libFlurry_5.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.2.0.a; sourceTree = "<group>"; };
+		79B4B8DA1999C19C00F803AF /* YookaAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaAppDelegate.m; sourceTree = "<group>"; };
+		79B4B8DC1999C1AF00F803AF /* YookaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaSearchViewController.m; sourceTree = "<group>"; };
 		79B5D4CA1981BFDA00495A63 /* YookaMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YookaMapViewController.h; sourceTree = "<group>"; };
 		79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YookaMapViewController.m; sourceTree = "<group>"; };
-		79B5D4D71981D0DA00495A63 /* YookaRestaurantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YookaRestaurantViewController.h; sourceTree = "<group>"; };
 		79B5D4DE1982AAD800495A63 /* doggy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = doggy.png; sourceTree = "<group>"; };
 		79B943BE18E7912C0037D574 /* commentdropbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = commentdropbox.png; sourceTree = "<group>"; };
 		79B943BF18E7912C0037D574 /* dropbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dropbox.png; sourceTree = "<group>"; };
@@ -1354,7 +1366,6 @@
 				79B153C719770DC9002222DD /* Accelerate.framework in Frameworks */,
 				03D1856818A97E0D007A26BA /* QuartzCore.framework in Frameworks */,
 				7900AC5D18CE9A74006C3AA6 /* MapKit.framework in Frameworks */,
-				797B1C241911914900A7EC5D /* libFlurry_5.0.0.a in Frameworks */,
 				03D1857518AA8F9C007A26BA /* CoreLocation.framework in Frameworks */,
 				03D185A818AF112F007A26BA /* CFNetwork.framework in Frameworks */,
 				7980ED6A195CE06000ED5EE0 /* AudioToolbox.framework in Frameworks */,
@@ -1368,6 +1379,7 @@
 				03D1847418A8683A007A26BA /* CoreGraphics.framework in Frameworks */,
 				03D1847618A8683A007A26BA /* UIKit.framework in Frameworks */,
 				7987892A190EE8D60051FC85 /* KinveyKit.framework in Frameworks */,
+				79B4B8D719997B9A00F803AF /* libFlurry_5.2.0.a in Frameworks */,
 				03D1847218A8683A007A26BA /* Foundation.framework in Frameworks */,
 				9D778A2F7A46449FB21D74CE /* libPods.a in Frameworks */,
 			);
@@ -1395,6 +1407,7 @@
 				7980ED77195E243500ED5EE0 /* UIImage+scale.m */,
 				799720AC1963B5FC007B830C /* UIImage+ImageEffects.h */,
 				799720AD1963B5FC007B830C /* UIImage+ImageEffects.m */,
+				794C74041996C87F00ED84A6 /* PendulumView */,
 				79B0A9ED198BF3BC00B43167 /* LLACircularProgressView */,
 				79B153CF19771134002222DD /* LiveFrost */,
 				79B153C819770E1E002222DD /* Classes */,
@@ -1445,116 +1458,116 @@
 		03D1847718A8683A007A26BA /* Yooka */ = {
 			isa = PBXGroup;
 			children = (
-				7980ED68195CE06000ED5EE0 /* Yooka.entitlements */,
 				79D08C3C19415CB200EB6A03 /* AnimationDelegate.h */,
 				79D08C3D19415CB200EB6A03 /* AnimationDelegate.m */,
 				79D08C3E19415CB200EB6A03 /* AnimationFrame.h */,
 				79D08C3F19415CB200EB6A03 /* AnimationFrame.m */,
-				79D08C4019415CB200EB6A03 /* GenericAnimationView.h */,
-				79D08C4119415CB200EB6A03 /* GenericAnimationView.m */,
-				79D08C4219415CB200EB6A03 /* FlipView.h */,
-				79D08C4319415CB200EB6A03 /* FlipView.m */,
-				79D08C3119413C4000EB6A03 /* MPFlipTransition.h */,
-				79D08C3219413C4000EB6A03 /* MPFlipTransition.m */,
-				79D08C3419413CA000EB6A03 /* MPFlipEnumerations.h */,
-				79D08C3819413CF700EB6A03 /* MPTransitionEnumerations.h */,
-				79D08C3519413CD500EB6A03 /* MPTransition.h */,
-				79D08C3619413CD500EB6A03 /* MPTransition.m */,
-				79D08C3919413D1400EB6A03 /* MPAnimation.h */,
-				79D08C3A19413D1400EB6A03 /* MPAnimation.m */,
-				79CAB485193D09C700BD577B /* iCarousel */,
-				79CAB45F193CE11D00BD577B /* Rotation */,
-				79DC957E19363E53000692F6 /* Protocol */,
-				79DC9264192EC6D0000692F6 /* Foursquare2 */,
-				79F875A2192ABB4A0070A91E /* LDProgressView */,
-				7983D1DC191B24B400818858 /* Cache-LifeSaver */,
-				797B1C211911914900A7EC5D /* Flurry */,
-				79878923190EDBAE0051FC85 /* WebImageOperations */,
-				791883FE1909F1B300B99295 /* SDWebImage */,
-				792ECE9C190832EB00093B7F /* GCDImage */,
+				79B4B8D419997B9A00F803AF /* Flurry */,
 				79AA1B9D18E5F09900142733 /* ArcLabel */,
+				03D184A618A97296007A26BA /* Assets */,
 				7962439618E0E42700C680AD /* BDDynamicGrid */,
 				79244D1018EA66AA000D4EB6 /* BDDynamicGrid2 */,
-				7900AC5E18CE9B08006C3AA6 /* MapAnnotation */,
-				03D184A618A97296007A26BA /* Assets */,
-				03D1848018A8683A007A26BA /* YookaAppDelegate.h */,
-				03D1848118A8683A007A26BA /* YookaAppDelegate.m */,
-				03D1848318A8683A007A26BA /* Main.storyboard */,
-				03D1848618A8683A007A26BA /* YookaViewController.h */,
-				03D1848718A8683A007A26BA /* YookaViewController.m */,
+				7983D1DC191B24B400818858 /* Cache-LifeSaver */,
+				79D08C4219415CB200EB6A03 /* FlipView.h */,
+				79D08C4319415CB200EB6A03 /* FlipView.m */,
+				79DC9264192EC6D0000692F6 /* Foursquare2 */,
+				03D185B618B5342C007A26BA /* FSQView */,
+				792ECE9C190832EB00093B7F /* GCDImage */,
+				79D08C4019415CB200EB6A03 /* GenericAnimationView.h */,
+				79D08C4119415CB200EB6A03 /* GenericAnimationView.m */,
+				79CAB485193D09C700BD577B /* iCarousel */,
 				03D1848918A8683A007A26BA /* Images.xcassets */,
-				03D1847818A8683A007A26BA /* Supporting Files */,
-				03D1858018AABDB7007A26BA /* YookaSignupViewController.h */,
-				03D1858118AABDB7007A26BA /* YookaSignupViewController.m */,
-				03D1858318AABDC8007A26BA /* YookaSigninViewController.h */,
-				03D1858418AABDC9007A26BA /* YookaSigninViewController.m */,
-				79A7C01D18F3294E009FD9A1 /* YookaForgotPasswordViewController.h */,
-				79A7C01E18F3294E009FD9A1 /* YookaForgotPasswordViewController.m */,
-				79A7C02018F3582E009FD9A1 /* TermsOfServiceViewController.h */,
-				79A7C02118F3582E009FD9A1 /* TermsOfServiceViewController.m */,
+				79F875A2192ABB4A0070A91E /* LDProgressView */,
+				79B151911975D2A2002222DD /* LRGlowingButton.h */,
+				79B151921975D2A2002222DD /* LRGlowingButton.m */,
+				03D1848318A8683A007A26BA /* Main.storyboard */,
 				79DC957F19363E89000692F6 /* MainViewController.h */,
 				79DC958019363E89000692F6 /* MainViewController.m */,
+				7900AC5E18CE9B08006C3AA6 /* MapAnnotation */,
+				79D08C3919413D1400EB6A03 /* MPAnimation.h */,
+				79D08C3A19413D1400EB6A03 /* MPAnimation.m */,
+				79D08C3419413CA000EB6A03 /* MPFlipEnumerations.h */,
+				79D08C3119413C4000EB6A03 /* MPFlipTransition.h */,
+				79D08C3219413C4000EB6A03 /* MPFlipTransition.m */,
+				79D08C3519413CD500EB6A03 /* MPTransition.h */,
+				79D08C3619413CD500EB6A03 /* MPTransition.m */,
+				79D08C3819413CF700EB6A03 /* MPTransitionEnumerations.h */,
 				79DC95821936425D000692F6 /* NavigationViewController.h */,
 				79B1A7B11994186800CC9A62 /* NavigationViewController.m */,
-				79F2B14D18CB9ED300ACCE51 /* YookaHuntVenuesViewController.h */,
-				79B1A7AB1994182B00CC9A62 /* YookaHuntVenuesViewController.m */,
-				79AFCB551979AB3100F09C12 /* YookaProfileNewViewController.h */,
-				79B1A7AD1994183C00CC9A62 /* YookaProfileNewViewController.m */,
-				799841FA198849C30069C9C1 /* YookaClickProfileViewController.h */,
-				79B1A7A71994180900CC9A62 /* YookaClickProfileViewController.m */,
-				79B5D4CA1981BFDA00495A63 /* YookaMapViewController.h */,
-				79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */,
-				7910A0901980332800500319 /* YookaHuntsLandingViewController.h */,
-				79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */,
-				79805D01196EE14800009304 /* YookaNewsFeedViewController.h */,
-				7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */,
-				799841FD198950C60069C9C1 /* YookaNewNewsfeedViewController.h */,
-				799841FE198950C60069C9C1 /* YookaNewNewsfeedViewController.m */,
-				791376CD193FB69800B89011 /* YookaFeaturedHuntViewController.h */,
-				7947AF651991858A002458F2 /* YookaFeaturedHuntViewController.m */,
-				79CAB48D193D348F00BD577B /* YookaCategoryViewController.h */,
-				7947AF6319918578002458F2 /* YookaCategoryViewController.m */,
-				79274E0519522E0900C058DE /* YookaSubCategoryViewController.h */,
-				7947AF7919919945002458F2 /* YookaSubCategoryViewController.m */,
-				7998420219898F900069C9C1 /* YookaSearchViewController.h */,
-				79B1A7AF1994185000CC9A62 /* YookaSearchViewController.m */,
-				7920F3CB196B140D008B7D7A /* YookaPostViewController.h */,
-				79B1A7B51995279700CC9A62 /* YookaPostViewController.m */,
-				79B5D4D71981D0DA00495A63 /* YookaRestaurantViewController.h */,
-				7947AF6F199185ED002458F2 /* YookaRestaurantViewController.m */,
+				79DC957E19363E53000692F6 /* Protocol */,
+				79CAB45F193CE11D00BD577B /* Rotation */,
+				791883FE1909F1B300B99295 /* SDWebImage */,
+				79E39A9618C632E800F8FC19 /* SelectedUserViewController.h */,
+				79E39A9718C632E800F8FC19 /* SelectedUserViewController.m */,
+				03D1847818A8683A007A26BA /* Supporting Files */,
+				79A7C02018F3582E009FD9A1 /* TermsOfServiceViewController.h */,
+				79A7C02118F3582E009FD9A1 /* TermsOfServiceViewController.m */,
 				79B0AA1F198D548200B43167 /* UserFollowersViewController.h */,
 				79B0AA20198D548200B43167 /* UserFollowersViewController.m */,
 				79B0AA21198D548200B43167 /* UserFollowingViewController.h */,
 				79B0AA22198D548200B43167 /* UserFollowingViewController.m */,
-				03D1859B18AC4725007A26BA /* YookaHuntsViewController.h */,
-				03D1859C18AC4725007A26BA /* YookaHuntsViewController.m */,
-				79DA513A191F2E3000692E05 /* YookaHunts2ViewController.h */,
-				79DA513B191F2E3000692E05 /* YookaHunts2ViewController.m */,
-				794C08D318D8DCF80033BA7C /* YookaHuntSearchViewController.h */,
-				794C08D418D8DCF80033BA7C /* YookaHuntSearchViewController.m */,
-				79DCB604194BBC7100006512 /* YookaHuntRestaurantViewController.h */,
-				79DCB605194BBC7100006512 /* YookaHuntRestaurantViewController.m */,
-				79920F72196D8AE700F8A632 /* YookaLocationViewController.h */,
-				79B151891975AE9E002222DD /* YookaLocationViewController.m */,
-				79E1416418F0F1E20043A7E7 /* YookaLocation2ViewController.h */,
-				79E1416518F0F1E20043A7E7 /* YookaLocation2ViewController.m */,
-				79920F6F196D8AD700F8A632 /* YookaMenuViewController.h */,
-				79B1518B1975AEB2002222DD /* YookaMenuViewController.m */,
-				7926D29B18D1414E0051EF2B /* YookaMenu2ViewController.h */,
-				7926D29C18D1414E0051EF2B /* YookaMenu2ViewController.m */,
-				79E1416118F0E47A0043A7E7 /* YookaSearchLandingViewController.h */,
-				79E1416218F0E47A0043A7E7 /* YookaSearchLandingViewController.m */,
-				79E39A9618C632E800F8FC19 /* SelectedUserViewController.h */,
-				79E39A9718C632E800F8FC19 /* SelectedUserViewController.m */,
-				03D185A418AC47B6007A26BA /* YookaProfileViewController.h */,
-				03D185A518AC47B6007A26BA /* YookaProfileViewController.m */,
+				79878923190EDBAE0051FC85 /* WebImageOperations */,
+				7980ED68195CE06000ED5EE0 /* Yooka.entitlements */,
+				03D1848018A8683A007A26BA /* YookaAppDelegate.h */,
+				79B4B8DA1999C19C00F803AF /* YookaAppDelegate.m */,
 				03D1859818ABCF82007A26BA /* YookaBackend.h */,
 				03D1859918ABCF82007A26BA /* YookaBackend.m */,
 				7962439318E0C97300C680AD /* YookaButton.h */,
 				7962439418E0C97300C680AD /* YookaButton.m */,
-				79B151911975D2A2002222DD /* LRGlowingButton.h */,
-				79B151921975D2A2002222DD /* LRGlowingButton.m */,
-				03D185B618B5342C007A26BA /* FSQView */,
+				79CAB48D193D348F00BD577B /* YookaCategoryViewController.h */,
+				7947AF6319918578002458F2 /* YookaCategoryViewController.m */,
+				79B4B8C719995E7A00F803AF /* YookaClickProfileViewController.h */,
+				79B4B8CA19996E1200F803AF /* YookaClickProfileViewController.m */,
+				791376CD193FB69800B89011 /* YookaFeaturedHuntViewController.h */,
+				79AD224E199AA43F00731151 /* YookaFeaturedHuntViewController.m */,
+				79A7C01D18F3294E009FD9A1 /* YookaForgotPasswordViewController.h */,
+				79A7C01E18F3294E009FD9A1 /* YookaForgotPasswordViewController.m */,
+				79DCB604194BBC7100006512 /* YookaHuntRestaurantViewController.h */,
+				79DCB605194BBC7100006512 /* YookaHuntRestaurantViewController.m */,
+				79DA513A191F2E3000692E05 /* YookaHunts2ViewController.h */,
+				79DA513B191F2E3000692E05 /* YookaHunts2ViewController.m */,
+				794C08D318D8DCF80033BA7C /* YookaHuntSearchViewController.h */,
+				794C08D418D8DCF80033BA7C /* YookaHuntSearchViewController.m */,
+				7910A0901980332800500319 /* YookaHuntsLandingViewController.h */,
+				79B1A7B319941A8D00CC9A62 /* YookaHuntsLandingViewController.m */,
+				03D1859B18AC4725007A26BA /* YookaHuntsViewController.h */,
+				03D1859C18AC4725007A26BA /* YookaHuntsViewController.m */,
+				79F2B14D18CB9ED300ACCE51 /* YookaHuntVenuesViewController.h */,
+				79AD2248199A978500731151 /* YookaHuntVenuesViewController.m */,
+				79E1416418F0F1E20043A7E7 /* YookaLocation2ViewController.h */,
+				79E1416518F0F1E20043A7E7 /* YookaLocation2ViewController.m */,
+				79920F72196D8AE700F8A632 /* YookaLocationViewController.h */,
+				79B1A7BB199556A300CC9A62 /* YookaLocationViewController.m */,
+				79B5D4CA1981BFDA00495A63 /* YookaMapViewController.h */,
+				79B5D4CB1981BFE000495A63 /* YookaMapViewController.m */,
+				7926D29B18D1414E0051EF2B /* YookaMenu2ViewController.h */,
+				7926D29C18D1414E0051EF2B /* YookaMenu2ViewController.m */,
+				79920F6F196D8AD700F8A632 /* YookaMenuViewController.h */,
+				79B1518B1975AEB2002222DD /* YookaMenuViewController.m */,
+				799841FD198950C60069C9C1 /* YookaNewNewsfeedViewController.h */,
+				799841FE198950C60069C9C1 /* YookaNewNewsfeedViewController.m */,
+				79805D01196EE14800009304 /* YookaNewsFeedViewController.h */,
+				7947AF6B199185CE002458F2 /* YookaNewsFeedViewController.m */,
+				7920F3CB196B140D008B7D7A /* YookaPostViewController.h */,
+				79AD224A199AA3E800731151 /* YookaPostViewController.m */,
+				79AFCB551979AB3100F09C12 /* YookaProfileNewViewController.h */,
+				79B4B8CE19996E8800F803AF /* YookaProfileNewViewController.m */,
+				03D185A418AC47B6007A26BA /* YookaProfileViewController.h */,
+				03D185A518AC47B6007A26BA /* YookaProfileViewController.m */,
+				79B4B8C4199953AD00F803AF /* YookaRestaurantViewController.h */,
+				79AD224C199AA41200731151 /* YookaRestaurantViewController.m */,
+				79E1416118F0E47A0043A7E7 /* YookaSearchLandingViewController.h */,
+				79E1416218F0E47A0043A7E7 /* YookaSearchLandingViewController.m */,
+				7998420219898F900069C9C1 /* YookaSearchViewController.h */,
+				79B4B8DC1999C1AF00F803AF /* YookaSearchViewController.m */,
+				03D1858318AABDC8007A26BA /* YookaSigninViewController.h */,
+				03D1858418AABDC9007A26BA /* YookaSigninViewController.m */,
+				03D1858018AABDB7007A26BA /* YookaSignupViewController.h */,
+				03D1858118AABDB7007A26BA /* YookaSignupViewController.m */,
+				79274E0519522E0900C058DE /* YookaSubCategoryViewController.h */,
+				79B4B8D019996EA200F803AF /* YookaSubCategoryViewController.m */,
+				03D1848618A8683A007A26BA /* YookaViewController.h */,
+				03D1848718A8683A007A26BA /* YookaViewController.m */,
 			);
 			path = Yooka;
 			sourceTree = "<group>";
@@ -1564,9 +1577,9 @@
 			children = (
 				79B973B318F724F500F8CECB /* GSBorderLabel.h */,
 				79B973B418F724F500F8CECB /* GSBorderLabel.m */,
-				03D1847918A8683A007A26BA /* Yooka-Info.plist */,
 				03D1847A18A8683A007A26BA /* InfoPlist.strings */,
 				03D1847D18A8683A007A26BA /* main.m */,
+				03D1847918A8683A007A26BA /* Yooka-Info.plist */,
 				03D1847F18A8683A007A26BA /* Yooka-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -1593,172 +1606,221 @@
 		03D184A618A97296007A26BA /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				79ADCF5719927B8100C79506 /* arrow_landing.png */,
-				7947AF7119918F3B002458F2 /* blue_pin.png */,
-				7947AF7219918F3B002458F2 /* grey_pin.png */,
-				7947AF611991855E002458F2 /* yooka_front.png */,
-				7947AF5F19918552002458F2 /* white_menu.png */,
-				7947AF5D19918549002458F2 /* tavern.png */,
-				7947AF5B19918541002458F2 /* resturant.png */,
-				7947AF5919918538002458F2 /* blimp2.png */,
-				7947AF5519904364002458F2 /* add_to_button.png */,
-				7947AF531990435B002458F2 /* ribbon.png */,
-				79ADF261198D8CFA004C1585 /* green_blimp.png */,
-				79ADF25F198D8CF1004C1585 /* mappin2.png */,
-				79ADF25D198D8CEA004C1585 /* homescreen.png */,
-				79B0AA17198C35BD00B43167 /* logoout_artisse.png */,
-				79B0AA11198C26DC00B43167 /* yooka_landing_page.png */,
-				79B0AA0F198C253400B43167 /* urban_explorer.png */,
-				79B0AA05198C1F7E00B43167 /* add_hunt_button.png */,
-				79B0A9FF198C1A8C00B43167 /* photo.png */,
-				79B0A9F1198C053200B43167 /* drink2.png */,
-				79B0A9EB198BDDF300B43167 /* map_pin.png */,
-				79B0A9E7198AF69500B43167 /* roundededges.png */,
-				799842001989872D0069C9C1 /* feed_placeholder.png */,
-				79EB92CF1987064E00E0FB34 /* restaurant.png */,
-				79EB92CB1987064700E0FB34 /* arrow_subcat.png */,
-				79B0A9E9198AF6AA00B43167 /* drink.png */,
-				79EB92CC1987064700E0FB34 /* blimp.png */,
-				79EB92C91983212A00E0FB34 /* plane.png */,
-				79B5D4DE1982AAD800495A63 /* doggy.png */,
-				7910A0851980330D00500319 /* ferriswheel.png */,
-				7910A0861980330D00500319 /* play.png */,
-				7910A0871980330D00500319 /* yooka_background.png */,
-				7910A0881980330D00500319 /* Yooka_building.png */,
-				7910A0891980330D00500319 /* yooka.png */,
-				7910A082197F236800500319 /* placestab_2.png */,
-				79AC6934197EB2BB006603A8 /* pin_artisse.png */,
-				79AFCB64197DBAC700F09C12 /* forward_arrow.png */,
-				79B153DB19772BCB002222DD /* home_artisse.png */,
-				79B153DD19772BD2002222DD /* newsfeed_artisse.png */,
-				79B153DF19772BD8002222DD /* profile_artisse.png */,
-				79B153E119772BE0002222DD /* search_artisse.png */,
-				79B153E319772BE7002222DD /* upload_artisse.png */,
+				79CAB46A193CE4AA00BD577B /* 10.png */,
+				79F3DD5518EF5316003C5D30 /* 100.png */,
+				79CAB46B193CE4AA00BD577B /* 11.png */,
+				79CAB46C193CE4AA00BD577B /* 12.png */,
+				79CAB46D193CE4AA00BD577B /* 13.png */,
+				79CAB46E193CE4AA00BD577B /* 14.png */,
+				79AD874C191011A200F22840 /* 1splash.png */,
+				79CAB46F193CE4AA00BD577B /* 2.png */,
+				79CAB470193CE4AA00BD577B /* 3.png */,
+				79CAB471193CE4AA00BD577B /* 4.png */,
+				79CAB472193CE4AA00BD577B /* 5.png */,
+				79CAB473193CE4AA00BD577B /* 6.png */,
+				79CAB474193CE4AA00BD577B /* 7.png */,
+				79CAB475193CE4AA00BD577B /* 8.png */,
+				79CAB476193CE4AA00BD577B /* 9.png */,
 				79B1519F1975E99C002222DD /* activate_icon.png */,
-				79B151A01975E99C002222DD /* Before_like.png */,
-				79B151A11975E99C002222DD /* check2.png */,
-				79B151A21975E99C002222DD /* full_heart.png */,
-				79B151A31975E99C002222DD /* newsfeed_bar.png */,
-				79B151A41975E99C002222DD /* nonactive_icon.png */,
-				79B151A51975E99C002222DD /* random_photo_icon.png */,
-				79B151A61975E99C002222DD /* red_x.png */,
-				79430C3F1974891900BBCC29 /* whitex.png */,
+				794C740A1997171A00ED84A6 /* add_grey.png */,
+				79B0AA05198C1F7E00B43167 /* add_hunt_button.png */,
+				7947AF5519904364002458F2 /* add_to_button.png */,
+				7951773E19509D2F00797912 /* add_to_menu.png */,
+				79F5B1281963316C00F481F3 /* arrow.png */,
 				79430C3D1974890D00BBCC29 /* arrow2.png */,
-				79430C3B1974492B00BBCC29 /* shadow_maplist.png */,
-				79430C371974227400BBCC29 /* lines.png */,
-				791CFAE91971F87C00553063 /* check.png */,
-				79805D3019707E2700009304 /* pin_white.png */,
-				79805D2E19707E1D00009304 /* info.png */,
-				79805D2C19707DF600009304 /* credit_card.png */,
-				79805D2A19707DEC00009304 /* phone2.png */,
-				79805D2819707DE500009304 /* clock2.png */,
-				79805D24196F59A900009304 /* info_icon.png */,
-				79805D22196F59A100009304 /* next_information.png */,
-				79805D20196F4EE600009304 /* back_artisse_3.png */,
-				79805D1E196F24BB00009304 /* shadow2.png */,
-				79805D0A196F23EA00009304 /* featuring_button.png */,
-				79805D0B196F23EA00009304 /* featuring.png */,
-				79805D0C196F23EA00009304 /* infobox_with_shadow2.png */,
-				79805D0D196F23EA00009304 /* infobox_with_shadow2x.png */,
-				79805D0E196F23EA00009304 /* rating2.png */,
-				79805D0F196F23EA00009304 /* rating2x.png */,
-				79805D13196F23EA00009304 /* whiteline2.png */,
+				79F5B1291963316C00F481F3 /* arrow2x.png */,
+				79ADCF5719927B8100C79506 /* arrow_landing.png */,
+				79EB92CB1987064700E0FB34 /* arrow_subcat.png */,
+				79B1A7BF19958E8100CC9A62 /* arrow_white.png */,
+				03D184A718A972BD007A26BA /* b.png */,
+				03D184A818A972BD007A26BA /* b@2x.png */,
 				79805D06196EF8E800009304 /* back_artisse_1.png */,
 				79805D08196F069F00009304 /* back_artisse_2.png */,
-				79805CFF196ED3FB00009304 /* hang_bars.png */,
-				79377E99196DD4D70009CC84 /* camera_blue.png */,
-				79920F62196D891000F8A632 /* horizontal_line.png */,
-				79920F63196D891000F8A632 /* people.png */,
-				79920F64196D891000F8A632 /* places.png */,
-				79920F65196D891000F8A632 /* search_button_blue.png */,
-				79920F66196D891000F8A632 /* x_close.png */,
-				7993F6B2196C70CE00A01184 /* Header_strip.png */,
-				7920F3CE196B1F0E008B7D7A /* greygps2.png */,
-				7920F3A11966FCCD008B7D7A /* cameraupload_2x.png */,
-				7920F3A21966FCCD008B7D7A /* close_2x.png */,
-				7920F3A31966FCCD008B7D7A /* gps_2x.png */,
-				7920F3A41966FCCD008B7D7A /* gps_upload2.png */,
-				7920F3A51966FCCD008B7D7A /* gps3.png */,
-				7920F3A61966FCCD008B7D7A /* greygps.png */,
-				7920F3A71966FCCD008B7D7A /* menu.png */,
-				7920F3A81966FCCD008B7D7A /* pencil_2x.png */,
-				7920F3A91966FCCD008B7D7A /* pencil2.png */,
-				7920F3AA1966FCCD008B7D7A /* profile_circle2.png */,
-				7920F3AB1966FCCD008B7D7A /* reff_page.png */,
-				7920F3AC1966FCCD008B7D7A /* tags_2x.png */,
-				7920F3AD1966FCCD008B7D7A /* tags2.png */,
-				7920F3AE1966FCCD008B7D7A /* upload_close.png */,
-				7920F3AF1966FCCD008B7D7A /* upload_horizontal_line.png */,
-				7920F3B01966FCCD008B7D7A /* upload_share_arrow.png */,
-				7920F3B11966FCCD008B7D7A /* upload_vertical_line.png */,
-				7920F3B21966FCCD008B7D7A /* yes_no_button_2x.png */,
-				7920F3B31966FCCD008B7D7A /* yes_no_button_after_2x.png */,
-				7920F3B41966FCCD008B7D7A /* yes_no_button_after2.png */,
-				7920F3B51966FCCD008B7D7A /* yes_no_button2.png */,
+				79805D20196F4EE600009304 /* back_artisse_3.png */,
+				03D185AC18B273F7007A26BA /* Back_Icon.png */,
+				79CAB45B193CC22900BD577B /* background_yooka_new.png */,
+				03D184AF18A972BD007A26BA /* badge.png */,
+				03D184B018A972BD007A26BA /* badge@2x.png */,
+				79F2B14018C97B3A00ACCE51 /* bbq.png */,
+				79B151A01975E99C002222DD /* Before_like.png */,
+				79EB92CC1987064700E0FB34 /* blimp.png */,
+				7947AF5919918538002458F2 /* blimp2.png */,
+				7947AF7119918F3B002458F2 /* blue_pin.png */,
+				79AA1B9B18E5E93600142733 /* bluecircle.png */,
+				79F2B14118C97B3A00ACCE51 /* brunch.png */,
 				799720AA196397E1007B830C /* building.png */,
-				79F5B136196361F700F481F3 /* picture_size.png */,
-				79F5B13419635E6D00F481F3 /* title_tile.png */,
-				79F5B1281963316C00F481F3 /* arrow.png */,
-				79F5B1291963316C00F481F3 /* arrow2x.png */,
-				79F5B12A1963316C00F481F3 /* notification.png */,
-				79F5B12B1963316C00F481F3 /* notification2x.png */,
-				79F5B12C1963316C00F481F3 /* title_line.png */,
-				79F5B12D1963316C00F481F3 /* title_line2x.png */,
-				7929170A1961F90D004E2FFB /* rating.png */,
-				792917041961B0A2004E2FFB /* shadow_bottom.png */,
-				792917021961AF66004E2FFB /* infobox_with_shadow.png */,
-				7980ED84195F70D100ED5EE0 /* postcard_try.jpg */,
-				7980ED7C195E7DD900ED5EE0 /* rombus.png */,
-				7980ED71195E026000ED5EE0 /* yooka_stamp2x.png */,
-				7980ED6F195DEFEF00ED5EE0 /* yookapostcard3.jpg */,
-				7980ED6B195D2FB300ED5EE0 /* yookapostcard.jpg */,
-				795E11E71954B01D00BF76E2 /* postcard.jpg */,
+				79BF5C5419368FBC004A7793 /* Button_hove.png */,
+				03D184F118A972BD007A26BA /* camera.png */,
+				03D184F218A972BD007A26BA /* camera@2x.png */,
+				79377E99196DD4D70009CC84 /* camera_blue.png */,
+				79DCB60B194F782400006512 /* camera_image_size.png */,
+				79CAB498193D5AFC00BD577B /* camera_new.png */,
+				7920F3A11966FCCD008B7D7A /* cameraupload_2x.png */,
+				796C75B5194F950A00A18E6E /* Captionbar.png */,
+				7947473418ED4B0900A99D53 /* chatbubble.png */,
+				791CFAE91971F87C00553063 /* check.png */,
+				79B151A11975E99C002222DD /* check2.png */,
+				79805D2819707DE500009304 /* clock2.png */,
+				7920F3A21966FCCD008B7D7A /* close_2x.png */,
+				03D184BD18A972BD007A26BA /* close_pop_up.png */,
+				03D184BE18A972BD007A26BA /* close_pop_up@2x.png */,
 				79274E2C1952588A00C058DE /* close_toppic.png */,
-				79274E201952572400C058DE /* greyheart 2.png */,
-				79274E211952572400C058DE /* greyheart 3.png */,
-				79274E221952572400C058DE /* greyheart.png */,
-				79274E231952572400C058DE /* Heart_fill 2.png */,
-				79274E241952572400C058DE /* Heart_fill 3.png */,
-				79274E251952572400C058DE /* Heart_fill.png */,
+				03D184B318A972BD007A26BA /* closeoverlay.png */,
+				03D184B418A972BD007A26BA /* closeoverlay@2x.png */,
+				7949BD4018FA50CF002F56E3 /* coin.png */,
+				7947626A18FF6B2D0057F799 /* coin30x30.png */,
+				7947626618FF6A930057F799 /* coin30x30teal.pdf */,
+				7942FE9818FBAD010033644C /* coin_30x30.png */,
+				79B943C218E9C8F60037D574 /* commentbox.png */,
+				79B943BE18E7912C0037D574 /* commentdropbox.png */,
+				79DCB609194F574E00006512 /* comments.png */,
+				79DCB607194F574300006512 /* comments_white.png */,
+				03D184C918A972BD007A26BA /* Confetti.png */,
+				79805D2C19707DF600009304 /* credit_card.png */,
+				79F2B14218C97B3A00ACCE51 /* cupcake.png */,
+				791376D0193FC77000B89011 /* discription-background_normal.png */,
+				79CAB490193D379200BD577B /* dismiss_Btn.png */,
+				79B5D4DE1982AAD800495A63 /* doggy.png */,
+				03D184E418A972BD007A26BA /* down_side_arrrow_button.png */,
+				03D184E518A972BD007A26BA /* down_side_arrrow_button@2x.png */,
+				79B0A9E9198AF6AA00B43167 /* drink.png */,
+				79B0A9F1198C053200B43167 /* drink2.png */,
+				79B943BF18E7912C0037D574 /* dropbox.png */,
+				03D184EE18A972BD007A26BA /* dummy_dish.png */,
+				03D184EF18A972BD007A26BA /* dummy_dish@2x.png */,
+				791376B5193E815E00B89011 /* edit_profile.png */,
+				79274DF61950EA1400C058DE /* facebook-icon.png */,
+				7947473618ED560C00A99D53 /* facebook.png */,
+				79805D0B196F23EA00009304 /* featuring.png */,
+				79805D0A196F23EA00009304 /* featuring_button.png */,
+				7947472018EC9BD800A99D53 /* feed_icon.jpg */,
+				799842001989872D0069C9C1 /* feed_placeholder.png */,
+				7910A0851980330D00500319 /* ferriswheel.png */,
+				79244D2118EB1F38000D4EB6 /* filled_orangecircle.png */,
+				03D184CC18A972BD007A26BA /* flag_challenge.png */,
+				03D184CD18A972BD007A26BA /* flag_challenge@2x.png */,
+				79AFCB64197DBAC700F09C12 /* forward_arrow.png */,
+				79B151A21975E99C002222DD /* full_heart.png */,
+				03D184A918A972BD007A26BA /* g.png */,
+				03D184AA18A972BD007A26BA /* g@2x.png */,
+				79DCB60F194F846300006512 /* gps.png */,
+				7920F3A51966FCCD008B7D7A /* gps3.png */,
+				7920F3A31966FCCD008B7D7A /* gps_2x.png */,
+				796C75B9194FC3E900A18E6E /* gps_blue.png */,
+				7920F3A41966FCCD008B7D7A /* gps_upload2.png */,
+				79ADF261198D8CFA004C1585 /* green_blimp.png */,
 				79274E1A1952570C00C058DE /* Grey_hearFill 2.png */,
 				79274E1B1952570C00C058DE /* Grey_hearFill 3.png */,
 				79274E1C1952570C00C058DE /* Grey_hearFill.png */,
-				79274E14195256FC00C058DE /* Wheart 2.png */,
-				79274E15195256FC00C058DE /* Wheart 3.png */,
-				79274E16195256FC00C058DE /* Wheart.png */,
-				79274E001951056000C058DE /* share_button_new.png */,
-				79274DFE1951047C00C058DE /* nay_hover.png */,
-				79274DFC1951047400C058DE /* yay_hover.png */,
-				79274DFA1951037B00C058DE /* nay.png */,
-				79274DF81951037200C058DE /* Yay.png */,
-				79274DF61950EA1400C058DE /* facebook-icon.png */,
 				79274DF41950ABD800C058DE /* grey_menu.png */,
-				7951773E19509D2F00797912 /* add_to_menu.png */,
-				7951773C1950972100797912 /* search_bar_new.png */,
-				79A8C966195084F50060B755 /* top_shadow_background.png */,
-				796C75B9194FC3E900A18E6E /* gps_blue.png */,
-				796C75B7194FB89200A18E6E /* search_button.png */,
-				796C75B5194F950A00A18E6E /* Captionbar.png */,
-				79DCB60F194F846300006512 /* gps.png */,
-				79DCB60D194F845A00006512 /* tags.png */,
-				79DCB60B194F782400006512 /* camera_image_size.png */,
-				79DCB609194F574E00006512 /* comments.png */,
-				79DCB607194F574300006512 /* comments_white.png */,
-				79984205198993990069C9C1 /* Yooka_placeholder.png */,
-				79DCB5CC194A514E00006512 /* newsfeed */,
-				79D08C961947568000EB6A03 /* resturant profile */,
-				79D08C8C1946580800EB6A03 /* product_image.png */,
-				79D08C4A19422AF300EB6A03 /* slide_bar_in_progress.png */,
-				79D08C4B19422AF300EB6A03 /* slide_bar_thefeed.png */,
-				79D08C48194222B800EB6A03 /* slide_bar_completed.png */,
-				791376DC19401E2200B89011 /* start_button_2x.png */,
-				791376DA19401DE700B89011 /* start_button.png */,
-				791376D8193FDCDE00B89011 /* meter_line.png */,
+				7947AF7219918F3B002458F2 /* grey_pin.png */,
+				7920F3A61966FCCD008B7D7A /* greygps.png */,
+				7920F3CE196B1F0E008B7D7A /* greygps2.png */,
+				79274E201952572400C058DE /* greyheart 2.png */,
+				79274E211952572400C058DE /* greyheart 3.png */,
+				79274E221952572400C058DE /* greyheart.png */,
+				79805CFF196ED3FB00009304 /* hang_bars.png */,
+				7993F6B2196C70CE00A01184 /* Header_strip.png */,
+				79274E231952572400C058DE /* Heart_fill 2.png */,
+				79274E241952572400C058DE /* Heart_fill 3.png */,
+				79274E251952572400C058DE /* Heart_fill.png */,
+				796E5D1C18E2496800EAFBB5 /* heartempty.png */,
+				796E5D1D18E2496800EAFBB5 /* heartfilled.png */,
+				03D184D218A972BD007A26BA /* home.png */,
+				03D184D318A972BD007A26BA /* home@2x.png */,
+				79B153DB19772BCB002222DD /* home_artisse.png */,
+				7912DA491936A624000A2A24 /* Home_button_background.png */,
+				79BF5C6819369570004A7793 /* home_icon.png */,
+				79CAB499193D5AFC00BD577B /* home_new.png */,
+				79ADF25D198D8CEA004C1585 /* homescreen.png */,
+				79920F62196D891000F8A632 /* horizontal_line.png */,
+				79CAB466193CE37600BD577B /* house_placeholder.png */,
+				7947626B18FF6B2D0057F799 /* hunt30x30.png */,
+				7947626718FF6A930057F799 /* hunt30x30teal.pdf */,
+				03D184B718A972BD007A26BA /* hunt_bottom.png */,
+				03D184B818A972BD007A26BA /* hunt_bottom@2x.png */,
+				03D184CE18A972BD007A26BA /* hunt_count.png */,
+				03D184CF18A972BD007A26BA /* hunt_count@2x.png */,
+				7949BD4118FA50CF002F56E3 /* hunticon.png */,
+				79C966FA18E5D24E00B2CD6B /* huntnamebackground.png */,
+				7949BD3018F9D26C002F56E3 /* huntscreenshot1a.png */,
+				79A7C01518F3078D009FD9A1 /* icon1.png */,
+				79A7C01618F3078D009FD9A1 /* icon2.png */,
+				79A7C01718F3078D009FD9A1 /* icon3.png */,
+				03D184DA18A972BD007A26BA /* icon_price.png */,
+				03D184DB18A972BD007A26BA /* icon_price@2x.png */,
+				03D184D818A972BD007A26BA /* icon_price_dish.png */,
+				03D184D918A972BD007A26BA /* icon_price_dish@2x.png */,
+				03D184DE18A972BD007A26BA /* image_for_profile.png */,
+				03D184DF18A972BD007A26BA /* image_for_profile@2x.png */,
+				03D184E818A972BD007A26BA /* image_profile_bg.png */,
+				03D184E918A972BD007A26BA /* image_profile_bg@2x.png */,
+				79B973AD18F618FC00F8CECB /* imagecircle.png */,
+				79805D2E19707E1D00009304 /* info.png */,
+				79805D24196F59A900009304 /* info_icon.png */,
+				792917021961AF66004E2FFB /* infobox_with_shadow.png */,
+				79805D0C196F23EA00009304 /* infobox_with_shadow2.png */,
+				79805D0D196F23EA00009304 /* infobox_with_shadow2x.png */,
+				7947473A18EDDD5400A99D53 /* instagram123.png */,
+				7949BD3418FA352F002F56E3 /* iphone4huntscreen.png */,
+				7949BD4418FB8CD9002F56E3 /* iphone4landingscreen.png */,
+				7949BD3618FA352F002F56E3 /* iphone4splash.png */,
+				7949BD3718FA352F002F56E3 /* iphone5huntscreen.png */,
+				7949BD4518FB8CD9002F56E3 /* iphone5landingscreen.png */,
+				79944FBB1909B6CE0051827F /* iphone5splash.png */,
+				7918842A190A001C00B99295 /* iphone5splash2.png */,
+				7949BD3118F9D26C002F56E3 /* landingscreenshot01a.png */,
+				79A7C02318F35BBE009FD9A1 /* License.png */,
+				03D184DC18A972BD007A26BA /* like.png */,
+				03D184DD18A972BD007A26BA /* like@2x.png */,
+				79430C371974227400BBCC29 /* lines.png */,
 				791376D6193FD04500B89011 /* location_background.png */,
-				791376D4193FCB5300B89011 /* White_divider.png */,
+				03D1850318A972BD007A26BA /* login_panel.png */,
+				03D1850418A972BD007A26BA /* login_panel@2x.png */,
+				03D1850518A972BD007A26BA /* logo.png */,
+				03D1850618A972BD007A26BA /* logo@2x.png */,
+				79B0AA17198C35BD00B43167 /* logoout_artisse.png */,
+				79B0A9EB198BDDF300B43167 /* map_pin.png */,
+				79ADF25F198D8CF1004C1585 /* mappin2.png */,
+				03D184BB18A972BD007A26BA /* marker_icon.png */,
+				03D184BC18A972BD007A26BA /* marker_icon@2x.png */,
+				03D184EA18A972BD007A26BA /* marker_location.png */,
+				03D184EB18A972BD007A26BA /* marker_location@2x.png */,
+				79B1A7C319958E9200CC9A62 /* medal-.png */,
+				79E1416918F2CEAE0043A7E7 /* menu-button.png */,
+				7920F3A71966FCCD008B7D7A /* menu.png */,
+				79BF5C4E193683C4004A7793 /* menu_background.png */,
+				79BF5C4C19367E90004A7793 /* menu_button.png */,
+				79DC9579193636D6000692F6 /* menu_button2x.png */,
+				79BF5C5019368807004A7793 /* menubar_blue.png */,
+				79BF5C5119368807004A7793 /* menubar_white.png */,
+				791376D8193FDCDE00B89011 /* meter_line.png */,
+				7926D29718CF4B5D0051EF2B /* mimosa.png */,
+				79E1417118F2FD720043A7E7 /* minion.jpg */,
+				796E5D1818E231B500EAFBB5 /* Montserrat-Bold.ttf */,
+				796E5D1918E231B500EAFBB5 /* Montserrat-Regular.ttf */,
+				79AA1B9918E5E76F00142733 /* namebackground.png */,
+				79274DFA1951037B00C058DE /* nay.png */,
+				79274DFE1951047C00C058DE /* nay_hover.png */,
+				03D184F318A972BD007A26BA /* news.png */,
+				03D184F418A972BD007A26BA /* news@2x.png */,
+				7912DA4A1936A624000A2A24 /* News_feed_background.png */,
+				79DCB5CC194A514E00006512 /* newsfeed */,
+				03D184F518A972BD007A26BA /* newsfeed.png */,
+				03D184F618A972BD007A26BA /* newsfeed@2x.png */,
+				79B153DD19772BD2002222DD /* newsfeed_artisse.png */,
+				79B151A31975E99C002222DD /* newsfeed_bar.png */,
+				79CAB49A193D5AFC00BD577B /* newsfeed_new.png */,
+				79805D22196F59A100009304 /* next_information.png */,
+				7926D29918CF678A0051EF2B /* no-dish@2x.png */,
+				03D184CA18A972BD007A26BA /* no_dish.png */,
+				03D184CB18A972BD007A26BA /* no_dish@2x.png */,
+				79B151A41975E99C002222DD /* nonactive_icon.png */,
+				79F5B12A1963316C00F481F3 /* notification.png */,
+				79F5B12B1963316C00F481F3 /* notification2x.png */,
 				791376D2193FC8E300B89011 /* number_of_hunt_circle_normal.png */,
-				791376D0193FC77000B89011 /* discription-background_normal.png */,
-				791376CB193F6BF900B89011 /* plane.png */,
+				03D184AB18A972BD007A26BA /* o.png */,
+				03D184AC18A972BD007A26BA /* o@2x.png */,
 				791376B7193E845D00B89011 /* OpenSans-Bold.ttf */,
 				791376B8193E845D00B89011 /* OpenSans-BoldItalic.ttf */,
 				791376B9193E845D00B89011 /* OpenSans-ExtraBold.ttf */,
@@ -1769,224 +1831,180 @@
 				791376BE193E845D00B89011 /* OpenSans-Regular.ttf */,
 				791376BF193E845D00B89011 /* OpenSans-Semibold.ttf */,
 				791376C0193E845D00B89011 /* OpenSans-SemiboldItalic.ttf */,
-				791376B5193E815E00B89011 /* edit_profile.png */,
+				79E1416F18F2E0180043A7E7 /* orange-pin.png */,
+				7947474018EDEBB400A99D53 /* orange_arrow.png */,
+				79B943C418E9D4FB0037D574 /* orangecircle.png */,
+				7920F3A91966FCCD008B7D7A /* pencil2.png */,
+				7920F3A81966FCCD008B7D7A /* pencil_2x.png */,
+				79920F63196D891000F8A632 /* people.png */,
+				79805D2A19707DEC00009304 /* phone2.png */,
+				79B0A9FF198C1A8C00B43167 /* photo.png */,
+				79F5B136196361F700F481F3 /* picture_size.png */,
+				79E1416D18F2DF530043A7E7 /* pin.png */,
+				79AC6934197EB2BB006603A8 /* pin_artisse.png */,
+				79B1A7C119958E8A00CC9A62 /* pin_blue_hole.png */,
+				79805D3019707E2700009304 /* pin_white.png */,
+				7947473E18EDDD6900A99D53 /* pinterest.png */,
+				79920F64196D891000F8A632 /* places.png */,
+				7910A082197F236800500319 /* placestab_2.png */,
+				79EB92C91983212A00E0FB34 /* plane.png */,
+				7910A0861980330D00500319 /* play.png */,
+				795E11E71954B01D00BF76E2 /* postcard.jpg */,
+				7980ED84195F70D100ED5EE0 /* postcard_try.jpg */,
+				79D08C8C1946580800EB6A03 /* product_image.png */,
+				79B153DF19772BD8002222DD /* profile_artisse.png */,
+				79BF5C5619368FEA004A7793 /* profile_background.png */,
+				03D184F818A972BD007A26BA /* profile_bg.png */,
+				03D184F918A972BD007A26BA /* profile_bg@2x.png */,
+				7920F3AA1966FCCD008B7D7A /* profile_circle2.png */,
+				03D184E218A972BD007A26BA /* profile_header.png */,
+				03D184E318A972BD007A26BA /* profile_header@2x.png */,
+				03D184E018A972BD007A26BA /* profile_header_info.png */,
+				03D184E118A972BD007A26BA /* profile_header_info@2x.png */,
+				03D184C718A972BD007A26BA /* profile_icons.png */,
+				03D184C218A972BD007A26BA /* profile_icons@2x.png */,
+				03D184C318A972BD007A26BA /* profile_like_out.png */,
+				03D184C418A972BD007A26BA /* profile_like_out@2x.png */,
+				03D184C518A972BD007A26BA /* profile_like_over.png */,
+				03D184C618A972BD007A26BA /* profile_like_over@2x.png */,
 				791376B3193E6E0900B89011 /* profile_photo_shadow.png */,
-				79CAB498193D5AFC00BD577B /* camera_new.png */,
-				79CAB499193D5AFC00BD577B /* home_new.png */,
-				79CAB49A193D5AFC00BD577B /* newsfeed_new.png */,
-				79CAB490193D379200BD577B /* dismiss_Btn.png */,
-				79CAB46A193CE4AA00BD577B /* 10.png */,
-				79CAB46B193CE4AA00BD577B /* 11.png */,
-				79CAB46C193CE4AA00BD577B /* 12.png */,
-				79CAB46D193CE4AA00BD577B /* 13.png */,
-				79CAB46E193CE4AA00BD577B /* 14.png */,
-				79CAB46F193CE4AA00BD577B /* 2.png */,
-				79CAB470193CE4AA00BD577B /* 3.png */,
-				79CAB471193CE4AA00BD577B /* 4.png */,
-				79CAB472193CE4AA00BD577B /* 5.png */,
-				79CAB473193CE4AA00BD577B /* 6.png */,
-				79CAB474193CE4AA00BD577B /* 7.png */,
-				79CAB475193CE4AA00BD577B /* 8.png */,
-				79CAB476193CE4AA00BD577B /* 9.png */,
-				79CAB489193D124700BD577B /* turn_dial.png */,
-				79CAB466193CE37600BD577B /* house_placeholder.png */,
-				79CAB45B193CC22900BD577B /* background_yooka_new.png */,
-				7912DA491936A624000A2A24 /* Home_button_background.png */,
-				7912DA4A1936A624000A2A24 /* News_feed_background.png */,
-				7912DA4B1936A624000A2A24 /* upload_photo_background.png */,
-				79BF5C6819369570004A7793 /* home_icon.png */,
-				79BF5C58193694E9004A7793 /* Quicksand_Dash.otf */,
+				79AA1B9718E5DE4A00142733 /* profilebackground.png */,
+				7947473018ED468200A99D53 /* purplebackground.png */,
+				7910AF2A18E61DB100A07FEA /* purplecircle.png */,
+				7910AF2B18E61DB100A07FEA /* purplepin.png */,
 				79BF5C59193694E9004A7793 /* Quicksand-Bold.otf */,
 				79BF5C5A193694E9004A7793 /* Quicksand-BoldItalic.otf */,
 				79BF5C5B193694E9004A7793 /* Quicksand-Italic.otf */,
 				79BF5C5C193694E9004A7793 /* Quicksand-Light.otf */,
 				79BF5C5D193694E9004A7793 /* Quicksand-LightItalic.otf */,
 				79BF5C5E193694E9004A7793 /* Quicksand-Regular.otf */,
-				79BF5C5F193694E9004A7793 /* SIL Open Font License.txt */,
-				79BF5C5619368FEA004A7793 /* profile_background.png */,
-				79BF5C5419368FBC004A7793 /* Button_hove.png */,
-				79BF5C5019368807004A7793 /* menubar_blue.png */,
-				79BF5C5119368807004A7793 /* menubar_white.png */,
-				79BF5C4E193683C4004A7793 /* menu_background.png */,
-				79BF5C4C19367E90004A7793 /* menu_button.png */,
-				79DC9579193636D6000692F6 /* menu_button2x.png */,
-				79AD874C191011A200F22840 /* 1splash.png */,
-				7947626A18FF6B2D0057F799 /* coin30x30.png */,
-				7947626B18FF6B2D0057F799 /* hunt30x30.png */,
-				7947626618FF6A930057F799 /* coin30x30teal.pdf */,
-				7947626718FF6A930057F799 /* hunt30x30teal.pdf */,
-				7942FE9818FBAD010033644C /* coin_30x30.png */,
-				7949BD4418FB8CD9002F56E3 /* iphone4landingscreen.png */,
-				7949BD4518FB8CD9002F56E3 /* iphone5landingscreen.png */,
-				7949BD4018FA50CF002F56E3 /* coin.png */,
-				7949BD4118FA50CF002F56E3 /* hunticon.png */,
-				7949BD3418FA352F002F56E3 /* iphone4huntscreen.png */,
-				7949BD3618FA352F002F56E3 /* iphone4splash.png */,
-				7949BD3718FA352F002F56E3 /* iphone5huntscreen.png */,
-				79944FBB1909B6CE0051827F /* iphone5splash.png */,
-				7918842A190A001C00B99295 /* iphone5splash2.png */,
-				7949BD3018F9D26C002F56E3 /* huntscreenshot1a.png */,
-				7949BD3118F9D26C002F56E3 /* landingscreenshot01a.png */,
-				7949BD2E18F9D25E002F56E3 /* splashscreen01.png */,
-				79B973B618F72CB800F8CECB /* tealpin.png */,
-				79B973B118F61CC700F8CECB /* yookalogo.png */,
-				79B973AF18F6191100F8CECB /* whitecircle.png */,
-				79B973AD18F618FC00F8CECB /* imagecircle.png */,
-				79A7C02318F35BBE009FD9A1 /* License.png */,
-				79A7C01B18F31F58009FD9A1 /* Yookatransparent.png */,
-				79A7C01518F3078D009FD9A1 /* icon1.png */,
-				79A7C01618F3078D009FD9A1 /* icon2.png */,
-				79A7C01718F3078D009FD9A1 /* icon3.png */,
-				79E1417118F2FD720043A7E7 /* minion.jpg */,
-				79E1416F18F2E0180043A7E7 /* orange-pin.png */,
-				79E1416D18F2DF530043A7E7 /* pin.png */,
-				79E1416B18F2DA230043A7E7 /* telephoneback.png */,
-				79E1416918F2CEAE0043A7E7 /* menu-button.png */,
-				79E1416718F1033C0043A7E7 /* White_transulentback.png */,
-				79F3DD5518EF5316003C5D30 /* 100.png */,
-				79F3DD5318EF2D06003C5D30 /* yooka_avatar.png */,
-				79F3DD4F18EF0AB3003C5D30 /* transparentpopupbox.png */,
-				79F3DD4D18EF086E003C5D30 /* yookabackground.png */,
-				7947474618EE29D100A99D53 /* yellowcircle.png */,
-				7947474018EDEBB400A99D53 /* orange_arrow.png */,
-				7947473618ED560C00A99D53 /* facebook.png */,
-				7947473818EDDD4900A99D53 /* twitter.png */,
-				7947473A18EDDD5400A99D53 /* instagram123.png */,
-				7947473C18EDDD5F00A99D53 /* tumblr.png */,
-				7947473E18EDDD6900A99D53 /* pinterest.png */,
-				7947473418ED4B0900A99D53 /* chatbubble.png */,
-				7947473218ED473F00A99D53 /* x-box.png */,
-				7947473018ED468200A99D53 /* purplebackground.png */,
-				7947472C18ECAA0B00A99D53 /* whiteline.png */,
-				7947472018EC9BD800A99D53 /* feed_icon.jpg */,
-				7947472118EC9BD800A99D53 /* target.jpg */,
-				79244D2118EB1F38000D4EB6 /* filled_orangecircle.png */,
-				7947472E18ECC76500A99D53 /* sharebutton-2.png */,
-				79B943C618E9E8810037D574 /* sharebutton.png */,
-				79B943C418E9D4FB0037D574 /* orangecircle.png */,
-				79B943C218E9C8F60037D574 /* commentbox.png */,
-				79B943BE18E7912C0037D574 /* commentdropbox.png */,
-				79B943BF18E7912C0037D574 /* dropbox.png */,
-				7910AF2A18E61DB100A07FEA /* purplecircle.png */,
-				7910AF2B18E61DB100A07FEA /* purplepin.png */,
-				7910AF2C18E61DB100A07FEA /* whitepin.png */,
-				79AA1B9B18E5E93600142733 /* bluecircle.png */,
-				79AA1B9718E5DE4A00142733 /* profilebackground.png */,
-				79AA1B9918E5E76F00142733 /* namebackground.png */,
-				79C966FA18E5D24E00B2CD6B /* huntnamebackground.png */,
+				79BF5C58193694E9004A7793 /* Quicksand_Dash.otf */,
+				79F2B14B18C97E0700ACCE51 /* Ramen.png */,
+				79B151A51975E99C002222DD /* random_photo_icon.png */,
+				7929170A1961F90D004E2FFB /* rating.png */,
+				79805D0E196F23EA00009304 /* rating2.png */,
+				79805D0F196F23EA00009304 /* rating2x.png */,
 				7993B69418E3B1B0005622EC /* ratingscalebehind.png */,
 				7993B69518E3B1B0005622EC /* ratingscalefront.png */,
-				796E5D1C18E2496800EAFBB5 /* heartempty.png */,
-				796E5D1D18E2496800EAFBB5 /* heartfilled.png */,
-				796243E818E21FAB00C680AD /* UbuntuTitling-Bold.ttf */,
-				796E5D1818E231B500EAFBB5 /* Montserrat-Bold.ttf */,
-				796E5D1918E231B500EAFBB5 /* Montserrat-Regular.ttf */,
-				7926D29918CF678A0051EF2B /* no-dish@2x.png */,
-				7926D29718CF4B5D0051EF2B /* mimosa.png */,
-				79F2B14018C97B3A00ACCE51 /* bbq.png */,
-				79F2B14118C97B3A00ACCE51 /* brunch.png */,
-				79F2B14218C97B3A00ACCE51 /* cupcake.png */,
-				79F2B14318C97B3A00ACCE51 /* skyline.png */,
-				79F2B14B18C97E0700ACCE51 /* Ramen.png */,
-				03D184A718A972BD007A26BA /* b.png */,
-				03D184A818A972BD007A26BA /* b@2x.png */,
-				03D184A918A972BD007A26BA /* g.png */,
-				03D184AA18A972BD007A26BA /* g@2x.png */,
-				03D184AB18A972BD007A26BA /* o.png */,
-				03D184AC18A972BD007A26BA /* o@2x.png */,
-				03D184AD18A972BD007A26BA /* share.png */,
-				03D184AE18A972BD007A26BA /* share@2x.png */,
-				03D184AF18A972BD007A26BA /* badge.png */,
-				03D184B018A972BD007A26BA /* badge@2x.png */,
-				03D184B118A972BD007A26BA /* winneryooka.png */,
-				03D184B218A972BD007A26BA /* winneryooka@2x.png */,
-				03D184B318A972BD007A26BA /* closeoverlay.png */,
-				03D184B418A972BD007A26BA /* closeoverlay@2x.png */,
-				03D184B518A972BD007A26BA /* shield.png */,
-				03D184B618A972BD007A26BA /* shield@2x.png */,
-				03D184B718A972BD007A26BA /* hunt_bottom.png */,
-				03D184B818A972BD007A26BA /* hunt_bottom@2x.png */,
-				03D184B918A972BD007A26BA /* top_hunt.png */,
-				03D184BA18A972BD007A26BA /* top_hunt@2x.png */,
-				03D184BB18A972BD007A26BA /* marker_icon.png */,
-				03D184BC18A972BD007A26BA /* marker_icon@2x.png */,
-				03D184BD18A972BD007A26BA /* close_pop_up.png */,
-				03D184BE18A972BD007A26BA /* close_pop_up@2x.png */,
-				03D184BF18A972BD007A26BA /* take_picture.png */,
-				03D184C018A972BD007A26BA /* take_picture@2x.png */,
-				03D184C118A972BD007A26BA /* profile_icons.png */,
-				03D184C218A972BD007A26BA /* profile_icons@2x.png */,
-				03D184C318A972BD007A26BA /* profile_like_out.png */,
-				03D184C418A972BD007A26BA /* profile_like_out@2x.png */,
-				03D184C518A972BD007A26BA /* profile_like_over.png */,
-				03D184C618A972BD007A26BA /* profile_like_over@2x.png */,
-				03D184C718A972BD007A26BA /* profile_icons.png */,
-				03D184C818A972BD007A26BA /* profile_icons@2x.png */,
-				03D184C918A972BD007A26BA /* Confetti.png */,
-				03D184CA18A972BD007A26BA /* no_dish.png */,
-				03D184CB18A972BD007A26BA /* no_dish@2x.png */,
-				03D184CC18A972BD007A26BA /* flag_challenge.png */,
-				03D184CD18A972BD007A26BA /* flag_challenge@2x.png */,
-				03D184CE18A972BD007A26BA /* hunt_count.png */,
-				03D184CF18A972BD007A26BA /* hunt_count@2x.png */,
-				03D184D018A972BD007A26BA /* ring.png */,
-				03D184D118A972BD007A26BA /* ring@2x.png */,
-				03D184D218A972BD007A26BA /* home.png */,
-				03D184D318A972BD007A26BA /* home@2x.png */,
+				79B151A61975E99C002222DD /* red_x.png */,
+				7920F3AB1966FCCD008B7D7A /* reff_page.png */,
+				79EB92CF1987064E00E0FB34 /* restaurant.png */,
 				03D184D418A972BD007A26BA /* restaurant_panel.png */,
 				03D184D518A972BD007A26BA /* restaurant_panel@2x.png */,
-				03D184D618A972BD007A26BA /* top_dishes_icon.png */,
-				03D184D718A972BD007A26BA /* top_dishes_icon@2x.png */,
-				03D184D818A972BD007A26BA /* icon_price_dish.png */,
-				03D184D918A972BD007A26BA /* icon_price_dish@2x.png */,
-				03D184DA18A972BD007A26BA /* icon_price.png */,
-				03D184DB18A972BD007A26BA /* icon_price@2x.png */,
-				03D184DC18A972BD007A26BA /* like.png */,
-				03D184DD18A972BD007A26BA /* like@2x.png */,
-				03D184DE18A972BD007A26BA /* image_for_profile.png */,
-				03D184DF18A972BD007A26BA /* image_for_profile@2x.png */,
-				03D184E018A972BD007A26BA /* profile_header_info.png */,
-				03D184E118A972BD007A26BA /* profile_header_info@2x.png */,
-				03D184E218A972BD007A26BA /* profile_header.png */,
-				03D184E318A972BD007A26BA /* profile_header@2x.png */,
-				03D184E418A972BD007A26BA /* down_side_arrrow_button.png */,
-				03D184E518A972BD007A26BA /* down_side_arrrow_button@2x.png */,
-				03D184E618A972BD007A26BA /* upload_panel.png */,
-				03D184E718A972BD007A26BA /* upload_panel@2x.png */,
-				03D184E818A972BD007A26BA /* image_profile_bg.png */,
-				03D184E918A972BD007A26BA /* image_profile_bg@2x.png */,
-				03D184EA18A972BD007A26BA /* marker_location.png */,
-				03D184EB18A972BD007A26BA /* marker_location@2x.png */,
-				03D184EC18A972BD007A26BA /* unlike.png */,
-				03D184ED18A972BD007A26BA /* unlike@2x.png */,
-				03D184EE18A972BD007A26BA /* dummy_dish.png */,
-				03D184EF18A972BD007A26BA /* dummy_dish@2x.png */,
-				03D184F018A972BD007A26BA /* yooka@2x.png */,
-				03D184F118A972BD007A26BA /* camera.png */,
-				03D184F218A972BD007A26BA /* camera@2x.png */,
-				03D184F318A972BD007A26BA /* news.png */,
-				03D184F418A972BD007A26BA /* news@2x.png */,
-				03D184F518A972BD007A26BA /* newsfeed.png */,
-				03D184F618A972BD007A26BA /* newsfeed@2x.png */,
+				79D08C961947568000EB6A03 /* resturant profile */,
+				7947AF5B19918541002458F2 /* resturant.png */,
+				7947AF531990435B002458F2 /* ribbon.png */,
+				03D184D018A972BD007A26BA /* ring.png */,
+				03D184D118A972BD007A26BA /* ring@2x.png */,
+				7980ED7C195E7DD900ED5EE0 /* rombus.png */,
+				79B0A9E7198AF69500B43167 /* roundededges.png */,
 				03D184F718A972BD007A26BA /* search.png */,
-				03D184F818A972BD007A26BA /* profile_bg.png */,
-				03D184F918A972BD007A26BA /* profile_bg@2x.png */,
 				03D184FA18A972BD007A26BA /* search@2x.png */,
-				03D184FB18A972BD007A26BA /* trending.png */,
-				03D184FC18A972BD007A26BA /* trending@2x.png */,
-				03D184FD18A972BD007A26BA /* user.png */,
-				03D184FE18A972BD007A26BA /* user@2x.png */,
+				79B153E119772BE0002222DD /* search_artisse.png */,
+				7951773C1950972100797912 /* search_bar_new.png */,
+				796C75B7194FB89200A18E6E /* search_button.png */,
+				79920F65196D891000F8A632 /* search_button_blue.png */,
+				794C74081997170700ED84A6 /* search_grey.png */,
+				79805D1E196F24BB00009304 /* shadow2.png */,
+				792917041961B0A2004E2FFB /* shadow_bottom.png */,
+				79430C3B1974492B00BBCC29 /* shadow_maplist.png */,
+				03D184AD18A972BD007A26BA /* share.png */,
+				03D184AE18A972BD007A26BA /* share@2x.png */,
+				79274E001951056000C058DE /* share_button_new.png */,
+				7947472E18ECC76500A99D53 /* sharebutton-2.png */,
+				79B943C618E9E8810037D574 /* sharebutton.png */,
+				03D184B518A972BD007A26BA /* shield.png */,
+				03D184B618A972BD007A26BA /* shield@2x.png */,
 				03D184FF18A972BD007A26BA /* signup_panel_bottom.png */,
 				03D1850018A972BD007A26BA /* signup_panel_bottom@2x.png */,
 				03D1850118A972BD007A26BA /* signup_panel_top.png */,
 				03D1850218A972BD007A26BA /* signup_panel_top@2x.png */,
-				03D1850318A972BD007A26BA /* login_panel.png */,
-				03D1850418A972BD007A26BA /* login_panel@2x.png */,
-				03D1850518A972BD007A26BA /* logo.png */,
-				03D1850618A972BD007A26BA /* logo@2x.png */,
-				03D185AC18B273F7007A26BA /* Back_Icon.png */,
+				79BF5C5F193694E9004A7793 /* SIL Open Font License.txt */,
+				79F2B14318C97B3A00ACCE51 /* skyline.png */,
+				79D08C48194222B800EB6A03 /* slide_bar_completed.png */,
+				79D08C4A19422AF300EB6A03 /* slide_bar_in_progress.png */,
+				79D08C4B19422AF300EB6A03 /* slide_bar_thefeed.png */,
+				7949BD2E18F9D25E002F56E3 /* splashscreen01.png */,
+				791376DA19401DE700B89011 /* start_button.png */,
+				791376DC19401E2200B89011 /* start_button_2x.png */,
+				79DCB60D194F845A00006512 /* tags.png */,
+				7920F3AD1966FCCD008B7D7A /* tags2.png */,
+				7920F3AC1966FCCD008B7D7A /* tags_2x.png */,
+				03D184BF18A972BD007A26BA /* take_picture.png */,
+				03D184C018A972BD007A26BA /* take_picture@2x.png */,
+				7947472118EC9BD800A99D53 /* target.jpg */,
+				7947AF5D19918549002458F2 /* tavern.png */,
+				79B973B618F72CB800F8CECB /* tealpin.png */,
+				79E1416B18F2DA230043A7E7 /* telephoneback.png */,
+				79F5B12C1963316C00F481F3 /* title_line.png */,
+				79F5B12D1963316C00F481F3 /* title_line2x.png */,
+				79F5B13419635E6D00F481F3 /* title_tile.png */,
+				03D184D618A972BD007A26BA /* top_dishes_icon.png */,
+				03D184D718A972BD007A26BA /* top_dishes_icon@2x.png */,
+				03D184B918A972BD007A26BA /* top_hunt.png */,
+				03D184BA18A972BD007A26BA /* top_hunt@2x.png */,
+				79A8C966195084F50060B755 /* top_shadow_background.png */,
+				79F3DD4F18EF0AB3003C5D30 /* transparentpopupbox.png */,
+				03D184FB18A972BD007A26BA /* trending.png */,
+				03D184FC18A972BD007A26BA /* trending@2x.png */,
+				7947473C18EDDD5F00A99D53 /* tumblr.png */,
+				79CAB489193D124700BD577B /* turn_dial.png */,
+				7947473818EDDD4900A99D53 /* twitter.png */,
+				796243E818E21FAB00C680AD /* UbuntuTitling-Bold.ttf */,
+				03D184EC18A972BD007A26BA /* unlike.png */,
+				03D184ED18A972BD007A26BA /* unlike@2x.png */,
+				79B153E319772BE7002222DD /* upload_artisse.png */,
+				7920F3AE1966FCCD008B7D7A /* upload_close.png */,
+				7920F3AF1966FCCD008B7D7A /* upload_horizontal_line.png */,
+				03D184E618A972BD007A26BA /* upload_panel.png */,
+				03D184E718A972BD007A26BA /* upload_panel@2x.png */,
+				7912DA4B1936A624000A2A24 /* upload_photo_background.png */,
+				7920F3B01966FCCD008B7D7A /* upload_share_arrow.png */,
+				7920F3B11966FCCD008B7D7A /* upload_vertical_line.png */,
+				79B0AA0F198C253400B43167 /* urban_explorer.png */,
+				03D184FD18A972BD007A26BA /* user.png */,
+				03D184FE18A972BD007A26BA /* user@2x.png */,
+				79274E14195256FC00C058DE /* Wheart 2.png */,
+				79274E15195256FC00C058DE /* Wheart 3.png */,
+				79274E16195256FC00C058DE /* Wheart.png */,
+				791376D4193FCB5300B89011 /* White_divider.png */,
+				7947AF5F19918552002458F2 /* white_menu.png */,
+				79E1416718F1033C0043A7E7 /* White_transulentback.png */,
+				79B973AF18F6191100F8CECB /* whitecircle.png */,
+				7947472C18ECAA0B00A99D53 /* whiteline.png */,
+				79805D13196F23EA00009304 /* whiteline2.png */,
+				7910AF2C18E61DB100A07FEA /* whitepin.png */,
+				79430C3F1974891900BBCC29 /* whitex.png */,
+				03D184B118A972BD007A26BA /* winneryooka.png */,
+				03D184B218A972BD007A26BA /* winneryooka@2x.png */,
+				7947473218ED473F00A99D53 /* x-box.png */,
+				79920F66196D891000F8A632 /* x_close.png */,
+				79274DF81951037200C058DE /* Yay.png */,
+				79274DFC1951047400C058DE /* yay_hover.png */,
+				7947474618EE29D100A99D53 /* yellowcircle.png */,
+				7920F3B51966FCCD008B7D7A /* yes_no_button2.png */,
+				7920F3B21966FCCD008B7D7A /* yes_no_button_2x.png */,
+				7920F3B41966FCCD008B7D7A /* yes_no_button_after2.png */,
+				7920F3B31966FCCD008B7D7A /* yes_no_button_after_2x.png */,
+				7910A0891980330D00500319 /* yooka.png */,
+				03D184F018A972BD007A26BA /* yooka@2x.png */,
+				79F3DD5318EF2D06003C5D30 /* yooka_avatar.png */,
+				7910A0871980330D00500319 /* yooka_background.png */,
+				7910A0881980330D00500319 /* Yooka_building.png */,
+				7947AF611991855E002458F2 /* yooka_front.png */,
+				79B0AA11198C26DC00B43167 /* yooka_landing_page.png */,
+				79984205198993990069C9C1 /* Yooka_placeholder.png */,
+				7980ED71195E026000ED5EE0 /* yooka_stamp2x.png */,
+				79F3DD4D18EF086E003C5D30 /* yookabackground.png */,
+				79B973B118F61CC700F8CECB /* yookalogo.png */,
+				7980ED6B195D2FB300ED5EE0 /* yookapostcard.jpg */,
+				7980ED6F195DEFEF00ED5EE0 /* yookapostcard3.jpg */,
 				796243E018E1ECDA00C680AD /* YookaPostsBg.png */,
 				796243E418E2008900C680AD /* YookaProfilePicbg.png */,
+				79A7C01B18F31F58009FD9A1 /* Yookatransparent.png */,
+				791376CB193F6BF900B89011 /* plane.png */,
+				03D184C718A972BD007A26BA /* profile_icons.png */,
+				03D184C818A972BD007A26BA /* profile_icons@2x.png */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -2084,6 +2102,15 @@
 			name = GCDImage;
 			sourceTree = "<group>";
 		};
+		794C74041996C87F00ED84A6 /* PendulumView */ = {
+			isa = PBXGroup;
+			children = (
+				794C74051996C87F00ED84A6 /* PendulumView.h */,
+				794C74061996C87F00ED84A6 /* PendulumView.m */,
+			);
+			path = PendulumView;
+			sourceTree = "<group>";
+		};
 		7962439618E0E42700C680AD /* BDDynamicGrid */ = {
 			isa = PBXGroup;
 			children = (
@@ -2134,15 +2161,6 @@
 				796243C118E0F08F00C680AD /* 25.jpg */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		797B1C211911914900A7EC5D /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				797B1C221911914900A7EC5D /* Flurry.h */,
-				797B1C231911914900A7EC5D /* libFlurry_5.0.0.a */,
-			);
-			path = Flurry;
 			sourceTree = "<group>";
 		};
 		7983D1DC191B24B400818858 /* Cache-LifeSaver */ = {
@@ -2213,6 +2231,15 @@
 				79B153D419771134002222DD /* LiveFrost.h */,
 			);
 			path = LiveFrost;
+			sourceTree = "<group>";
+		};
+		79B4B8D419997B9A00F803AF /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				79B4B8D519997B9A00F803AF /* Flurry.h */,
+				79B4B8D619997B9A00F803AF /* libFlurry_5.2.0.a */,
+			);
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 		79CAB45F193CE11D00BD577B /* Rotation */ = {
@@ -2546,6 +2573,7 @@
 				7912DA4E1936A624000A2A24 /* upload_photo_background.png in Resources */,
 				79274DFF1951047C00C058DE /* nay_hover.png in Resources */,
 				79AA1B9C18E5E93600142733 /* bluecircle.png in Resources */,
+				79B1A7C419958E9200CC9A62 /* medal-.png in Resources */,
 				79B151A81975E99C002222DD /* Before_like.png in Resources */,
 				7910A08B1980330D00500319 /* ferriswheel.png in Resources */,
 				79D08CBF1947568000EB6A03 /* slider_background.png in Resources */,
@@ -2592,6 +2620,7 @@
 				796243C218E0F08F00C680AD /* placeholder.png in Resources */,
 				799842011989872D0069C9C1 /* feed_placeholder.png in Resources */,
 				79A7C02418F35BBE009FD9A1 /* License.png in Resources */,
+				794C74091997170700ED84A6 /* search_grey.png in Resources */,
 				796243C918E0F08F00C680AD /* 7.jpg in Resources */,
 				7920F3BD1966FCCD008B7D7A /* pencil_2x.png in Resources */,
 				79B0AA06198C1F7E00B43167 /* add_hunt_button.png in Resources */,
@@ -2749,8 +2778,10 @@
 				796243D218E0F08F00C680AD /* 16.jpg in Resources */,
 				7949BD3A18FA352F002F56E3 /* iphone4huntscreen.png in Resources */,
 				79D08CB41947568000EB6A03 /* close_button2x.png in Resources */,
+				794C740B1997171A00ED84A6 /* add_grey.png in Resources */,
 				79DCB5F9194A514F00006512 /* timeline_bullet.png in Resources */,
 				79D08C8D1946580800EB6A03 /* product_image.png in Resources */,
+				79B1A7C219958E8A00CC9A62 /* pin_blue_hole.png in Resources */,
 				796243DB18E0F08F00C680AD /* 25.jpg in Resources */,
 				03D1854E18A972BD007A26BA /* dummy_dish.png in Resources */,
 				79DC9283192EC6D0000692F6 /* pin@2x.png in Resources */,
@@ -2854,6 +2885,7 @@
 				79D08CC81947AA4500EB6A03 /* clock.png in Resources */,
 				79BF5C67193694E9004A7793 /* SIL Open Font License.txt in Resources */,
 				79274DFB1951037B00C058DE /* nay.png in Resources */,
+				79B1A7C019958E8100CC9A62 /* arrow_white.png in Resources */,
 				79E1416C18F2DA230043A7E7 /* telephoneback.png in Resources */,
 				79F5B1331963316C00F481F3 /* title_line2x.png in Resources */,
 				7910A08D1980330D00500319 /* yooka_background.png in Resources */,
@@ -2962,6 +2994,7 @@
 				79B151991975D6A2002222DD /* MultiplePulsingHaloLayer.m in Sources */,
 				7980ED78195E243500ED5EE0 /* UIImage+scale.m in Sources */,
 				79DC9280192EC6D0000692F6 /* FSWebLogin.m in Sources */,
+				79B4B8DB1999C19C00F803AF /* YookaAppDelegate.m in Sources */,
 				79DA513C191F2E3000692E05 /* YookaHunts2ViewController.m in Sources */,
 				79A7C02218F3582E009FD9A1 /* TermsOfServiceViewController.m in Sources */,
 				79D08C4619415CB200EB6A03 /* GenericAnimationView.m in Sources */,
@@ -2979,11 +3012,14 @@
 				79B0A9F0198BF3BC00B43167 /* LLACircularProgressView.m in Sources */,
 				7962439E18E0E44600C680AD /* BDDynamicGridCell.m in Sources */,
 				79CAB465193CE12E00BD577B /* RVCollectionViewLayout.m in Sources */,
+				79AD224F199AA43F00731151 /* YookaFeaturedHuntViewController.m in Sources */,
 				79B1A7B21994186800CC9A62 /* NavigationViewController.m in Sources */,
 				79B1518C1975AEB2002222DD /* YookaMenuViewController.m in Sources */,
+				79AD224B199AA3E800731151 /* YookaPostViewController.m in Sources */,
 				79244D1F18EA6DB2000D4EB6 /* BDViewController+Private2.m in Sources */,
 				03D1859D18AC4725007A26BA /* YookaHuntsViewController.m in Sources */,
 				03D1858218AABDB7007A26BA /* YookaSignupViewController.m in Sources */,
+				79B4B8CF19996E8800F803AF /* YookaProfileNewViewController.m in Sources */,
 				79DC958119363E89000692F6 /* MainViewController.m in Sources */,
 				791884211909F1B300B99295 /* SDWebImageDownloader.m in Sources */,
 				799720AE1963B5FC007B830C /* UIImage+ImageEffects.m in Sources */,
@@ -2997,7 +3033,6 @@
 				79DCB606194BBC7100006512 /* YookaHuntRestaurantViewController.m in Sources */,
 				791884251909F1B300B99295 /* UIButton+WebCache.m in Sources */,
 				791884221909F1B300B99295 /* SDWebImageDownloaderOperation.m in Sources */,
-				79B1A7B01994185000CC9A62 /* YookaSearchViewController.m in Sources */,
 				79E1416618F0F1E20043A7E7 /* YookaLocation2ViewController.m in Sources */,
 				79B153CD19770E1E002222DD /* UIERealTimeBlurView.m in Sources */,
 				79244D1918EA6700000D4EB6 /* BDDynamicGridViewController2.m in Sources */,
@@ -3006,29 +3041,25 @@
 				79B1519A1975D6A2002222DD /* PulsingHaloLayer.m in Sources */,
 				7918841C1909F1B300B99295 /* MKAnnotationView+WebCache.m in Sources */,
 				79D08C3B19413D1400EB6A03 /* MPAnimation.m in Sources */,
-				7947AF661991858A002458F2 /* YookaFeaturedHuntViewController.m in Sources */,
+				79B4B8CB19996E1200F803AF /* YookaClickProfileViewController.m in Sources */,
 				791884291909F1B300B99295 /* UIImageView+WebCache.m in Sources */,
-				79B1A7AC1994182B00CC9A62 /* YookaHuntVenuesViewController.m in Sources */,
 				7900AC6C18CE9B2C006C3AA6 /* DetailViewController.m in Sources */,
 				79DC927A192EC6D0000692F6 /* Foursquare2.m in Sources */,
-				03D1848218A8683A007A26BA /* YookaAppDelegate.m in Sources */,
+				794C74071996C87F00ED84A6 /* PendulumView.m in Sources */,
 				792ECE9F1908330000093B7F /* UIImageView+DispatchLoad.m in Sources */,
 				796243A018E0E44600C680AD /* BDRowInfo.m in Sources */,
 				03D1847E18A8683A007A26BA /* main.m in Sources */,
 				79B153D619771134002222DD /* LFGlassView.m in Sources */,
 				79D08C4419415CB200EB6A03 /* AnimationDelegate.m in Sources */,
-				7947AF7A19919945002458F2 /* YookaSubCategoryViewController.m in Sources */,
 				79FBC814192AFF9700FF3358 /* koaGradient.m in Sources */,
 				79DC927D192EC6D0000692F6 /* FSOAuthNoAppStore.m in Sources */,
 				7962439518E0C97300C680AD /* YookaButton.m in Sources */,
 				799841FF198950C60069C9C1 /* YookaNewNewsfeedViewController.m in Sources */,
-				79B1A7A81994180900CC9A62 /* YookaClickProfileViewController.m in Sources */,
 				03D185BC18B5342C007A26BA /* FSVenue.m in Sources */,
 				79B153CE19770E1E002222DD /* UIImage+BoxBlur.m in Sources */,
 				791884201909F1B300B99295 /* SDWebImageDecoder.m in Sources */,
 				79CAB464193CE12E00BD577B /* RVCollectionViewCell.m in Sources */,
 				7900AC6518CE9B22006C3AA6 /* BridgeAnnotation.m in Sources */,
-				7947AF70199185ED002458F2 /* YookaRestaurantViewController.m in Sources */,
 				79F875A7192ABB4A0070A91E /* LDProgressView.m in Sources */,
 				79D08C3719413CD500EB6A03 /* MPTransition.m in Sources */,
 				7900AC6718CE9B22006C3AA6 /* CustomMapItem.m in Sources */,
@@ -3036,9 +3067,9 @@
 				79D08C4719415CB200EB6A03 /* FlipView.m in Sources */,
 				79D08C4519415CB200EB6A03 /* AnimationFrame.m in Sources */,
 				79A7C01F18F3294E009FD9A1 /* YookaForgotPasswordViewController.m in Sources */,
+				79B4B8D119996EA200F803AF /* YookaSubCategoryViewController.m in Sources */,
 				791884281909F1B300B99295 /* UIImage+WebP.m in Sources */,
 				79CAB488193D09C700BD577B /* iCarousel.m in Sources */,
-				79B1518A1975AE9E002222DD /* YookaLocationViewController.m in Sources */,
 				03D1848818A8683A007A26BA /* YookaViewController.m in Sources */,
 				79AA1BA018E5F0AC00142733 /* CoreTextArcView.m in Sources */,
 				79FBC813192AFF9700FF3358 /* KOAProgressBar.m in Sources */,
@@ -3046,20 +3077,22 @@
 				03D1859A18ABCF82007A26BA /* YookaBackend.m in Sources */,
 				79E1416318F0E47A0043A7E7 /* YookaSearchLandingViewController.m in Sources */,
 				794C08D518D8DCF80033BA7C /* YookaHuntSearchViewController.m in Sources */,
-				79B1A7AE1994183C00CC9A62 /* YookaProfileNewViewController.m in Sources */,
 				7918841D1909F1B300B99295 /* NSData+ImageContentType.m in Sources */,
 				791884271909F1B300B99295 /* UIImage+MultiFormat.m in Sources */,
 				03D185A618AC47B6007A26BA /* YookaProfileViewController.m in Sources */,
 				7900AC7018CE9DDC006C3AA6 /* AddressAnnotation.m in Sources */,
-				79B1A7B61995279700CC9A62 /* YookaPostViewController.m in Sources */,
 				79DC927C192EC6D0000692F6 /* FSKeychain.m in Sources */,
 				03D185BB18B5342C007A26BA /* FSConverter.m in Sources */,
 				79B0AA24198D548200B43167 /* UserFollowingViewController.m in Sources */,
+				79AD224D199AA41200731151 /* YookaRestaurantViewController.m in Sources */,
 				79B973B518F724F500F8CECB /* GSBorderLabel.m in Sources */,
 				79F875A8192ABB4A0070A91E /* UIColor+RGBValues.m in Sources */,
 				7900AC6618CE9B22006C3AA6 /* SFAnnotation.m in Sources */,
 				796243A618E0E45600C680AD /* BDViewController+Private.m in Sources */,
+				79B4B8DD1999C1AF00F803AF /* YookaSearchViewController.m in Sources */,
+				79B1A7BC199556A300CC9A62 /* YookaLocationViewController.m in Sources */,
 				7980ED7B195E3A1500ED5EE0 /* UIImage+Crop.m in Sources */,
+				79AD2249199A978500731151 /* YookaHuntVenuesViewController.m in Sources */,
 				7926D29D18D1414E0051EF2B /* YookaMenu2ViewController.m in Sources */,
 				7918841F1909F1B300B99295 /* SDWebImageCompat.m in Sources */,
 				79B1A7B419941A8D00CC9A62 /* YookaHuntsLandingViewController.m in Sources */,
@@ -3147,7 +3180,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
+				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
 				SDKROOT = iphoneos7.1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3182,7 +3215,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
+				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
 				SDKROOT = iphoneos7.1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3233,7 +3266,7 @@
 					Social,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
+				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
 				SDKROOT = iphoneos7.1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3284,7 +3317,7 @@
 					Social,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "649D8DC1-69D0-4F68-B64D-086A3B2CF29E";
+				PROVISIONING_PROFILE = "CED13B98-C01A-4CD2-BD3D-9E770E04D318";
 				SDKROOT = iphoneos7.1;
 				WRAPPER_EXTENSION = app;
 			};

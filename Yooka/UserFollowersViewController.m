@@ -126,8 +126,6 @@
     _customEndpoint1 = @"NewsFeed";
     _fieldName1 = nil;
     self.userEmail = [KCSUser activeUser].email;
-    NSLog(@"user email = %@",self.userEmail);
-    NSLog(@"follower users = %@",self.followers);
     _dict = [[NSDictionary alloc]initWithObjectsAndKeys:_userEmail,@"userEmail",self.followers,@"followingUsers",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
     
     [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict completionBlock:^(id results, NSError *error){

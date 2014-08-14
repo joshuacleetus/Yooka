@@ -15,6 +15,7 @@
 #import "YookaHuntVenuesViewController.h"
 #import "PulsingHaloLayer.h"
 #import "MultiplePulsingHaloLayer.h"
+#import "Flurry.h"
 
 @interface YookaFeaturedHuntViewController ()
 @property (nonatomic, strong) MultiplePulsingHaloLayer *mutiHalo;
@@ -122,9 +123,9 @@
 //    [self.descriptionImage setImage:[UIImage imageNamed:@"discription-background_normal.png"]];
 //    [self.view addSubview:self.descriptionImage];
     
-    self.descriptionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 300, 150, 20)];
+    self.descriptionLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 300, 320, 20)];
     self.descriptionLabel.textColor = [self colorWithHexString:@"afaeae"];
-    self.descriptionLabel.font = [UIFont fontWithName:@"OpenSans" size:14.0];
+    self.descriptionLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.0];
     NSString *string = @"INFORMATION";
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     float spacing = 1.5f;
@@ -133,6 +134,7 @@
                              range:NSMakeRange(0, [string length])];
     
     self.descriptionLabel.attributedText = attributedString;
+    self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.descriptionLabel];
     
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 335, 320, 1)];
@@ -154,7 +156,7 @@
 //    [self.view addSubview:self.countLabel];
     
     UIImageView *restaurant_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 240, 320, 45)];
-    [restaurant_bg setBackgroundColor:[self colorWithHexString:@"75bfea"]];
+    [restaurant_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
     [self.view addSubview:restaurant_bg];
     
     self.restaurantLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 240, 320, 45)];
@@ -235,7 +237,7 @@
             shareLabel.attributedText = attributedString;
         }
         shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
-        shareLabel.textColor = [self colorWithHexString:@"75bfea"];
+        shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
         [self.view addSubview:shareLabel];
         
         self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -282,7 +284,7 @@
             
             self.huntDescriptionLabel = [[UILabel alloc]init];
             self.huntDescriptionLabel.textColor = [self colorWithHexString:@"afaeae"];
-            self.huntDescriptionLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+            self.huntDescriptionLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:12.0];
             self.huntDescriptionLabel.textAlignment = NSTextAlignmentJustified;
             self.huntDescriptionLabel.numberOfLines = 0;
             
@@ -352,7 +354,7 @@
                     shareLabel.attributedText = attributedString;
                 }
                 shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
-                shareLabel.textColor = [self colorWithHexString:@"75bfea"];
+                shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
                 [self.view addSubview:shareLabel];
                 
                 self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -381,7 +383,7 @@
                         shareLabel.attributedText = attributedString;
                     }
                     shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
-                    shareLabel.textColor = [self colorWithHexString:@"75bfea"];
+                    shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
                     [self.view addSubview:shareLabel];
                     
                     self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -523,7 +525,7 @@
             shareLabel.attributedText = attributedString;
         }
         shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
-        shareLabel.textColor = [self colorWithHexString:@"75bfea"];
+        shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
         [self.view addSubview:shareLabel];
         
         self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -642,6 +644,13 @@
 {
     
     [self.startButton setEnabled:NO];
+    
+    // Capture author info &  user status
+    NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self.huntTitle, @"Hunt_Name",
+                                   nil];
+    
+    [Flurry logEvent:@"Hunt_Started" withParameters:articleParams];
     
     [self.subscribedHunts addObject:_huntTitle];
     if ([self.unsubscribedHunts containsObject:self.huntTitle]) {

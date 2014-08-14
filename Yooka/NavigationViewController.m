@@ -17,6 +17,7 @@
 #import "UIImage+ImageEffects.h"
 #import "YookaAppDelegate.h"
 #import "YookaMapViewController.h"
+#import "Flurry.h"
 
 @interface NavigationViewController ()
 
@@ -689,26 +690,33 @@
 }
 
 - (IBAction)homeButtonClicked:(id)sender {
+    
+    [Flurry logEvent:@"Main_Menu_Home_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaHuntsLandingViewController"];
 }
 
 - (IBAction)uploadPhotoButtonClicked:(id)sender {
+    [Flurry logEvent:@"Main_Menu_Photo_Upload_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaPostViewController"];
 }
 
 - (IBAction)newsFeedButtonClicked:(id)sender {
+    [Flurry logEvent:@"Main_Menu_Newsfeed_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaNewsFeedViewController"];
 }
 
 - (IBAction)profileButtonClicked:(id)sender {
+    [Flurry logEvent:@"Main_Menu_Profile_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaProfileNewViewController"];
 }
 
 - (IBAction)searchButtonClicked:(id)sender {
+    [Flurry logEvent:@"Main_Menu_Search_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaSearchViewController"];
 }
 
 - (IBAction)mapButtonClicked:(id)sender {
+    [Flurry logEvent:@"Main_Menu_Map_Button_Clicked"];
     [self.delegate didSelectViewWithName:@"YookaMapViewController"];
 }
 

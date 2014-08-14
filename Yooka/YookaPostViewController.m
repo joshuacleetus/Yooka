@@ -24,6 +24,7 @@
 #import "Foursquare2.h"
 #import "FSConverter.h"
 #import "FSVenue.h"
+#import "Flurry.h"
 
 #define kOFFSET_FOR_KEYBOARD 155.0
 #define kOFFSET_FOR_KEYBOARD_1 255.0
@@ -65,8 +66,6 @@
         if (screenSize.height > 480.0f) {
             /*Do iPhone 5 stuff here.*/
             
-//            [self getUserImage];
-            
             [self.view setBackgroundColor:[UIColor whiteColor]];
             
             UIImageView *setPostBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 275)];
@@ -74,21 +73,11 @@
             setPostBgImage.backgroundColor = [self colorWithHexString:@"a3a3a3"];
             [self.view addSubview:setPostBgImage];
             
-//            UILabel *plusLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 55, 200, 200)];
-//            plusLabel.text= @"+";
-//            plusLabel.font = [UIFont fontWithName:@"OpenSans-Regular" size:83.0];
-//            plusLabel.textColor = [UIColor whiteColor];
-//            [self.view addSubview:plusLabel];
-            
             
             UIImageView *plusLabel = [[UIImageView alloc]initWithFrame:CGRectMake(145, 105, 30, 30)];
             plusLabel.image = [UIImage imageNamed:@"photo.png"];
             plusLabel.backgroundColor=[UIColor clearColor];
             [self.view addSubview:plusLabel];
-            
-//            UIImageView *modalView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 275)];
-//            modalView.backgroundColor = [[self colorWithHexString:(@"88888D")] colorWithAlphaComponent:0.3f];
-//            [self.view addSubview:modalView];
             
             NSLog(@"my hunt count = %@",_huntCount);
             NSLog(@"hunt count = %@",_totalHuntCount);
@@ -101,7 +90,7 @@
             self.modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 275)];
             self.modal_view.opaque = NO;
             //self.modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-            [self.view addSubview:self.modal_view];
+           // [self.view addSubview:self.modal_view];
             
             KCSCollection* collection = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
             self.updateStore = [KCSLinkedAppdataStore storeWithOptions:@{ KCSStoreKeyResource : collection, KCSStoreKeyCachePolicy : @(KCSCachePolicyBoth), KCSStoreKeyOfflineUpdateEnabled : @YES }];
@@ -348,8 +337,8 @@
             if(self.presentingViewController.presentedViewController == self) {
                 
                 NSLog(@"presented view");
-                self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 30, 30, 30)];
-                self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_3.png"];
+                self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
+                self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
                 [self.view addSubview:self.backBtnImage];
                 
                 self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -407,13 +396,13 @@
         else {
 
             [self.view setBackgroundColor:[UIColor whiteColor]];
-            
+         
             UIImageView *setPostBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 275)];
             //setPostBgImage.image = [UIImage imageNamed:@"camera_image_size.png"];
             setPostBgImage.backgroundColor = [self colorWithHexString:@"a3a3a3"];
             [self.view addSubview:setPostBgImage];
             
-            UIImageView *plusLabel = [[UIImageView alloc]initWithFrame:CGRectMake(145, 105, 30, 30)];
+            UIImageView *plusLabel = [[UIImageView alloc]initWithFrame:CGRectMake(145, 105-30, 30, 30)];
             plusLabel.image = [UIImage imageNamed:@"photo.png"];
             plusLabel.backgroundColor=[UIColor clearColor];
             [self.view addSubview:plusLabel];
@@ -425,7 +414,7 @@
             
             self.modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 275)];
             self.modal_view.opaque = NO;
-            [self.view addSubview:self.modal_view];
+            //[self.view addSubview:self.modal_view];
             
             KCSCollection* collection = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
             self.updateStore = [KCSLinkedAppdataStore storeWithOptions:@{ KCSStoreKeyResource : collection, KCSStoreKeyCachePolicy : @(KCSCachePolicyBoth), KCSStoreKeyOfflineUpdateEnabled : @YES }];
@@ -468,7 +457,7 @@
             [_voteImageview addSubview:_voteLabel];
             
             _yayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_yayButton  setFrame:CGRectMake(73, 330-54, 70, 35)];
+            [_yayButton  setFrame:CGRectMake(73, 330-64, 70, 35)];
             [_yayButton setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
             [_yayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.yayButton addTarget:self action:@selector(yayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
@@ -484,7 +473,7 @@
             [_yayButton addSubview:yesView];
             
             _nayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_nayButton  setFrame:CGRectMake(175, 330-54, 70, 35)];
+            [_nayButton  setFrame:CGRectMake(175, 330-64, 70, 35)];
             [_nayButton setBackgroundColor:[UIColor clearColor]];
             [_nayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.nayButton addTarget:self action:@selector(nayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
@@ -653,8 +642,8 @@
             
             if(self.presentingViewController.presentedViewController == self) {
                 
-                self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 30, 30, 30)];
-                self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_3.png"];
+                self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
+                self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
                 [self.view addSubview:self.backBtnImage];
                 
                 self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -891,26 +880,40 @@
         } else {
             /*Do iPhone Classic stuff here.*/
             _yayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_yayButton  setFrame:CGRectMake(70, 325, 65, 60)];
+            [_yayButton  setFrame:CGRectMake(73, 330-64, 70, 35)];
             [_yayButton setBackgroundColor:[UIColor clearColor]];
-            [_yayButton setBackgroundImage:[[UIImage imageNamed:@"filled_orangecircle.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-            [_yayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.yayButton addTarget:self action:@selector(yayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.yayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-            self.yayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            [_yayButton setTitle:@"  YAY" forState:UIControlStateNormal];
+            
+            [_yayButton setTitle:@" YES" forState:UIControlStateNormal];
+            
             [self.view addSubview:_yayButton];
             
+            
+            UIImageView *yesView = [[UIImageView alloc]initWithFrame:CGRectMake(-8, -7, 85, 48)];
+            yesView.image = [UIImage imageNamed:@"yes_no_button_after2.png"];
+            yesView.backgroundColor=[UIColor clearColor];
+            [_yayButton addSubview:yesView];
+            
+            [_yayButton setTitleColor:[self colorWithHexString:@"3ac0ec"]forState:UIControlStateNormal];
+            [self.yayButton addTarget:self action:@selector(yayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+            [self.yayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
+            self.yayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            
+            
+            
             _nayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_nayButton  setFrame:CGRectMake(174, 325, 65, 60)];
-            [_nayButton setBackgroundColor:[UIColor clearColor]];
-            [_nayButton setBackgroundImage:[[UIImage imageNamed:@"orangecircle.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-            [_nayButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [_nayButton  setFrame:CGRectMake(175, 330-64, 70, 35)];
+            [_nayButton setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [_nayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.nayButton addTarget:self action:@selector(nayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.nayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            [self.nayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
             self.nayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            [_nayButton setTitle:@"  NAY" forState:UIControlStateNormal];
+            [_nayButton setTitle:@" NO" forState:UIControlStateNormal];
             [self.view addSubview:_nayButton];
+            
+            UIImageView *noView = [[UIImageView alloc]initWithFrame:CGRectMake(-18, -10, 100, 50)];
+            noView.image = [UIImage imageNamed:@"yes_no_button2.png"];
+            noView.backgroundColor=[UIColor clearColor];
+            [_nayButton addSubview:noView];
         }
     } else {
         /*Do iPad stuff here.*/
@@ -974,8 +977,6 @@
             [self.nayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
             self.nayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             
-     
-            
             _yayButton = [UIButton buttonWithType:UIButtonTypeCustom];
             [_yayButton  setFrame:CGRectMake(73, 330, 70, 35)];
             [_yayButton setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
@@ -994,27 +995,36 @@
         
         } else {
             /*Do iPhone Classic stuff here.*/
+            _nayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_nayButton  setFrame:CGRectMake(175, 330-64, 70, 35)];
+            [_nayButton setBackgroundColor:[UIColor clearColor]];
+            [_nayButton setTitle:@" NO" forState:UIControlStateNormal];
+            [self.view addSubview:_nayButton];
+            
+            UIImageView *noView = [[UIImageView alloc]initWithFrame:CGRectMake(-8, -8, 85, 48)];
+            noView.image = [UIImage imageNamed:@"yes_no_button_after2.png"];
+            noView.backgroundColor=[UIColor clearColor];
+            [_nayButton addSubview:noView];
+            
+            [_nayButton setTitleColor:[self colorWithHexString:@"3ac0ec"]forState:UIControlStateNormal];
+            [self.nayButton addTarget:self action:@selector(nayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
+            [self.nayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
+            self.nayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            
             _yayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_yayButton  setFrame:CGRectMake(70, 325, 65, 60)];
-            [_yayButton setBackgroundColor:[UIColor clearColor]];
-            [_yayButton setBackgroundImage:[[UIImage imageNamed:@"orangecircle.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-            [_yayButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [_yayButton  setFrame:CGRectMake(73, 330-64, 70, 35)];
+            [_yayButton setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [_yayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.yayButton addTarget:self action:@selector(yayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.yayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
+            [self.yayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
             self.yayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            [_yayButton setTitle:@"  YAY" forState:UIControlStateNormal];
+            [_yayButton setTitle:@" YES" forState:UIControlStateNormal];
             [self.view addSubview:_yayButton];
             
-            _nayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_nayButton  setFrame:CGRectMake(174, 325, 65, 60)];
-            [_nayButton setBackgroundColor:[UIColor clearColor]];
-            [_nayButton setBackgroundImage:[[UIImage imageNamed:@"filled_orangecircle.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-            [_nayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.nayButton addTarget:self action:@selector(nayButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.nayButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
-            self.nayButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-            [_nayButton setTitle:@"  NAY" forState:UIControlStateNormal];
-            [self.view addSubview:_nayButton];
+            UIImageView *yesView = [[UIImageView alloc]initWithFrame:CGRectMake(-18, -10, 100, 50)];
+            yesView.image = [UIImage imageNamed:@"yes_no_button2.png"];
+            yesView.backgroundColor=[UIColor clearColor];
+            [_yayButton addSubview:yesView];
         }
     } else {
         /*Do iPad stuff here.*/
@@ -1032,11 +1042,7 @@
     [self.navigationItem setTitle:@"Upload Picture"];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-//    NSLog(@"hunt name = %@",_huntName);
-//    NSLog(@"location name = %@",_venueSelected);
-//    NSLog(@"location id = %@",_venueID);
-    
+
     if (_uploadImage) {
 
     }else{
@@ -1089,138 +1095,282 @@
 - (void)getUserImage
 {
     
-    NSLog(@"something");
-    // Whenever a person opens the app, check for a cached session
-    if (FBSession.activeSession.isOpen) {
-        
-        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        
-        _userPicUrl = [ud objectForKey:@"user_pic_url"];
-        
-//        NSLog(@"Found a cached session");
-        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
-                                                            options:0
-                                                           progress:^(NSInteger receivedSize, NSInteger expectedSize)
-         {
-             // progression tracking code
-         }
-                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-         {
-             if (image && finished)
-             {
-                 // do something with image
-                 UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190-100, 100, 92)];
-                 profile_icon.backgroundColor=[UIColor clearColor];
-                 profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
-                 [self.view addSubview:profile_icon];
-                 
-                 self.cameraView.image = image;
-                 [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
-                 [self.cameraView setClipsToBounds:YES];
-                 [self.view addSubview:_cameraView];
-                 NSLog(@"profile image2");
-                 
-                 self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200-100, 72, 72)];
-                 self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                 [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
-                 [self.profileImageView setClipsToBounds:YES];
-                 [self.profileImageView setImage:image];
-                 [self.view addSubview:self.profileImageView];
-                 
-                 self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
-                 
-                 UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280-100, 320, 20)];
-                 NSString *string4 = self.userFullName;
-                 if (string4) {
-                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
-                     float spacing = 1.4f;
-                     [attributedString addAttribute:NSKernAttributeName
-                                              value:@(spacing)
-                                              range:NSMakeRange(0, [string4 length])];
-                     profileLabel.attributedText = attributedString;
-                 }
-                 profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
-                 profileLabel.textColor = [UIColor whiteColor];
-                 profileLabel.textAlignment = NSTextAlignmentCenter;
-                 [self.view addSubview:profileLabel];
-                 
-            //     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
 
-                 
-             }
-         }];
-        
-        // If there's no cached session, we will show a login button
-    } else {
-        
-        _collectionName1 = @"userPicture";
-        _customEndpoint1 = @"NewsFeed";
-        _fieldName1 = @"_id";
-        _dict1 = [[NSDictionary alloc]initWithObjectsAndKeys:_userEmail,@"userEmail",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
-        
-        [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict1 completionBlock:^(id results, NSError *error){
-            if ([results isKindOfClass:[NSArray class]]) {
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if (screenSize.height > 480.0f){
+            
+            
+            
+            // Whenever a person opens the app, check for a cached session
+            if (FBSession.activeSession.isOpen) {
                 
-                _objects = [NSMutableArray arrayWithArray:results];
+                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                 
-                if (_objects && _objects.count) {
-//                    NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
-                    _userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
-                    
-                    [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
-                                                                        options:0
-                                                                       progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                _userPicUrl = [ud objectForKey:@"user_pic_url"];
+                
+                //        NSLog(@"Found a cached session");
+                [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
+                                                                    options:0
+                                                                   progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                 {
+                     // progression tracking code
+                 }
+                                                                  completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                 {
+                     if (image && finished)
                      {
-                         // progression tracking code
-                     }
-                                                                      completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-                     {
-                         if (image && finished)
-                         {
-                             
-                             UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190, 100, 92)];
-                             profile_icon.backgroundColor=[UIColor clearColor];
-                             profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
-                             [self.view addSubview:profile_icon];
-                             
-                            self.cameraView.image = image;
-                            [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
-                            [self.cameraView setClipsToBounds:YES];
-                            [self.view addSubview:_cameraView];
-                            NSLog(@"profile image2");
-                             
-                             self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200, 72, 72)];
-                             self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-                             [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
-                             [self.profileImageView setClipsToBounds:YES];
-                             [self.profileImageView setImage:image];
-                             [self.view addSubview:self.profileImageView];
-                             
-                            self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
-                             
-                             UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280, 320, 20)];
-                             NSString *string4 = self.userFullName;
-                             if (string4) {
-                                 NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
-                                 float spacing = 1.4f;
-                                 [attributedString addAttribute:NSKernAttributeName
-                                                          value:@(spacing)
-                                                          range:NSMakeRange(0, [string4 length])];
-                                 profileLabel.attributedText = attributedString;
-                             }
-                             profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
-                             profileLabel.textColor = [UIColor whiteColor];
-                             profileLabel.textAlignment = NSTextAlignmentCenter;
-                             [self.view addSubview:profileLabel];
-                             
-                             
+                         // do something with image
+                         UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190, 100, 92)];
+                         profile_icon.backgroundColor=[UIColor clearColor];
+                         profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
+                         [self.view addSubview:profile_icon];
+                         
+                         self.cameraView.image = image;
+                         [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
+                         [self.cameraView setClipsToBounds:YES];
+                         [self.view addSubview:_cameraView];
+                         NSLog(@"profile image2");
+                         
+                         self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200, 72, 72)];
+                         self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                         [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
+                         [self.profileImageView setClipsToBounds:YES];
+                         [self.profileImageView setImage:image];
+                         [self.view addSubview:self.profileImageView];
+                         
+                         self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
+                         
+                         UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280, 320, 20)];
+                         NSString *string4 = self.userFullName;
+                         if (string4) {
+                             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
+                             float spacing = 1.4f;
+                             [attributedString addAttribute:NSKernAttributeName
+                                                      value:@(spacing)
+                                                      range:NSMakeRange(0, [string4 length])];
+                             profileLabel.attributedText = attributedString;
                          }
-                     }];
-                }
+                         profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+                         profileLabel.textColor = [UIColor whiteColor];
+                         profileLabel.textAlignment = NSTextAlignmentCenter;
+                         [self.view addSubview:profileLabel];
+                         
+                         //     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                         
+                         
+                     }
+                 }];
+                
+                // If there's no cached session, we will show a login button
+            } else {
+                
+                _collectionName1 = @"userPicture";
+                _customEndpoint1 = @"NewsFeed";
+                _fieldName1 = @"_id";
+                _dict1 = [[NSDictionary alloc]initWithObjectsAndKeys:_userEmail,@"userEmail",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
+                
+                [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict1 completionBlock:^(id results, NSError *error){
+                    if ([results isKindOfClass:[NSArray class]]) {
+                        
+                        _objects = [NSMutableArray arrayWithArray:results];
+                        
+                        if (_objects && _objects.count) {
+                            //                    NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
+                            _userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
+                            
+                            [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
+                                                                                options:0
+                                                                               progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                             {
+                                 // progression tracking code
+                             }
+                                                                              completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                             {
+                                 if (image && finished)
+                                 {
+                                     
+                                     UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190, 100, 92)];
+                                     profile_icon.backgroundColor=[UIColor clearColor];
+                                     profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
+                                     [self.view addSubview:profile_icon];
+                                     
+                                     self.cameraView.image = image;
+                                     [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
+                                     [self.cameraView setClipsToBounds:YES];
+                                     [self.view addSubview:_cameraView];
+                                     NSLog(@"profile image2");
+                                     
+                                     self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200, 72, 72)];
+                                     self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                                     [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
+                                     [self.profileImageView setClipsToBounds:YES];
+                                     [self.profileImageView setImage:image];
+                                     [self.view addSubview:self.profileImageView];
+                                     
+                                     self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
+                                     
+                                     UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280, 320, 20)];
+                                     NSString *string4 = self.userFullName;
+                                     if (string4) {
+                                         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
+                                         float spacing = 1.4f;
+                                         [attributedString addAttribute:NSKernAttributeName
+                                                                  value:@(spacing)
+                                                                  range:NSMakeRange(0, [string4 length])];
+                                         profileLabel.attributedText = attributedString;
+                                     }
+                                     profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+                                     profileLabel.textColor = [UIColor whiteColor];
+                                     profileLabel.textAlignment = NSTextAlignmentCenter;
+                                     [self.view addSubview:profileLabel];
+                                     
+                                     
+                                 }
+                             }];
+                        }
+                        
+                    }
+                }];
                 
             }
-        }];
-        
+            
+        }
+        else{
+            if (FBSession.activeSession.isOpen) {
+                
+                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                
+                _userPicUrl = [ud objectForKey:@"user_pic_url"];
+                
+                //        NSLog(@"Found a cached session");
+                [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
+                                                                    options:0
+                                                                   progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                 {
+                     // progression tracking code
+                 }
+                                                                  completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                 {
+                     if (image && finished)
+                     {
+                         // do something with image
+                         UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190-65, 100, 92)];
+                         profile_icon.backgroundColor=[UIColor clearColor];
+                         profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
+                         [self.view addSubview:profile_icon];
+                         
+                         self.cameraView.image = image;
+                         [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
+                         [self.cameraView setClipsToBounds:YES];
+                         [self.view addSubview:_cameraView];
+                         NSLog(@"profile image2");
+                         
+                         self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200-65, 72, 72)];
+                         self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                         [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
+                         [self.profileImageView setClipsToBounds:YES];
+                         [self.profileImageView setImage:image];
+                         [self.view addSubview:self.profileImageView];
+                         
+                         self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
+                         
+                         UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280-65, 320, 20)];
+                         NSString *string4 = self.userFullName;
+                         if (string4) {
+                             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
+                             float spacing = 1.4f;
+                             [attributedString addAttribute:NSKernAttributeName
+                                                      value:@(spacing)
+                                                      range:NSMakeRange(0, [string4 length])];
+                             profileLabel.attributedText = attributedString;
+                         }
+                         profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+                         profileLabel.textColor = [UIColor whiteColor];
+                         profileLabel.textAlignment = NSTextAlignmentCenter;
+                         [self.view addSubview:profileLabel];
+                         
+                         //     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                         
+                         
+                     }
+                 }];
+                
+                // If there's no cached session, we will show a login button
+            } else {
+                
+                _collectionName1 = @"userPicture";
+                _customEndpoint1 = @"NewsFeed";
+                _fieldName1 = @"_id";
+                _dict1 = [[NSDictionary alloc]initWithObjectsAndKeys:_userEmail,@"userEmail",_collectionName1,@"collectionName",_fieldName1,@"fieldName", nil];
+                
+                [KCSCustomEndpoints callEndpoint:_customEndpoint1 params:_dict1 completionBlock:^(id results, NSError *error){
+                    if ([results isKindOfClass:[NSArray class]]) {
+                        
+                        _objects = [NSMutableArray arrayWithArray:results];
+                        
+                        if (_objects && _objects.count) {
+                            //                    NSLog(@"User Search Results = \n %@",[[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"]);
+                            _userPicUrl = [[results[0] objectForKey:@"userImage"]objectForKey:@"_downloadURL"];
+                            
+                            [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:_userPicUrl]
+                                                                                options:0
+                                                                               progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                             {
+                                 // progression tracking code
+                             }
+                                                                              completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                             {
+                                 if (image && finished)
+                                 {
+                                     
+                                     UIImageView *profile_icon = [[UIImageView alloc]initWithFrame:CGRectMake(108, 190-65, 100, 92)];
+                                     profile_icon.backgroundColor=[UIColor clearColor];
+                                     profile_icon.image = [UIImage imageNamed:@"profile_circle2.png"];
+                                     [self.view addSubview:profile_icon];
+                                     
+                                     self.cameraView.image = image;
+                                     [self.cameraView.layer setCornerRadius:self.cameraView.frame.size.width/2];
+                                     [self.cameraView setClipsToBounds:YES];
+                                     [self.view addSubview:_cameraView];
+                                     NSLog(@"profile image2");
+                                     
+                                     self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(125, 200-65, 72, 72)];
+                                     self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+                                     [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
+                                     [self.profileImageView setClipsToBounds:YES];
+                                     [self.profileImageView setImage:image];
+                                     [self.view addSubview:self.profileImageView];
+                                     
+                                     self.userFullName = [NSString stringWithFormat:@"%@ %@",[[KCSUser activeUser].givenName uppercaseString],[[KCSUser activeUser].surname  uppercaseString]];
+                                     
+                                     UILabel *profileLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 280-65, 320, 20)];
+                                     NSString *string4 = self.userFullName;
+                                     if (string4) {
+                                         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string4];
+                                         float spacing = 1.4f;
+                                         [attributedString addAttribute:NSKernAttributeName
+                                                                  value:@(spacing)
+                                                                  range:NSMakeRange(0, [string4 length])];
+                                         profileLabel.attributedText = attributedString;
+                                     }
+                                     profileLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+                                     profileLabel.textColor = [UIColor whiteColor];
+                                     profileLabel.textAlignment = NSTextAlignmentCenter;
+                                     [self.view addSubview:profileLabel];
+                                     
+                                     
+                                 }
+                             }];
+                        }
+                        
+                    }
+                }];
+                
+            }
+
+        }
     }
 }
 
@@ -1287,11 +1437,6 @@
 //                self.dishImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 160)];
                 self.dishImage.image = newImage;
                 
-                self.modalView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 240)];
-                self.modalView.opaque = NO;
-                self.modalView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                [self.view addSubview:self.modalView];
-                
                 self.changePic = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.changePic  setFrame:CGRectMake(0, 0, 320, 180)];
                 [self.changePic setBackgroundColor:[UIColor clearColor]];
@@ -1308,8 +1453,8 @@
                 if(self.presentingViewController.presentedViewController == self) {
                     
                     NSLog(@"presented view");
-                    self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 30, 30, 30)];
-                    self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_3.png"];
+                    self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
+                    self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
                     [self.view addSubview:self.backBtnImage];
                     
                     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1334,9 +1479,9 @@
                     [self.view addSubview:self.navButton3];
                     
                     self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [self.navButton  setFrame:CGRectMake(10, 23, 25, 21)];
+                    [self.navButton  setFrame:CGRectMake(10, 27, 25, 18)];
                     [self.navButton setBackgroundColor:[UIColor clearColor]];
-                    [self.navButton setBackgroundImage:[[UIImage imageNamed:@"menubar_white.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+                    [self.navButton setBackgroundImage:[[UIImage imageNamed:@"white_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
                     [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                     [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
                     [self.navButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
@@ -1378,8 +1523,8 @@
                 if(self.presentingViewController.presentedViewController == self) {
                     
                     NSLog(@"presented view");
-                    self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 30, 30, 30)];
-                    self.backBtnImage.image = [UIImage imageNamed:@"dismiss_Btn.png"];
+                    self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
+                    self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
                     [self.view addSubview:self.backBtnImage];
                     
                     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1404,9 +1549,9 @@
                     [self.view addSubview:self.navButton3];
                     
                     self.navButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [self.navButton  setFrame:CGRectMake(10, 23, 25, 21)];
+                    [self.navButton  setFrame:CGRectMake(10, 27, 25, 18)];
                     [self.navButton setBackgroundColor:[UIColor clearColor]];
-                    [self.navButton setBackgroundImage:[[UIImage imageNamed:@"menubar_white.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
+                    [self.navButton setBackgroundImage:[[UIImage imageNamed:@"white_menu.png"]stretchableImageWithLeftCapWidth:2.0 topCapHeight:2.0] forState:UIControlStateNormal];
                     [self.navButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                     [self.navButton addTarget:self action:@selector(navButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
                     [self.navButton.titleLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:18]];
@@ -1426,7 +1571,6 @@
                     
                     [self.navButton2 setHidden:YES];
                 }
-
 
             }
         }
@@ -1816,6 +1960,8 @@
             if (errorOrNil == nil) {
                 NSLog(@"saved successfully");
                 
+                [Flurry logEvent:@"Photo_Upload_Saved"];
+                
                 [self.modalView removeFromSuperview];
                 
                 if(self.presentingViewController.presentedViewController == self) {
@@ -1860,6 +2006,7 @@
             } else {
                 
                 [self.modalView removeFromSuperview];
+                [Flurry logEvent:@"Photo_Upload_Failed"];
                 
                 [self.postBtn setEnabled:YES];
                 [self.locationButton setEnabled:YES];
@@ -1874,7 +2021,9 @@
                 [alert show];
 
             }
-        } withProgressBlock:^(NSArray *objects, double percentComplete) {
+        } withProgressBlock:^(NSArray *objects, double percentComplete
+                              
+                              ) {
             
 //            percent = -(percentComplete)/1000000;
 //            NSLog(@"percent complete = %f",percent);
@@ -2042,6 +2191,14 @@
 
 -(void)sendLocationDataToA:(NSArray *)locationSelected
 {
+    
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if (screenSize.height > 480.0f) {
+    
+    
     // data will come here inside of ViewControllerA
     if (locationSelected.count>0) {
         if ([[locationSelected objectAtIndex:1] isKindOfClass:[NSNull class]]) {
@@ -2057,7 +2214,7 @@
         
         if (_venueSelected){
             
-            UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 50-9, 35, 37)];
+            UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 50, 35, 37)];
             gps_icon.backgroundColor=[UIColor clearColor];
             gps_icon.image = [UIImage imageNamed:@"gps3.png"];
             [self.bottomView addSubview:gps_icon];
@@ -2085,6 +2242,55 @@
         
         NSLog(@"venue id = %@",self.venueID);
         NSLog(@"venue address = %@",self.venueAddress);
+    }
+            
+        }
+        
+        else{
+            
+            if (locationSelected.count>0) {
+                if ([[locationSelected objectAtIndex:1] isKindOfClass:[NSNull class]]) {
+                    
+                }else{
+                    _venueSelected = [locationSelected objectAtIndex:1];
+                    
+                }
+                NSLog(@" sendlocation %@",_venueSelected);
+                
+                //[self.locationLabel setText:_venueSelected];
+                
+                
+                if (_venueSelected){
+                    
+                    UIImageView *gps_icon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 50-9, 35, 37)];
+                    gps_icon.backgroundColor=[UIColor clearColor];
+                    gps_icon.image = [UIImage imageNamed:@"gps3.png"];
+                    [self.bottomView addSubview:gps_icon];
+                    
+                }
+                self.locName= [_venueSelected uppercaseString];
+                
+                if (self.locName) {
+                    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.locName] ;
+                    float spacing = 1.4f;
+                    [attributedString addAttribute:NSKernAttributeName
+                                             value:@(spacing)
+                                             range:NSMakeRange(0, [self.locName length])];
+                    self.locationLabel.attributedText = attributedString;
+                }
+                
+                
+                _venueID = [locationSelected objectAtIndex:0];
+                _venueAddress = [locationSelected objectAtIndex:2];
+                _venueCc = [locationSelected objectAtIndex:3];
+                _venueCity = [locationSelected objectAtIndex:4];
+                _venueState = [locationSelected objectAtIndex:5];
+                _venueCountry = [locationSelected objectAtIndex:6];
+                _venuePostalCode = [locationSelected objectAtIndex:7];
+
+            }
+            
+        }
     }
 }
 
