@@ -115,4 +115,9 @@ enum {
 @property (nonatomic, strong) NSMutableArray *featured_hunt;
 @property (nonatomic, strong) NSMutableArray *featured_hunt_names;
 
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_2;
+
+@property (nonatomic, strong) IBOutlet UIButton *next_button;
+
 @end

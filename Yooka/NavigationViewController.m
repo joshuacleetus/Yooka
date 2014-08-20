@@ -740,27 +740,28 @@
         }else{
             //log out clicked
             
-            [[KCSUser activeUser] logout];
-            
-            NSUserDefaults * myNSUserDefaults = [NSUserDefaults standardUserDefaults];
-            NSDictionary * dict = [myNSUserDefaults dictionaryRepresentation];
-            for (id key in dict) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // do work here
+                [[KCSUser activeUser] logout];
                 
-                //heck the keys if u need
-                [myNSUserDefaults removeObjectForKey:key];
-            }
-            [myNSUserDefaults synchronize];
-            
-            // Close the session and remove the access token from the cache
-            // The session state handler (in the app delegate) will be called automatically
-            [FBSession.activeSession closeAndClearTokenInformation];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ThisUserHasLaunchedOnce"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            
-            // If there's no cached session, we will show a login button
-            YookaAppDelegate* appDelegate = (id)[UIApplication sharedApplication].delegate;
-            [appDelegate userLoggedOut];
+                // Close the session and remove the access token from the cache
+                // The session state handler (in the app delegate) will be called automatically
+                [FBSession.activeSession closeAndClearTokenInformation];
+                
+                NSUserDefaults * myNSUserDefaults = [NSUserDefaults standardUserDefaults];
+                NSDictionary * dict = [myNSUserDefaults dictionaryRepresentation];
+                for (id key in dict) {
+                    
+                    //heck the keys if u need
+                    [myNSUserDefaults removeObjectForKey:key];
+                }
+                [myNSUserDefaults synchronize];
+                                
+                // If there's no cached session, we will show a login button
+                YookaAppDelegate* appDelegate = (id)[UIApplication sharedApplication].delegate;
+                [appDelegate userLoggedOut];
+
+            });
             
         }
         

@@ -61,6 +61,8 @@
 @property (nonatomic, strong) NSMutableArray *following_users;
 @property (nonatomic, strong) NSMutableArray *postsData;
 @property (nonatomic, strong) IBOutlet UITableView *postsTableView;
+@property (nonatomic, strong) IBOutlet UIRefreshControl *customRefreshControl;
+
 @property (nonatomic, strong) UILabel *descriptionLabel;
 @property (retain) NSIndexPath *lastSelected;
 @property (nonatomic, strong) NSMutableArray *newsFeed;
@@ -77,6 +79,7 @@
 @property (nonatomic, strong) NSMutableArray *newsfeed_postvote;
 @property (nonatomic, strong) NSMutableArray *newsfeed_posttype;
 @property (nonatomic, strong) NSMutableArray *newsfeed_kinvey_id;
+@property (nonatomic, strong) NSMutableArray *newsfeed_kinveyid;
 @property (nonatomic, strong) NSMutableArray *newsfeed_huntname;
 @property (nonatomic, strong) NSMutableArray *newsfeed_postdate;
 @property (nonatomic, strong) NSMutableArray *newsfeed_useremail;
@@ -177,5 +180,14 @@
 @property (nonatomic, strong) IBOutlet UIView *FeaturedView;
 
 @property (nonatomic, strong) NSMutableDictionary *huntPicUrlDict;
+
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_2;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_3;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_4;
+
+@property (strong, nonatomic) IBOutlet UIButton *next_button;
+
+@property (nonatomic, strong) NSString *yooka_check;
 
 @end

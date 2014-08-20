@@ -28,4 +28,11 @@
 @property (strong,nonatomic) IBOutlet UIImageView* imageView13;
 @property (strong,nonatomic) IBOutlet UIImageView* imageView14;
 
+@property (strong,nonatomic) IBOutlet UIImageView* fb_image_view;
+@property (strong,nonatomic) IBOutlet UIImageView* signup_image_view;
+@property (strong,nonatomic) IBOutlet UIImageView* signin_image_view;
+
+
+@property (nonatomic, strong) IBOutlet UIPageControl *hunts_pages;
+
 @end

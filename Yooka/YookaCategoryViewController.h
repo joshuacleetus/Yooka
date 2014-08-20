@@ -25,10 +25,13 @@
 
 @property (nonatomic, strong) NSMutableArray *featuredHunts;
 @property (nonatomic, strong) NSMutableArray *thumbnails;
+@property (nonatomic, strong) NSMutableArray *image_array;
 
 @property (nonatomic, strong) UIScrollView* gridScrollView;
 
 @property (nonatomic, strong) NSMutableArray *subscribedHunts;
 @property (nonatomic, strong) NSMutableArray *unsubscribedHunts;
+
+@property (nonatomic, strong) UIImage* category_image;
 
 @end

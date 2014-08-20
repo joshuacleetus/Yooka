@@ -131,6 +131,8 @@ const NSInteger yookaThumbnailSpace2000 = 5;
             self.feedScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
             [self.view addSubview:self.feedScrollView];
             [self.feedScrollView setBackgroundColor:[UIColor whiteColor]];
+            
+            [self.feedScrollView setHidden:YES];
 
             UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 278)];
             [bg_color setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
@@ -676,9 +678,9 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                 [self.completedView addSubview:get_started_button_2];
             }
             
-            UIImageView *camera = [[UIImageView alloc]initWithFrame:CGRectMake(143, 60, 40, 40)];
+            UIImageView *camera = [[UIImageView alloc]initWithFrame:CGRectMake(143, 70, 40, 40)];
             camera.backgroundColor=[UIColor clearColor];
-            camera.image = [UIImage imageNamed:@"camera_blue.png"];
+            camera.image = [UIImage imageNamed:@"map_camera.png"];
             [self.feedView addSubview:camera];
             
             UILabel *label21 = [[UILabel alloc]initWithFrame:CGRectMake(0, 130, 320, 20)];
@@ -1549,14 +1551,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                 }
 
                 if (objectsOrNil.count>0) {
+                    
                     for (int a = 0; a<objectsOrNil.count; a++) {
                         YookaBackend *yooka = objectsOrNil[a];
                         if (yooka.venueName) {
                             [array1 addObject:yooka.venueName];
                         }
                     }
+                    
                     NSArray *copy = [array1 copy];
                     NSInteger index = [copy count] - 1;
+                    
                     for (id object in [copy reverseObjectEnumerator]) {
                         if ([array1 indexOfObject:object inRange:NSMakeRange(0, index)] != NSNotFound) {
                             [array1 removeObjectAtIndex:index];
@@ -1565,8 +1570,11 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                     }
                     
                     [_finishedHuntVenues setObject:array1 forKey:_cachesubscribedHuntNames[(self.cachesubscribedHuntNames.count-j)-1]];
+                    
                 }else{
-                [_finishedHuntVenues setObject:objectsOrNil forKey:_cachesubscribedHuntNames[(self.cachesubscribedHuntNames.count-j)-1]];
+                    
+                    [_finishedHuntVenues setObject:objectsOrNil forKey:_cachesubscribedHuntNames[(self.cachesubscribedHuntNames.count-j)-1]];
+                    
                 }
                 
                 if (array1.count >=[[_huntDict2 objectForKey:_cachesubscribedHuntNames[(self.cachesubscribedHuntNames.count-j)-1]]integerValue]) {
@@ -1725,7 +1733,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
             
             if (string) {
                 NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-                float spacing = 1.2f;
+                float spacing = 1.f;
                 [attributedString addAttribute:NSKernAttributeName
                                          value:@(spacing)
                                          range:NSMakeRange(0, [string length])];
@@ -1745,15 +1753,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
             ver_bg3.userInteractionEnabled = YES;
             [button addSubview:ver_bg3];
             
-            UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
-            huntCountLabel.text =self.inProgressHuntCounts[num];
-            huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+            UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
+            //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
+            huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
+            //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
+            huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
             huntCountLabel.textAlignment = NSTextAlignmentCenter;
             huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
             huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
             huntCountLabel.adjustsFontSizeToFitWidth = YES;
-            huntCountLabel.layer.masksToBounds = NO;
-            huntCountLabel.numberOfLines = 0;
+            huntCountLabel.layer.cornerRadius = 10;
+            huntCountLabel.clipsToBounds = YES;
             //[huntCountLabel sizeToFit];
             
             [button addSubview:huntCountLabel];
@@ -1834,7 +1844,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      
                      if (string) {
                          NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-                         float spacing = 1.2f;
+                         float spacing = 1.f;
                          [attributedString addAttribute:NSKernAttributeName
                                                   value:@(spacing)
                                                   range:NSMakeRange(0, [string length])];
@@ -1854,15 +1864,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      ver_bg3.userInteractionEnabled = YES;
                      [button addSubview:ver_bg3];
                      
-                     UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
-                     huntCountLabel.text =self.inProgressHuntCounts[num];
-                     huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+                     UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
+                     //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
+                     huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
+                     //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
+                     huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                      huntCountLabel.textAlignment = NSTextAlignmentCenter;
                      huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
                      huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                      huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                     huntCountLabel.layer.masksToBounds = NO;
-                     huntCountLabel.numberOfLines = 0;
+                     huntCountLabel.layer.cornerRadius = 10;
+                     huntCountLabel.clipsToBounds = YES;
                      //[huntCountLabel sizeToFit];
                      
                      [button addSubview:huntCountLabel];
@@ -1988,17 +2000,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
 
             [button addSubview:ver_bg3];
             
-            UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
+            UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
             //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
             huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
             //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
-            huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+            huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
             huntCountLabel.textAlignment = NSTextAlignmentCenter;
             huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
             huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
             huntCountLabel.adjustsFontSizeToFitWidth = YES;
-            huntCountLabel.layer.masksToBounds = NO;
-            huntCountLabel.numberOfLines = 0;
+            huntCountLabel.layer.cornerRadius = 10;
+            huntCountLabel.clipsToBounds = YES;
             //[huntCountLabel sizeToFit];
             
             [button addSubview:huntCountLabel];
@@ -2094,17 +2106,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      [button addSubview:ver_bg3];
                      
                      
-                     UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
+                     UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                      //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
                      huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
                      //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
-                     huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+                     huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                      huntCountLabel.textAlignment = NSTextAlignmentCenter;
                      huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
                      huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                      huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                     huntCountLabel.layer.masksToBounds = NO;
-                     huntCountLabel.numberOfLines = 0;
+                     huntCountLabel.layer.cornerRadius = 10;
+                     huntCountLabel.clipsToBounds = YES;
                      //[huntCountLabel sizeToFit];
                      
                      [button addSubview:huntCountLabel];
@@ -2222,17 +2234,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                  ver_bg3.backgroundColor = [UIColor whiteColor];
                  [button addSubview:ver_bg3];
                  
-                 UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
+                 UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                  //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
-                 huntCountLabel.text =self.finishedHuntCounts[l];
+                 huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
                  //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
-                 huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+                 huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                  huntCountLabel.textAlignment = NSTextAlignmentCenter;
                  huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
                  huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                  huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                 huntCountLabel.layer.masksToBounds = NO;
-                 huntCountLabel.numberOfLines = 0;
+                 huntCountLabel.layer.cornerRadius = 10;
+                 huntCountLabel.clipsToBounds = YES;
                  //[huntCountLabel sizeToFit];
                  
                  [button addSubview:huntCountLabel];
@@ -2327,17 +2339,17 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                           ver_bg3.backgroundColor = [UIColor whiteColor];
                           [button addSubview:ver_bg3];
                           
-                          UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 33, 33)];
+                          UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                           //UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(133, 3, 25, 25)];
-                          huntCountLabel.text =self.finishedHuntCounts[l];
+                          huntCountLabel.text =self.inProgressHuntCounts[(self.inProgressHuntNames.count-k)-1];
                           //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
-                          huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15.f];
+                          huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                           huntCountLabel.textAlignment = NSTextAlignmentCenter;
                           huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
                           huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                           huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                          huntCountLabel.layer.masksToBounds = NO;
-                          huntCountLabel.numberOfLines = 0;
+                          huntCountLabel.layer.cornerRadius = 10;
+                          huntCountLabel.clipsToBounds = YES;
                           //[huntCountLabel sizeToFit];
                           
                           [button addSubview:huntCountLabel];
@@ -2583,11 +2595,6 @@ const NSInteger yookaThumbnailSpace2000 = 5;
         
         row++;
         
-//        if (col >= yookaImagesPerRow2000) {
-//            row++;
-//            col = 0;
-//        }
-        
         [self.feedScrollView addSubview:_button];
         [self.thumbnails addObject:_button];
         
@@ -2596,7 +2603,6 @@ const NSInteger yookaThumbnailSpace2000 = 5;
     }
     
     self.feedView.frame = CGRectMake(0, 300, 320, 300+586);
-
     
     [self loadImages];
     
@@ -2923,7 +2929,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
             
             UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 55, 305, 225)];
             [buttonImage setBackgroundColor:[UIColor clearColor]];
-            buttonImage.contentMode = UIViewContentModeTopLeft;
+            buttonImage.contentMode = UIViewContentModeScaleAspectFill;
             //buttonImage.layer.cornerRadius = 5.0;
             buttonImage.clipsToBounds = YES;
             buttonImage.opaque = YES;
@@ -2998,7 +3004,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      
                      [self.imagesArray addObject:image];
                      
-                     self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(260, 260, 50, 20)];
+                     self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(287, 267, 26, 13)];
                      UIColor * color4 = [self colorWithHexString:@"9a8e92"];
                      [self.pics_options_button setBackgroundColor:color4];
                      self.pics_options_button.tag = m;
@@ -3007,19 +3013,19 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      [self.pics_options_button addTarget:self action:@selector(pics_options:) forControlEvents:UIControlEventTouchUpInside];
                      [button addSubview:self.pics_options_button];
                      
-                     UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(275, 252, 50, 20)];
+                     UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(289, 249, 33, 29)];
                      dot.text= @".";
                      dot.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot.textColor=[UIColor whiteColor];
                      [button addSubview:dot];
                      
-                     UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(282, 252, 50, 20)];
+                     UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(296, 249, 33, 29)];
                      dot2.text= @".";
                      dot2.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot2.textColor=[UIColor whiteColor];
                      [button addSubview:dot2];
                      
-                     UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(289, 252, 50, 20)];
+                     UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(303, 249, 33, 29)];
                      dot3.text= @".";
                      dot3.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot3.textColor=[UIColor whiteColor];
@@ -3086,32 +3092,28 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                               
                               [self.imagesArray addObject:image];
                               
-                              self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(260, 260, 50, 20)];
+                              self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(287, 267, 26, 13)];
                               UIColor * color4 = [self colorWithHexString:@"9a8e92"];
                               [self.pics_options_button setBackgroundColor:color4];
-                              //UIColor * color5 = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-                              //self.followBtn.shadowColor = color5;
-                              //self.followBtn.shadowHeight = 3.0f;
                               self.pics_options_button.tag = m;
-                              self.pics_options_button.titleLabel.font = [UIFont fontWithName:@"OpenSans" size:18.0];
-                              //                     [self.pics_options_button setTitle:@"..." forState:UIControlStateNormal];
+                              self.pics_options_button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0];
                               [self.pics_options_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                               [self.pics_options_button addTarget:self action:@selector(pics_options:) forControlEvents:UIControlEventTouchUpInside];
                               [button addSubview:self.pics_options_button];
                               
-                              UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(275, 252, 50, 20)];
+                              UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(289, 249, 33, 29)];
                               dot.text= @".";
                               dot.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot.textColor=[UIColor whiteColor];
                               [button addSubview:dot];
                               
-                              UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(282, 252, 50, 20)];
+                              UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(296, 249, 33, 29)];
                               dot2.text= @".";
                               dot2.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot2.textColor=[UIColor whiteColor];
                               [button addSubview:dot2];
                               
-                              UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(289, 252, 50, 20)];
+                              UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(303, 249, 33, 29)];
                               dot3.text= @".";
                               dot3.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot3.textColor=[UIColor whiteColor];
@@ -3263,7 +3265,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      transparent_view.backgroundColor = [[self colorWithHexString:@"4c4a4a"] colorWithAlphaComponent:0.5f];
                      [button addSubview:transparent_view];
                      
-                     self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(260, 245, 50, 20)];
+                     self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(287, 252, 26, 13)];
                      UIColor * color4 = [self colorWithHexString:@"9a8e92"];
                      [self.pics_options_button setBackgroundColor:color4];
                      self.pics_options_button.tag = m;
@@ -3273,19 +3275,19 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      [self.pics_options_button addTarget:self action:@selector(pics_options:) forControlEvents:UIControlEventTouchUpInside];
                      [button addSubview:self.pics_options_button];
                      
-                     UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(275, 237, 50, 20)];
+                     UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(289, 234, 33, 29)];
                      dot.text= @".";
                      dot.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot.textColor=[UIColor whiteColor];
                      [button addSubview:dot];
                      
-                     UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(282, 237, 50, 20)];
+                     UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(296, 234, 33, 29)];
                      dot2.text= @".";
                      dot2.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot2.textColor=[UIColor whiteColor];
                      [button addSubview:dot2];
                      
-                     UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(289, 237, 50, 20)];
+                     UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(303, 234, 33, 29)];
                      dot3.text= @".";
                      dot3.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                      dot3.textColor=[UIColor whiteColor];
@@ -3343,9 +3345,6 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      captionLabel.backgroundColor = [UIColor clearColor];
                      [button addSubview:captionLabel];
                      
-                     
-                     
-                     
                      [self.feedScrollView addSubview:button];
                      
                      m++;
@@ -3379,29 +3378,29 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                               transparent_view.backgroundColor = [[self colorWithHexString:@"4c4a4a"] colorWithAlphaComponent:0.5f];
                               [button addSubview:transparent_view];
                               
-                              
-                              self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(260, 245, 50, 20)];
+                              self.pics_options_button = [[YookaButton alloc]initWithFrame:CGRectMake(287, 252, 26, 13)];
                               UIColor * color4 = [self colorWithHexString:@"9a8e92"];
                               [self.pics_options_button setBackgroundColor:color4];
                               self.pics_options_button.tag = m;
                               self.pics_options_button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0];
+                              //                     [self.pics_options_button setTitle:@"..." forState:UIControlStateNormal];
                               [self.pics_options_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                               [self.pics_options_button addTarget:self action:@selector(pics_options:) forControlEvents:UIControlEventTouchUpInside];
                               [button addSubview:self.pics_options_button];
                               
-                              UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(275, 237, 50, 20)];
+                              UILabel *dot = [[UILabel alloc]initWithFrame:CGRectMake(289, 234, 33, 29)];
                               dot.text= @".";
                               dot.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot.textColor=[UIColor whiteColor];
                               [button addSubview:dot];
                               
-                              UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(282, 237, 50, 20)];
+                              UILabel *dot2 = [[UILabel alloc]initWithFrame:CGRectMake(296, 234, 33, 29)];
                               dot2.text= @".";
                               dot2.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot2.textColor=[UIColor whiteColor];
                               [button addSubview:dot2];
                               
-                              UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(289, 237, 50, 20)];
+                              UILabel *dot3 = [[UILabel alloc]initWithFrame:CGRectMake(303, 234, 33, 29)];
                               dot3.text= @".";
                               dot3.font = [UIFont fontWithName:@"OpenSans" size:29.f];
                               dot3.textColor=[UIColor whiteColor];
@@ -3579,7 +3578,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                      
                      UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 25, 240, 30)];
                      userLabel.textColor = [UIColor lightGrayColor];
-                     userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                     userLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
                      
                      if (userFullName) {
                          
@@ -3655,7 +3654,7 @@ const NSInteger yookaThumbnailSpace2000 = 5;
                                      [userLabel setBackgroundColor:[UIColor clearColor]];
                                      userLabel.textAlignment = NSTextAlignmentLeft;
                                      userLabel.adjustsFontSizeToFitWidth = YES;
-                                     //                     userLabel.numberOfLines = 0;
+                                     userLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:12.0];
                                      [button addSubview:userLabel];
                                      
                                      NSArray *items = [userFullName componentsSeparatedByString:@" "];

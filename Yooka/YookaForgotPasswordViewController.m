@@ -46,26 +46,21 @@
                                    action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:tap];
     
-    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-    [self.view setBackgroundColor:color];
+    [self.view setBackgroundColor:[self colorWithHexString:@"eeeeee"]];
     
     if ([[UIScreen mainScreen] bounds].size.height == 568) {
         
 //        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
         
-            UIImageView *backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(100, 97, 120, 120)];
-            backgroundImage.image = [UIImage imageNamed:@"Yookatransparent.png"];
+            UIImageView *backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 30, 320, 52)];
+            backgroundImage.image = [UIImage imageNamed:@"reset_screen.png"];
             [self.view addSubview:backgroundImage];
             [self.view sendSubviewToBack:backgroundImage];
         
-        UIImageView *emailbgImage = [[UIImageView alloc] initWithFrame:CGRectMake(30, 275, 260, 30)];
-        emailbgImage.backgroundColor = [UIColor whiteColor];
-        [self.view addSubview:emailbgImage];
-        
-            _email = [[UITextField alloc] initWithFrame:CGRectMake(40, 275, 260, 30)];
+            _email = [[UITextField alloc] initWithFrame:CGRectMake( 15, 40, 300, 30)];
             _email.borderStyle = UITextBorderStyleNone;
-            _email.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15];
-            _email.placeholder = @"    Email";
+            _email.font = [UIFont fontWithName:@"OpenSans" size:17.5];
+            _email.placeholder = @"Email Address";
             _email.backgroundColor = [UIColor whiteColor];
             _email.autocorrectionType = UITextAutocorrectionTypeNo;
             _email.keyboardType = UIKeyboardTypeEmailAddress;
@@ -76,20 +71,6 @@
                        action:@selector(resetPassword:)
              forControlEvents:UIControlEventEditingDidEndOnExit];
             [self.view addSubview:_email];
-            
-            resetPasswordBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [resetPasswordBtn setFrame:CGRectMake(30, 320, 85, 30)];
-            [resetPasswordBtn setTitle:@"Reset" forState:UIControlStateNormal];
-            [resetPasswordBtn setBackgroundColor:[UIColor orangeColor]];
-            [resetPasswordBtn addTarget:self action:@selector(resetPassword:) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:resetPasswordBtn];
-            
-            cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [cancelBtn setFrame:CGRectMake(195, 320, 85, 30)];
-            [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
-            [cancelBtn setBackgroundColor:[UIColor orangeColor]];
-            [cancelBtn addTarget:self action:@selector(cancelBtn:) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:cancelBtn];
             
 //        } else {
 //            
@@ -291,9 +272,81 @@
     }
 }
 
+-(UIColor*)colorWithHexString:(NSString*)hex
+{
+    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+    
+    // String should be 6 or 8 characters
+    if ([cString length] < 6) return [UIColor grayColor];
+    
+    // strip 0X if it appears
+    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
+    
+    if ([cString length] != 6) return  [UIColor grayColor];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.location = 0;
+    range.length = 2;
+    NSString *rString = [cString substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [cString substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [cString substringWithRange:range];
+    
+    // Scan values
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    return [UIColor colorWithRed:((float) r / 255.0f)
+                           green:((float) g / 255.0f)
+                            blue:((float) b / 255.0f)
+                           alpha:1.0f];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self.navigationController setNavigationBarHidden:YES];
+    [self.navigationController setNavigationBarHidden:NO];
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.tintColor = [self colorWithHexString:@"3ac0ec"];
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationItem.title = @"Reset";
+    
+    if (IS_OS_7_OR_LATER) {
+        self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [self colorWithHexString:@"6e6e6e"],
+                                                                        NSFontAttributeName: [UIFont fontWithName:@"OpenSans" size:18.0f]
+                                                                        };
+        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
+         setTitleTextAttributes:
+         @{NSForegroundColorAttributeName:[self colorWithHexString:@"3ac0ec"],
+           NSFontAttributeName:[UIFont fontWithName:@"OpenSans" size:18.0f]
+           }
+         forState:UIControlStateNormal];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+    
+    if (IS_OS_5_OR_LATER) {
+        self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [self colorWithHexString:@"6e6e6e"],
+                                                                        UITextAttributeFont: [UIFont fontWithName:@"OpenSans" size:18.0f]
+                                                                        };
+        
+        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+         @{UITextAttributeTextColor:[self colorWithHexString:@"3ac0ec"],
+           UITextAttributeFont:[UIFont fontWithName:@"OpenSans" size:18.0f]
+           }
+                                                                                                forState:UIControlStateNormal];
+    }
+    
+    UIBarButtonItem *signinButton = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStylePlain target:self action:@selector(resetPassword:)];
+    self.navigationItem.rightBarButtonItem = signinButton;
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                            withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 - (BOOL)shouldAutorotate

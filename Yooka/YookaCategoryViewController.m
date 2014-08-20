@@ -37,10 +37,11 @@
     
     self.featuredHunts = [NSMutableArray new];
     self.thumbnails = [NSMutableArray new];
+    self.image_array = [NSMutableArray new];
     
     i = 0;
     row = 0;
-    contentSize = 60;
+    contentSize = 240;
     item = 0;
     
     CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
@@ -49,25 +50,65 @@
     self.gridScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
     [self.view addSubview:self.gridScrollView];
     
-    UIImageView *top_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIImageView *top_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 240)];
     [top_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
     [self.view addSubview:top_bg];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 70, 260, 120)];
+    
+    NSLog(@"category name = %@",self.categoryName);
+    
+    UIImageView *top_bg_image = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 180)];
+    [self.view addSubview:top_bg_image];
+    
+    UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
+    categoryLabel.textColor = [UIColor whiteColor];
+    categoryLabel.textAlignment = NSTextAlignmentCenter;
+    [categoryLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:17]];
+    categoryLabel.text = [NSString stringWithFormat:@"%@",[self.categoryName uppercaseString]];
+    categoryLabel.adjustsFontSizeToFitWidth = YES;
+    //    titleLabel.numberOfLines = 0;
+    //    [titleLabel sizeToFit];
+    categoryLabel.layer.masksToBounds = NO;
+    categoryLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:categoryLabel];
+    
+    UIImageView *bg_layover = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 180)];
+    [bg_layover setBackgroundColor:[[self colorWithHexString:@"091229"]colorWithAlphaComponent:0.5f]];
+    [self.view addSubview:bg_layover];
+    
+    UILabel *descriptionLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 125, 320, 40)];
+    descriptionLabel.textColor = [UIColor whiteColor];
+    [descriptionLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:25]];
+    descriptionLabel.textAlignment = NSTextAlignmentCenter;
+    descriptionLabel.adjustsFontSizeToFitWidth = YES;
+    descriptionLabel.numberOfLines = 0;
+    descriptionLabel.layer.masksToBounds = NO;
+    descriptionLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:descriptionLabel];
+    
+    if ([self.categoryName isEqualToString:@"EAT"]) {
+        
+        [top_bg_image setImage:[UIImage imageNamed:@"header_picture.png"]];
+        descriptionLabel.text = [[NSString stringWithFormat:@"Plan the perfect outing"] capitalizedString];
+        
+    }else if ([self.categoryName isEqualToString:@"DRINK"]){
+        descriptionLabel.text = [[NSString stringWithFormat:@"What would you like to drink?"]capitalizedString];
+    }else if ([self.categoryName isEqualToString:@"PLAY"]){
+        descriptionLabel.text = [[NSString stringWithFormat:@"How would you like to play?"]capitalizedString];
+    }else if ([self.categoryName isEqualToString:@"YOOKA"]){
+        descriptionLabel.text = [NSString stringWithFormat:@"Plan the perfect yooka"];
+    }
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 142, 325, 60)];
     titleLabel.textColor = [UIColor whiteColor];
-    [titleLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:22]];
-    titleLabel.text = [NSString stringWithFormat:@"CHOOSE \nYOUR INTEREST"];
+    [titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    titleLabel.text = [NSString stringWithFormat:@"CHOOSE BELOW"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.numberOfLines = 0;
-    [titleLabel sizeToFit];
     titleLabel.layer.masksToBounds = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:titleLabel];
-    
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(120, 150, 80, 2)];
-    lineView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:lineView];
     
     self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
     self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
@@ -81,21 +122,6 @@
     [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.backBtn];
     
-    self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 10, 120, 60)];
-    self.titleLabel.textColor = [UIColor whiteColor];
-    self.titleLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:25.0];
-    NSString *string = self.categoryName;
-    if (string) {
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-        float spacing = 2.5f;
-        [attributedString addAttribute:NSKernAttributeName
-                                 value:@(spacing)
-                                 range:NSMakeRange(0, [string length])];
-        self.titleLabel.attributedText = attributedString;
-    }
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    //[self.gridScrollView addSubview:self.titleLabel];
-        
     
     [self getCategoryHunts];
     
@@ -178,7 +204,6 @@
             //got all events back from server -- update table view
             //            NSLog(@"featured hunts = %@",objectsOrNil);
             self.featuredHunts = [NSMutableArray arrayWithArray:objectsOrNil];
-            NSLog(@"featured hunts = %@",self.featuredHunts);
             [self fillSubCats];
             
         }
@@ -189,13 +214,12 @@
     if (i<self.featuredHunts.count) {
         
         YookaBackend *yooka = self.featuredHunts[i];
-        NSLog(@"subcat name = %@",yooka.subcatName);
         
         UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                      200+(i*70),
+                                                                      240+(i*65),
                                                                       320,
                                                                       70)];
-        contentSize += 70;
+        contentSize += 65;
         button.tag = item;
         button.userInteractionEnabled = YES;
         
@@ -206,35 +230,34 @@
              if (image) {
                  
                  //set image
-                 UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
+                 UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake( 8, 8, 48, 48)];
                  subcatImage.layer.cornerRadius = subcatImage.frame.size.height / 2;
                  [subcatImage setContentMode:UIViewContentModeScaleAspectFill];
                  [subcatImage setClipsToBounds:YES];
                  
                  subcatImage.image = image;
+                 [self.image_array addObject:image];
                  [subcatImage setBackgroundColor:[UIColor clearColor]];
                  [button addSubview:subcatImage];
                  
-                 [[SDImageCache sharedImageCache] storeImage:image forKey:yooka.subcatPicUrl];
-                 
                  //set arrow
-                 UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 23, 21, 29)];
-                 [arrow setImage:[UIImage imageNamed:@"next_information.png"]];
+                 UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 8, 35, 50)];
+                 [arrow setImage:[UIImage imageNamed:@"arrow_dark.png"]];
                  [button addSubview:arrow];
                  
-                 UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 20, 200, 20)];
-                 subCatLabel.textColor = [UIColor lightGrayColor];
-                 [subCatLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:18]];
-                 subCatLabel.text = [yooka.subcatName uppercaseString];
+                 UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(67, 15, 200, 20)];
+                 subCatLabel.textColor = [self colorWithHexString:@"222730"];
+                 [subCatLabel setFont:[UIFont fontWithName:@"OpenSans" size:20]];
+                 subCatLabel.text = yooka.subcatName;
                  subCatLabel.textAlignment = NSTextAlignmentLeft;
                  subCatLabel.adjustsFontSizeToFitWidth = NO;
                  [subCatLabel setBackgroundColor:[UIColor clearColor]];
                  [button addSubview:subCatLabel];
                  
-                 UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(72, 43, 200, 10)];
-                 countLabel.textColor = [UIColor lightGrayColor];
-                 [countLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:10]];
-                 countLabel.text = [NSString stringWithFormat:@"%lu ITEMS",(unsigned long)[yooka.subcatHuntNames count]];
+                 UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(67, 36, 200, 15)];
+                 countLabel.textColor = [UIColor grayColor];
+                 [countLabel setFont:[UIFont fontWithName:@"OpenSans" size:11]];
+                 countLabel.text = [NSString stringWithFormat:@"%lu places",(unsigned long)[yooka.subcatHuntNames count]];
                  countLabel.textAlignment = NSTextAlignmentLeft;
                  countLabel.adjustsFontSizeToFitWidth = NO;
                  [countLabel setBackgroundColor:[UIColor clearColor]];
@@ -242,8 +265,8 @@
                  
                  [button setBackgroundColor:[UIColor clearColor]];
                  
-                 UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 69, self.view.bounds.size.width, 1)];
-                 lineView.backgroundColor = [self colorWithHexString:@"f5f5f5"];
+                 UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake( 8, 64, self.view.bounds.size.width, 1)];
+                 lineView.backgroundColor = [self colorWithHexString:@"f0f0f0"];
                  [button addSubview:lineView];
                  
                  [self.gridScrollView addSubview:button];
@@ -271,36 +294,37 @@
                       {
                           // do something with image
                           //set image
-                          UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 50, 50)];
+                          UIImageView *subcatImage = [[UIImageView alloc]initWithFrame:CGRectMake( 8, 8, 48, 48)];
                           subcatImage.layer.cornerRadius = subcatImage.frame.size.height / 2;
                           [subcatImage setContentMode:UIViewContentModeScaleAspectFill];
                           [subcatImage setClipsToBounds:YES];
                           
                           subcatImage.image = image;
+                          [self.image_array addObject:image];
+
                           [subcatImage setBackgroundColor:[UIColor clearColor]];
                           [button addSubview:subcatImage];
                           
                           [[SDImageCache sharedImageCache] storeImage:image forKey:yooka.subcatPicUrl];
                           
                           //set arrow
-                          UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 23, 21, 29)];
-                          [arrow setImage:[UIImage imageNamed:@"next_information.png"]];
+                          UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(285, 8, 35, 50)];
+                          [arrow setImage:[UIImage imageNamed:@"arrow_dark.png"]];
                           [button addSubview:arrow];
                           
-                          
-                          UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 20, 200, 20)];
-                          subCatLabel.textColor = [UIColor lightGrayColor];
-                          [subCatLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:18]];
-                          subCatLabel.text = [yooka.subcatName uppercaseString];
+                          UILabel *subCatLabel = [[UILabel alloc]initWithFrame:CGRectMake(67, 15, 200, 20)];
+                          subCatLabel.textColor = [self colorWithHexString:@"222730"];
+                          [subCatLabel setFont:[UIFont fontWithName:@"OpenSans" size:20]];
+                          subCatLabel.text = yooka.subcatName;
                           subCatLabel.textAlignment = NSTextAlignmentLeft;
                           subCatLabel.adjustsFontSizeToFitWidth = NO;
                           [subCatLabel setBackgroundColor:[UIColor clearColor]];
                           [button addSubview:subCatLabel];
                           
-                          UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(72, 43, 200, 10)];
-                          countLabel.textColor = [UIColor lightGrayColor];
-                          [countLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:10]];
-                          countLabel.text = [NSString stringWithFormat:@"%lu ITEMS",(unsigned long)[yooka.subcatHuntNames count]];
+                          UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(67, 36, 200, 15)];
+                          countLabel.textColor = [UIColor grayColor];
+                          [countLabel setFont:[UIFont fontWithName:@"OpenSans" size:11]];
+                          countLabel.text = [NSString stringWithFormat:@"%lu places",(unsigned long)[yooka.subcatHuntNames count]];
                           countLabel.textAlignment = NSTextAlignmentLeft;
                           countLabel.adjustsFontSizeToFitWidth = NO;
                           [countLabel setBackgroundColor:[UIColor clearColor]];
@@ -308,8 +332,8 @@
                           
                           [button setBackgroundColor:[UIColor clearColor]];
                           
-                          UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 69, self.view.bounds.size.width, 1)];
-                          lineView.backgroundColor = [self colorWithHexString:@"f5f5f5"];
+                          UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake( 8, 64, self.view.bounds.size.width, 1)];
+                          lineView.backgroundColor = [self colorWithHexString:@"f0f0f0"];
                           [button addSubview:lineView];
                           
                           [self.gridScrollView addSubview:button];
@@ -321,7 +345,6 @@
                           i++;
                           
                           [self fillSubCats];
-                          
                       }
                   }];
                  
@@ -336,13 +359,9 @@
     
     UIButton* button = sender;
     NSUInteger b = button.tag;
-    NSLog(@"button %lu pressed",(unsigned long)b);
-    
 
     
     YookaBackend *yooka = self.featuredHunts[b];
-    NSLog(@"subcat hunt name = %@",yooka.subcatPicUrl);
-    
     NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                    self.categoryName,@"Category_Name",
                                    yooka.subcatName, @"Sub_Category_Name",
@@ -369,6 +388,7 @@
     media.subCatPicUrl = yooka.subcatPicUrl;
     media.subscribedHunts = self.subscribedHunts;
     media.unsubscribedHunts = self.unsubscribedHunts;
+    media.category_image = self.image_array[b];
     [self presentViewController:media animated:NO completion:nil];
     
 }

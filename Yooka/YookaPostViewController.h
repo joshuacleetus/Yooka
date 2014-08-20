@@ -135,4 +135,12 @@
 @property (nonatomic, strong) NSMutableArray *yay_list;
 @property (nonatomic, strong) NSMutableArray *nay_list;
 
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_2;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_3;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_4;
+
+@property (nonatomic, strong) IBOutlet UIButton *next_button;
+@property (nonatomic, strong) IBOutlet UIButton *cover_button;
+
 @end

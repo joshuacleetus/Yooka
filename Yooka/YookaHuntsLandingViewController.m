@@ -26,6 +26,7 @@
 #import "YookaFeaturedHuntViewController.h"
 #import "LRGlowingButton.h"
 #import "Flurry.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface YookaHuntsLandingViewController ()<iCarouselDataSource, iCarouselDelegate>
 
@@ -126,6 +127,17 @@
             self.navButton3.tag = 1;
             self.navButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             [self.view addSubview:self.navButton3];
+            
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            int launches = [[ud objectForKey:@"landing_screen"]intValue];
+            
+            if(launches == 0){
+                self.instruction_screen_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 300, 320, 568-300)];
+                [self.instruction_screen_3 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                [self.view addSubview:self.instruction_screen_3];
+            
+                [self.instruction_screen_3 setHidden:YES];
+            }
 
             //create carousel
             self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 240, 320, 300)];
@@ -135,6 +147,11 @@
             self.carousel.dataSource = self;
             self.carousel.backgroundColor = [UIColor clearColor];
             self.carousel.clipsToBounds = YES; //This is main point
+            if(launches==0){
+                [self.carousel scrollToItemAtIndex:3 animated:NO];
+                [self.carousel scrollToItemAtIndex:0 duration:1.f];
+                [self.carousel setUserInteractionEnabled:NO];
+            }
             //add carousel to view
             [self.view addSubview:self.carousel];
             
@@ -234,17 +251,100 @@
     
     [self.carousel setHidden:NO];
 
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     if (INTERFACE_IS_PHONE) {
         if (isiPhone5) {
             
-            self.topScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 60, 320, 150)];
-            [self.topScrollView setBackgroundColor:[UIColor clearColor]];
-            self.topScrollView.delegate = self;
-            [self.view addSubview:self.topScrollView];
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            int launches = [[ud objectForKey:@"landing_screen"]intValue];
             
-            [self.topScrollView setPagingEnabled:YES];
-            self.topScrollView.showsHorizontalScrollIndicator = NO;
+            if(launches == 0){
+                
+                self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+                [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                [self.view addSubview:self.instruction_screen_1];
+                
+                UIButton *cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                [cover_button setFrame:CGRectMake( 0, 0, 320, 568)];
+                [cover_button addTarget:self action:@selector(cover_button:) forControlEvents:UIControlEventTouchUpInside];
+                [cover_button setBackgroundColor:[UIColor clearColor]];
+                [self.instruction_screen_1 addSubview:cover_button];
+                
+                UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(180, 180, 60, 60)];
+                [pointing_finger setImage:[UIImage imageNamed:@"pointer1.png"]];
+                pointing_finger.alpha = 0.f;
+                [self.instruction_screen_1 addSubview:pointing_finger];
+                
+                CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+                hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+                hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+                hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+                hover.autoreverses = YES; // Animate back to normal afterwards
+                hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+                hover.repeatCount = INFINITY; // The number of times the animation should repeat
+                [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+                
+                UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 220, 300, 60)];
+                instruction1.textColor = [UIColor whiteColor];
+                instruction1.text = @"A couple featured lists you might like!\n Swipe left to see more ";
+                instruction1.alpha = 0.f;
+                instruction1.adjustsFontSizeToFitWidth = YES;
+                instruction1.numberOfLines = 0;
+                instruction1.textAlignment = NSTextAlignmentCenter;
+                [self.instruction_screen_1 addSubview:instruction1];
+                
+                UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 500, 100, 30)];
+                next_label.textColor = [UIColor whiteColor];
+                next_label.text = @"NEXT-->";
+                [self.instruction_screen_1 addSubview:next_label];
+                
+                self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+                [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+                [self.next_button setBackgroundColor:[UIColor clearColor]];
+                [self.view addSubview:self.next_button];
+                
+                [UIView animateWithDuration:0.5f
+                                      delay:1.f
+                                    options: UIViewAnimationOptionAllowAnimatedContent
+                                 animations:^
+                 {
+                     pointing_finger.alpha = 1.f;
+                     instruction1.alpha = 1.f;
+                 }
+                                 completion:^(BOOL finished)
+                 {
+                     NSLog(@"Completed");
+                     
+                 }];
+                
+                self.topScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 60, 320, 150)];
+                [self.topScrollView setBackgroundColor:[UIColor clearColor]];
+                self.topScrollView.delegate = self;
+                [self.view addSubview:self.topScrollView];
+                
+                [self.topScrollView setUserInteractionEnabled:NO];
+                [self.topScrollView setPagingEnabled:YES];
+                self.topScrollView.showsHorizontalScrollIndicator = NO;
+                
+                self.instruction_screen_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 300)];
+                [self.instruction_screen_2 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                [self.view addSubview:self.instruction_screen_2];
+                
+                [self.instruction_screen_2 setHidden:YES];
+                
+            }else{
+                
+                self.topScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 60, 320, 150)];
+                [self.topScrollView setBackgroundColor:[UIColor clearColor]];
+                self.topScrollView.delegate = self;
+                [self.view addSubview:self.topScrollView];
+                
+                [self.topScrollView setPagingEnabled:YES];
+                self.topScrollView.showsHorizontalScrollIndicator = NO;
+                
+            }
+            
+
             
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             self.cache_sponsored_hunt_names = [defaults objectForKey:@"sponsoredHunts"];
@@ -304,6 +404,83 @@
             
         }
     }
+    
+}
+
+- (void)cover_button:(id)sender{
+    
+}
+
+- (void)next_action:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    [self.instruction_screen_2 setHidden:NO];
+    [self.instruction_screen_3 setHidden:NO];
+
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(180, 235, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+    pointing_finger.alpha = 0.f;
+    [self.instruction_screen_2 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 200, 300, 40)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Scroll right and see \nwhat your in the mood for";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    instruction1.alpha = 0.f;
+    instruction1.adjustsFontSizeToFitWidth = YES;
+    instruction1.numberOfLines = 0;
+    [self.instruction_screen_2 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 500, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_2 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+    [UIView animateWithDuration:0.5f
+                          delay:1.0f
+                        options: UIViewAnimationOptionAllowAnimatedContent
+                     animations:^
+     {
+         pointing_finger.alpha = 1.f;
+         instruction1.alpha = 1.f;
+     }
+                     completion:^(BOOL finished)
+     {
+         NSLog(@"Completed");
+         
+     }];
+    
+    
+}
+
+- (void)next_action_2:(id)sender{
+    
+    [self.instruction_screen_2 removeFromSuperview];
+    [self.instruction_screen_3 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    [self.topScrollView setUserInteractionEnabled:YES];
+    [self.carousel setUserInteractionEnabled:YES];
+
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:[NSNumber numberWithInt:1] forKey:@"landing_screen"];
     
 }
 

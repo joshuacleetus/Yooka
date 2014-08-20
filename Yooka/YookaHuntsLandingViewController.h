@@ -62,6 +62,10 @@
 @property (nonatomic, strong) IBOutlet UIImageView *imageView2;
 @property (nonatomic, strong) IBOutlet UIImageView *middleImageView;
 
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_2;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_3;
+
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView1;
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView2;
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView3;
@@ -147,6 +151,8 @@
 @property (nonatomic, strong) IBOutlet UIImageView *badgeView2;
 @property (nonatomic, strong) IBOutlet UIImageView *badgeView3;
 @property (nonatomic, strong) IBOutlet FUIButton *startButton;
+
+@property (nonatomic, strong) IBOutlet UIButton *next_button;
 
 @property (nonatomic, strong) NSString *startedHunt;
 

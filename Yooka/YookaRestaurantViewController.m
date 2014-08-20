@@ -522,7 +522,11 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.reviewsImageView setHidden:NO];
     [self.detailsImageView setHidden:YES];
     [self.menuImageView setHidden:YES];
-    
+    [self.uploadButton setHidden:NO];
+    [self.camera setHidden:NO];
+    [self.arrow setHidden:NO];
+    [self.shareLabel setHidden:NO];
+
     NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                    self.huntTitle, @"Hunt_Name",
                                    self.selectedRestaurantName,@"Venue_Name",
@@ -546,6 +550,10 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.reviewsImageView setHidden:YES];
     [self.detailsImageView setHidden:NO];
     [self.menuImageView setHidden:YES];
+    [self.uploadButton setHidden:YES];
+    [self.camera setHidden:YES];
+    [self.arrow setHidden:YES];
+    [self.shareLabel setHidden:YES];
     
     NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                    self.huntTitle, @"Hunt_Name",
@@ -569,6 +577,10 @@ const NSInteger yookaThumbnailSpace2013 = 5;
     [self.reviewsImageView setHidden:YES];
     [self.detailsImageView setHidden:YES];
     [self.menuImageView setHidden:NO];
+    [self.uploadButton setHidden:YES];
+    [self.camera setHidden:YES];
+    [self.arrow setHidden:YES];
+    [self.shareLabel setHidden:YES];
     
     NSDictionary *articleParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                    self.huntTitle, @"Hunt_Name",
@@ -715,13 +727,13 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                             [self.uploadButton addTarget:self action:@selector(uploadBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
                             [self.reviewsView addSubview:self.uploadButton];
                             
-                            UIImageView *camera = [[UIImageView alloc]initWithFrame:CGRectMake(58, 247, 79, 41)];
-                            [camera setImage:[UIImage imageNamed:@"camera2.png"]];
-                            [camera setBackgroundColor:[UIColor whiteColor]];
-                            [self.reviewsView addSubview:camera];
+                            self.camera = [[UIImageView alloc]initWithFrame:CGRectMake(70, 247, 40, 38)];
+                            [self.camera setImage:[UIImage imageNamed:@"map_camera.png"]];
+                            [self.camera setBackgroundColor:[UIColor whiteColor]];
+                            [self.reviewsView addSubview:self.camera];
                             
 //                            NSLog(@"subscribed hunts");
-                            UILabel *shareLabel = [[UILabel alloc]initWithFrame:CGRectMake(117, 533, 125, 20)];
+                            self.shareLabel = [[UILabel alloc]initWithFrame:CGRectMake(117, 533, 125, 20)];
                             NSString *string5 = @"TAKE A PICTURE!";
                             if (string5) {
                                 NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string5];
@@ -729,16 +741,16 @@ const NSInteger yookaThumbnailSpace2013 = 5;
                                 [attributedString addAttribute:NSKernAttributeName
                                                          value:@(spacing)
                                                          range:NSMakeRange(0, [string5 length])];
-                                shareLabel.attributedText = attributedString;
+                                self.shareLabel.attributedText = attributedString;
                             }
-                            shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
-                            shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
-                            [self.view addSubview:shareLabel];
+                            self.shareLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:13.0];
+                            self.shareLabel.textColor = [self colorWithHexString:@"3ac0ec"];
+                            [self.view addSubview:self.shareLabel];
                             
-                            UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(237, 538, 30, 10)];
-                            arrow.backgroundColor=[UIColor clearColor];
-                            arrow.image = [UIImage imageNamed:@"upload_share_arrow.png"];
-                            [self.view addSubview:arrow];
+                            self.arrow = [[UIImageView alloc]initWithFrame:CGRectMake(237, 538, 30, 10)];
+                            self.arrow.backgroundColor=[UIColor clearColor];
+                            self.arrow.image = [UIImage imageNamed:@"upload_share_arrow.png"];
+                            [self.view addSubview:self.arrow];
                             
                         }
                         
@@ -2460,7 +2472,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             annotationView.canShowCallout = YES;
             
             
-            UIImage *flagImage = [UIImage imageNamed:@"blue_pin.png"];
+            UIImage *flagImage = [UIImage imageNamed:@"mappin2.png"];
             // size the flag down to the appropriate size
             CGRect resizeRect;
             
@@ -2474,7 +2486,7 @@ const NSInteger yookaThumbnailSpace2013 = 5;
             //            if (resizeRect.size.height > maxSize.height)
             //                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
             
-            resizeRect = CGRectMake(0.f, 0.f, 35.f, 45.f);
+            resizeRect = CGRectMake(0.f, 0.f, 22.f, 35.f);
             
             resizeRect.origin = CGPointMake(0.0, 0.0);
             UIGraphicsBeginImageContext(resizeRect.size);

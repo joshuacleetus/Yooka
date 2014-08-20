@@ -56,4 +56,9 @@
 @property (strong, nonatomic) IBOutlet UIButton *addBtn;
 @property (strong, nonatomic) IBOutlet UITextField *textField;
 
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+
+@property (nonatomic, strong) IBOutlet UIButton *next_button;
+@property (nonatomic, strong) IBOutlet UIButton *cover_button;
+
 @end

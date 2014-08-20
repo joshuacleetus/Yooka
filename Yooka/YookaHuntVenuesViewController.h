@@ -221,4 +221,14 @@
 
 @property (nonatomic, strong) NSString *popuppic;
 
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_1;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_2;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_3;
+@property (nonatomic, strong) IBOutlet UIImageView *instruction_screen_4;
+
+@property (nonatomic, strong) IBOutlet UIButton *next_button;
+@property (nonatomic, strong) IBOutlet UIButton *next_button_2;
+@property (nonatomic, strong) IBOutlet UIButton *cover_button;
+
+
 @end

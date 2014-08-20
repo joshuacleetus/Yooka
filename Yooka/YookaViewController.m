@@ -25,236 +25,132 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
-    {
-        // app already launched
-//        NSLog(@"app already launched");
-        UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-        [self.view setBackgroundColor:color];
-        
-        CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-        
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            if (screenSize.height > 480.0f) {
+            if (isiPhone5) {
                 
                 /*Do iPhone 5 stuff here.*/
                 
-                self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 102, 120, 120)];
-                self.logoImage.image = [UIImage imageNamed:@"Yookatransparent.png"];
-                [self.view addSubview:self.logoImage];
+                CGRect screenRect = CGRectMake(0.f, 0.f, self.view.frame.size.width, 568.f);
+                self.scrollView=[[UIScrollView alloc] initWithFrame:screenRect];
+                self.scrollView.frame = CGRectMake(0.f, 0.f, self.view.frame.size.width, 568.f);
+                self.scrollView.delegate = self;
+                CGSize contentSize = CGSizeMake(960, self.view.frame.size.height);
+                self.scrollView.contentSize = contentSize;
+                self.scrollView.pagingEnabled = YES;
+                self.scrollView.showsVerticalScrollIndicator=NO;
+                [self.view addSubview:self.scrollView];
                 
-                self.fbBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 268, 288, 43)];
-                UIColor * color2 = [UIColor colorWithRed:67/255.0f green:125/255.0f blue:162/255.0f alpha:1.0f];
-                self.fbBtn.buttonColor = color2;
-                UIColor * color3 = [UIColor colorWithRed:45/255.0f green:93/255.0f blue:124/255.0f alpha:1.0f];
-                self.fbBtn.shadowColor = color3;
-                self.fbBtn.shadowHeight = 3.0f;
-                self.fbBtn.cornerRadius = 6.0f;
-                self.fbBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.fbBtn setTitle:@"Facebook" forState:UIControlStateNormal];
-                [self.fbBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.fbBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.fbBtn addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.fbBtn];
+                self.imageView12 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+                self.imageView12.image = [UIImage imageNamed:@"Sign_up_welcome.jpg"];
+                [self.scrollView addSubview:self.imageView12];
                 
-                self.signInBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 321, 288, 43)];
-                UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
-                self.signInBtn.buttonColor = color4;
-                UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
-                self.signInBtn.shadowColor = color5;
-                self.signInBtn.shadowHeight = 3.0f;
-                self.signInBtn.cornerRadius = 6.0f;
-                self.signInBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.signInBtn setTitle:@"Signin" forState:UIControlStateNormal];
-                [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.signInBtn addTarget:self action:@selector(signInBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.signInBtn];
+                self.imageView13 = [[UIImageView alloc]initWithFrame:CGRectMake(320, 0, 320, 568)];
+                self.imageView13.image = [UIImage imageNamed:@"Sign_up_bestoflist.png"];
+                [self.scrollView addSubview:self.imageView13];
                 
-                self.signUpBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 374, 288, 43)];
-                UIColor * color6 = [UIColor colorWithRed:216/255.0f green:115/255.0f blue:82/255.0f alpha:1.0f];
-                self.signUpBtn.buttonColor = color6;
-                UIColor * color7 = [UIColor colorWithRed:185/255.0f green:74/255.0f blue:47/255.0f alpha:1.0f];
-                self.signUpBtn.shadowColor = color7;
-                self.signUpBtn.shadowHeight = 3.0f;
-                self.signUpBtn.cornerRadius = 6.0f;
-                self.signUpBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.signUpBtn setTitle:@"Signup" forState:UIControlStateNormal];
-                [self.signUpBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.signUpBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.signUpBtn addTarget:self action:@selector(signUpBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.signUpBtn];
+                self.imageView14 = [[UIImageView alloc]initWithFrame:CGRectMake(640, 0, 320, 588)];
+                self.imageView14.image = [UIImage imageNamed:@"Sign_up_share.jpg"];
+                [self.scrollView addSubview:self.imageView14];
+                
+                self.hunts_pages = [[UIPageControl alloc] init];
+                self.hunts_pages.frame = CGRectMake(141,568-110,30,30);
+                self.hunts_pages.enabled = TRUE;
+                [self.hunts_pages setHighlighted:YES];
+                [self.view addSubview:self.hunts_pages];
+                
+                self.hunts_pages.currentPage = 0;
+                self.hunts_pages.numberOfPages = 3;
+            
+                
+                self.fb_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 568-80, 320, 40)];
+                [self.fb_image_view setImage:[UIImage imageNamed:@"facebookbutton.png"]];
+                [self.view addSubview:self.fb_image_view];
+                
+                self.signup_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 568-40, 160, 40)];
+                [self.signup_image_view setImage:[UIImage imageNamed:@"signupbutton.png"]];
+                [self.view addSubview:self.signup_image_view];
+                
+                self.signin_image_view = [[UIImageView alloc]initWithFrame:CGRectMake(160, 568-40, 160, 40)];
+                [self.signin_image_view setImage:[UIImage imageNamed:@"signinbutton.png"]];
+                [self.view addSubview:self.signin_image_view];
                 
                 
-                UILabel *termsLbl = [[UILabel alloc]initWithFrame:CGRectMake(10, 500, 295, 30)];
-                termsLbl.textColor = [UIColor whiteColor];
-                [termsLbl setFont:[UIFont fontWithName:@"Helvetica" size:9]];
-                termsLbl.text = @"Terms of Service";
-                termsLbl.textAlignment = NSTextAlignmentCenter;
-                termsLbl.adjustsFontSizeToFitWidth = NO;
-                [self.view addSubview:termsLbl];
-                
-                self.termsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [_termsBtn setFrame:CGRectMake(100, 500, 120, 30)];
-                [_termsBtn setTitle:nil forState:UIControlStateNormal];
-                [_termsBtn setBackgroundColor:[UIColor clearColor]];
-                [_termsBtn addTarget:self action:@selector(termsofservice:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:_termsBtn];
-                
-            } else {
-                
-                /*Do iPhone Classic stuff here.*/
-                
-                self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 62, 120, 120)];
-                self.logoImage.image = [UIImage imageNamed:@"Yookatransparent.png"];
-                [self.view addSubview:self.logoImage];
-                
-                self.fbBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 248, 288, 43)];
-                UIColor * color2 = [UIColor colorWithRed:67/255.0f green:125/255.0f blue:162/255.0f alpha:1.0f];
-                self.fbBtn.buttonColor = color2;
-                UIColor * color3 = [UIColor colorWithRed:45/255.0f green:93/255.0f blue:124/255.0f alpha:1.0f];
-                self.fbBtn.shadowColor = color3;
-                self.fbBtn.shadowHeight = 3.0f;
-                self.fbBtn.cornerRadius = 6.0f;
-                self.fbBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.fbBtn setTitle:@"Facebook" forState:UIControlStateNormal];
-                [self.fbBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.fbBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.fbBtn addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.fbBtn];
-                
-                self.signInBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 301, 288, 43)];
-                UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
-                self.signInBtn.buttonColor = color4;
-                UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
-                self.signInBtn.shadowColor = color5;
-                self.signInBtn.shadowHeight = 3.0f;
-                self.signInBtn.cornerRadius = 6.0f;
-                self.signInBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.signInBtn setTitle:@"Signin" forState:UIControlStateNormal];
-                [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.signInBtn addTarget:self action:@selector(signInBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.signInBtn];
-                
-                self.signUpBtn = [[FUIButton alloc]initWithFrame:CGRectMake(16, 354, 288, 43)];
-                UIColor * color6 = [UIColor colorWithRed:216/255.0f green:115/255.0f blue:82/255.0f alpha:1.0f];
-                self.signUpBtn.buttonColor = color6;
-                UIColor * color7 = [UIColor colorWithRed:185/255.0f green:74/255.0f blue:47/255.0f alpha:1.0f];
-                self.signUpBtn.shadowColor = color7;
-                self.signUpBtn.shadowHeight = 3.0f;
-                self.signUpBtn.cornerRadius = 6.0f;
-                self.signUpBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-                [self.signUpBtn setTitle:@"Signup" forState:UIControlStateNormal];
-                [self.signUpBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [self.signUpBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-                [self.signUpBtn addTarget:self action:@selector(signUpBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:self.signUpBtn];
-                
-                UILabel *termsLbl = [[UILabel alloc]initWithFrame:CGRectMake(120, 415, 100, 30)];
-                [termsLbl setFont:[UIFont fontWithName:@"Helvetica" size:10]];
-                NSString *string1 = @"Terms of Service";
-//                NSMutableAttributedString* string = [[NSMutableAttributedString alloc]initWithString:string1];
-//                [string addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Helvetica" size:10] range:NSMakeRange(0, string.length)];
-//            [string addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, string.length)];//TextColor
-//                UIColor * color = [UIColor whiteColor];
-//                NSNumber* underlineNumber = [NSNumber numberWithInteger:NSUnderlineStyleThick];
-//                [string1 addAttribute:NSUnderlineStyleAttributeName value:underlineNumber range:NSMakeRange(0, string.length)];
-                //Underline color
-                NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSUnderlineStyleAttributeName: @1 };
-                termsLbl.textColor = [UIColor whiteColor];
-                NSAttributedString *myString = [[NSAttributedString alloc] initWithString:string1 attributes:attributes];
-                termsLbl.attributedText = myString;
-                [termsLbl setBackgroundColor:[UIColor clearColor]];
-//                [string addAttribute:NSUnderlineColorAttributeName value:color range:NSMakeRange(0, string.length)];
-//                termsLbl. attributedText = string;
-//                termsLbl.textAlignment = NSTextAlignmentCenter;
-//                termsLbl.adjustsFontSizeToFitWidth = NO;
-                [self.view addSubview:termsLbl];
-                
-                self.termsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [_termsBtn setFrame:CGRectMake(100, 415, 120, 30)];
-                [_termsBtn setTitle:nil forState:UIControlStateNormal];
-                [_termsBtn setBackgroundColor:[UIColor clearColor]];
-                [_termsBtn addTarget:self action:@selector(termsofservice:) forControlEvents:UIControlEventTouchUpInside];
-                [self.view addSubview:_termsBtn];
-                
-            }
-        } else {
-            /*Do iPad stuff here.*/
-        }
+                UIButton *fb_button = [[UIButton alloc]initWithFrame:CGRectMake(0, 568-80, 320, 45)];
+                UIColor * color2 = [UIColor clearColor];
+                [fb_button setBackgroundColor:color2];
+                [fb_button setImage:[UIImage imageNamed:@"facebookbutton.png"] forState:UIControlStateNormal];
+                [fb_button addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+                [self.view addSubview:fb_button];
 
-    }
-    else
-    {
-        
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        // This is the first launch ever
-//        NSLog(@"This is the first launch ever");
-        
-        CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            if (screenSize.height > 480.0f) {
-                /*Do iPhone 5 stuff here.*/
+                UIButton *sign_up_btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 568-40, 160, 40)];
+                [sign_up_btn setImage:[UIImage imageNamed:@"signupbutton.png"] forState:UIControlStateNormal];
+                [sign_up_btn addTarget:self action:@selector(signUpBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+                [self.view addSubview:sign_up_btn];
                 
-                _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,320, 586)];
-                _scrollView.delegate = self;
-                [_scrollView setPagingEnabled:YES];
-                _scrollView.showsHorizontalScrollIndicator = NO;
-                _scrollView.showsVerticalScrollIndicator = NO;
-                [_scrollView setScrollsToTop:NO];
-                [self.view addSubview:_scrollView];
-                [_scrollView setContentSize:CGSizeMake(320*3, 568)];
-                self.automaticallyAdjustsScrollViewInsets = NO;
+                UIButton *sign_in_btn = [[UIButton alloc]initWithFrame:CGRectMake(160, 568-40, 160, 40)];
+                [sign_in_btn setImage:[UIImage imageNamed:@"signinbutton.png"] forState:UIControlStateNormal];
+                [sign_in_btn addTarget:self action:@selector(signInBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+                [self.view addSubview:sign_in_btn];
                 
-                _imageView12 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
-                _imageView12.image = [UIImage imageNamed:@"iphone5splash.png"];
-                [_scrollView addSubview:_imageView12];
+                UIImageView *gray_line = [[UIImageView alloc]initWithFrame:CGRectMake(160, 568-40, 1, 40)];
+                [gray_line setBackgroundColor:[self colorWithHexString:@"cccccc"]];
+                [self.view addSubview:gray_line];
                 
-                _imageView13 = [[UIImageView alloc]initWithFrame:CGRectMake(320, 0, 320, 568)];
-                _imageView13.image = [UIImage imageNamed:@"iphone5landingscreen.png"];
-                [_scrollView addSubview:_imageView13];
                 
-                _imageView14 = [[UIImageView alloc]initWithFrame:CGRectMake(640, 0, 320, 568)];
-                _imageView14.image = [UIImage imageNamed:@"iphone5huntscreen.png"];
-                [_scrollView addSubview:_imageView14];
-                
+//
                 
             } else {
+                
                 /*Do iPhone Classic stuff here.*/
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Coming for iphone 4 soon!"
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Cancel"
+                                                      otherButtonTitles:@"Yes", nil];
                 
-                _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,320, 480)];
-                _scrollView.delegate = self;
-                [_scrollView setPagingEnabled:YES];
-                _scrollView.showsHorizontalScrollIndicator = NO;
-                _scrollView.showsVerticalScrollIndicator = NO;
-                [_scrollView setScrollsToTop:NO];
-                [self.view addSubview:_scrollView];
-                [_scrollView setContentSize:CGSizeMake(320*3, 480)];
-                self.automaticallyAdjustsScrollViewInsets = NO;
-                
-                _imageView12 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
-                _imageView12.image = [UIImage imageNamed:@"iphone4splash.png"];
-                [_scrollView addSubview:_imageView12];
-                
-                _imageView13 = [[UIImageView alloc]initWithFrame:CGRectMake(320, 0, 320, 480)];
-                _imageView13.image = [UIImage imageNamed:@"iphone4landingscreen.png"];
-                [_scrollView addSubview:_imageView13];
-                
-                _imageView14 = [[UIImageView alloc]initWithFrame:CGRectMake(640, 0, 320, 480)];
-                _imageView14.image = [UIImage imageNamed:@"iphone4huntscreen.png"];
-                [_scrollView addSubview:_imageView14];
+                [alert show];
                 
             }
         } else {
             /*Do iPad stuff here.*/
         }
-        
-    }
     
+}
+
+-(UIColor*)colorWithHexString:(NSString*)hex
+{
+    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
+    // String should be 6 or 8 characters
+    if ([cString length] < 6) return [UIColor grayColor];
+    
+    // strip 0X if it appears
+    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
+    
+    if ([cString length] != 6) return  [UIColor grayColor];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.location = 0;
+    range.length = 2;
+    NSString *rString = [cString substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [cString substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [cString substringWithRange:range];
+    
+    // Scan values
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    return [UIColor colorWithRed:((float) r / 255.0f)
+                           green:((float) g / 255.0f)
+                            blue:((float) b / 255.0f)
+                           alpha:1.0f];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -264,6 +160,9 @@
     [self.fbBtn setEnabled:YES];
     [self.signInBtn setEnabled:YES];
     [self.signUpBtn setEnabled:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES
+                                            withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -272,33 +171,24 @@
     [self.fbBtn setEnabled:YES];
     [self.signInBtn setEnabled:YES];
     [self.signUpBtn setEnabled:YES];
-    UIActivityIndicatorView *activityView=[[UIActivityIndicatorView alloc]     initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    
-    activityView.center=self.view.center;
-    
-    [activityView stopAnimating];
-    
-    [self.view addSubview:activityView];
+//    UIActivityIndicatorView *activityView=[[UIActivityIndicatorView alloc]     initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    
+//    activityView.center=self.view.center;
+//    
+//    [activityView stopAnimating];
+//    
+//    [self.view addSubview:activityView];
 }
 
 -(void)scrollViewDidScroll: (UIScrollView*)scrollView
 {
-    float scrollViewWidth = scrollView.frame.size.width;
-    float scrollContentSizeWidth = scrollView.contentSize.width;
-    float scrollOffset = scrollView.contentOffset.x;
+
+    CGFloat pageWidth = scrollView.frame.size.width;
+    float fractionalPage = scrollView.contentOffset.x / pageWidth;
+    NSInteger page = lround(fractionalPage);
     
-    if (scrollOffset == 0)
-    {
-        // then we are at the top
-    }
-    else if (scrollOffset + scrollViewWidth > scrollContentSizeWidth)
-    {
-        // then we are at the end
+        self.hunts_pages.currentPage = page;
         
-        [_scrollView removeFromSuperview];
-        [self viewDidLoad];
-        
-    }
 }
 
 - (IBAction)fbBtnTouched:(id)sender

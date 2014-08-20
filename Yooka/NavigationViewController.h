@@ -43,6 +43,7 @@
 @property (nonatomic, strong) NSString *fieldName1;
 @property (nonatomic, strong) NSDictionary *dict1;
 @property (nonatomic, strong) UIImage* userImage;
+@property (nonatomic, strong) NSURLConnection* connection;
 
 @property (nonatomic, retain) id<KCSStore> updateStore;
 

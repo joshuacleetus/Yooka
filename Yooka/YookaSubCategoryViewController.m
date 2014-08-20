@@ -15,6 +15,7 @@
 #import "UIImage+Crop.h"
 #import "UIImage+Screenshot.h"
 #import "Flurry.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface YookaSubCategoryViewController ()
 
@@ -41,7 +42,7 @@
     item = 0;
     row = 0;
     col = 0;
-    contentSize = 60;
+    contentSize = 240-180;
     
     self.myEmail = [KCSUser activeUser].email;
     
@@ -52,7 +53,8 @@
     _huntDict5 = [NSMutableDictionary new];
     _huntDict6 = [NSMutableDictionary new];
     self.huntCounts = [NSMutableArray new];
-    
+    self.finishedHuntVenues = [NSMutableDictionary new];
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _huntDict1 = [defaults objectForKey:@"huntDescription"];
     _huntDict2 = [defaults objectForKey:@"huntCount"];
@@ -72,23 +74,68 @@
     self.gridScrollView=[[UIScrollView alloc] initWithFrame:screenRect];
     self.gridScrollView.contentSize= self.view.bounds.size;
     self.gridScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+    self.gridScrollView.delegate = self;
     [self.view addSubview:self.gridScrollView];
     
-    UIImageView *top_blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
-    [top_blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-    [self.view addSubview:top_blue_bg];
+    UIImageView *top_bg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
+    [top_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+    [self.view addSubview:top_bg];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [titleLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
-    titleLabel.text = [NSString stringWithFormat:@"%@",[self.subCategoryName uppercaseString]];
-    titleLabel.adjustsFontSizeToFitWidth = YES;
+    NSLog(@"category name = %@",self.categoryName);
+    
+//    UIImageView *top_bg_image = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 180)];
+//    [self.gridScrollView addSubview:top_bg_image];
+    
+    UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
+    categoryLabel.textColor = [UIColor whiteColor];
+    categoryLabel.textAlignment = NSTextAlignmentCenter;
+    [categoryLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:17]];
+    categoryLabel.text = [NSString stringWithFormat:@"%@",[self.subCategoryName uppercaseString]];
+    categoryLabel.adjustsFontSizeToFitWidth = YES;
     //    titleLabel.numberOfLines = 0;
     //    [titleLabel sizeToFit];
+    categoryLabel.layer.masksToBounds = NO;
+    categoryLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:categoryLabel];
+    
+//    UIImageView *bg_layover = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 180)];
+//    [bg_layover setBackgroundColor:[[self colorWithHexString:@"091229"]colorWithAlphaComponent:0.5f]];
+//    [self.gridScrollView addSubview:bg_layover];
+    
+    UILabel *descriptionLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 125, 320, 40)];
+    descriptionLabel.textColor = [UIColor whiteColor];
+    [descriptionLabel setFont:[UIFont fontWithName:@"OpenSans-Semibold" size:25]];
+    descriptionLabel.textAlignment = NSTextAlignmentCenter;
+    descriptionLabel.adjustsFontSizeToFitWidth = YES;
+    descriptionLabel.numberOfLines = 0;
+    descriptionLabel.layer.masksToBounds = NO;
+    descriptionLabel.backgroundColor = [UIColor clearColor];
+    [self.gridScrollView addSubview:descriptionLabel];
+    
+//    if ([self.categoryName isEqualToString:@"EAT"]) {
+//        [top_bg_image setImage:self.category_image];
+//        descriptionLabel.text = [NSString stringWithFormat:@"ALMOST THERE!"];
+//    }else if ([self.categoryName isEqualToString:@"DRINK"]){
+//        [top_bg_image setImage:self.category_image];
+//        descriptionLabel.text = [NSString stringWithFormat:@"ALMOST THERE!"];
+//    }else if ([self.categoryName isEqualToString:@"PLAY"]){
+//        [top_bg_image setImage:self.category_image];
+//        descriptionLabel.text = [NSString stringWithFormat:@"ALMOST THERE!"];
+//    }else if ([self.categoryName isEqualToString:@"YOOKA"]){
+//        [top_bg_image setImage:self.category_image];
+//        descriptionLabel.text = [NSString stringWithFormat:@"ALMOST THERE!"];
+//    }
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 142, 325, 60)];
+    titleLabel.textColor = [UIColor whiteColor];
+    [titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    titleLabel.text = [NSString stringWithFormat:@"PICK CATEGORY"];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.numberOfLines = 0;
     titleLabel.layer.masksToBounds = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:titleLabel];
+    [self.gridScrollView addSubview:titleLabel];
     
     _backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
     _backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
@@ -110,6 +157,16 @@
 //    [self getMyHuntCounts];
     
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+//    float scrollOffset = scrollView.contentOffset.y;
+//    if (scrollOffset < 0) {
+//        self.gridScrollView.scrollEnabled = NO;
+//    }else{
+//        self.gridScrollView.scrollEnabled = YES;
+//    }
 }
 
 - (void)getsubCatPicture{
@@ -147,31 +204,6 @@
              [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
              [self.gridScrollView addSubview:self.backBtn];
              
-//             UIImageView *userView = [[UIImageView alloc]initWithFrame:CGRectMake(135, 40, 50, 50)];
-//             userView.layer.cornerRadius = userView.frame.size.height / 2;
-//             [userView setContentMode:UIViewContentModeScaleAspectFill];
-//             [userView.layer setBorderWidth:3.0];
-//             [userView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-//             [userView setClipsToBounds:YES];
-//             
-//             NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-//             NSData* imageData = [ud objectForKey:@"MyProfilePic"];
-//             UIImage *image = [UIImage imageWithData:imageData];
-//             if (image) {
-//                 
-//                 //if image is already there set it to userview.
-//                 [userView setImage:image];
-//                 
-//             }else{
-//                 
-//                 //get the user image from facebook or kinvey if its not cached.
-//                 //[self get_user_image];
-//             }
-             
-             
-             
-             //[self.gridScrollView addSubview:userView];
-             
              self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
              self.titleLabel.textColor = [UIColor whiteColor];
              self.titleLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:15];
@@ -189,18 +221,6 @@
              self.titleLabel.adjustsFontSizeToFitWidth = YES;
              //[self.gridScrollView addSubview:self.titleLabel];
              
-//             UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
-//             titleLabel.textColor = [UIColor whiteColor];
-//             [titleLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
-//             titleLabel.text = [NSString stringWithFormat:@"\n%@",string];
-//             titleLabel.textAlignment = NSTextAlignmentCenter;
-//             titleLabel.adjustsFontSizeToFitWidth = YES;
-//             //titleLabel.numberOfLines = 0;
-//            // [titleLabel sizeToFit];
-//             titleLabel.layer.masksToBounds = NO;
-//             titleLabel.backgroundColor = [UIColor clearColor];
-//             [self.gridScrollView addSubview:titleLabel];
-             
              UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
              titleLabel.textColor = [UIColor whiteColor];
              titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -213,9 +233,6 @@
              titleLabel.backgroundColor = [UIColor clearColor];
              [self.gridScrollView addSubview:titleLabel];
              
-//             UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(120, 150, 75, 2)];
-//             lineView.backgroundColor = [UIColor whiteColor];
-//             [self.gridScrollView addSubview:lineView];
          }
      }];
 }
@@ -225,37 +242,42 @@
     
     if (j<self.subCategoryArray.count) {
         
-
-        
         NSString *hunt_name = self.subCategoryArray[j];
         
         KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
         KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
-        
-        KCSQuery* query = [KCSQuery queryOnField:@"userEmail" withExactMatchForValue:_myEmail];
+
+        KCSQuery* query = [KCSQuery queryOnField:@"userEmail" withExactMatchForValue:[KCSUser activeUser].email];
         KCSQuery* query2 = [KCSQuery queryOnField:@"HuntName" withExactMatchForValue:self.subCategoryArray[j]];
         KCSQuery* query3 = [KCSQuery queryOnField:@"postType" usingConditional:kKCSNotEqual forValue:@"started hunt"];
-        KCSQuery* query4 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query,query2,query3, nil];
+        KCSQuery* query4 = [KCSQuery queryOnField:@"deleted" withExactMatchForValue:@"NO"];
+        KCSQuery* query5 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query,query2,query3,query4, nil];
         
-        [store queryWithQuery:query4 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
+        [store queryWithQuery:query5 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
             if (errorOrNil != nil) {
                 //An error happened, just log for now
+                
+
+                
                 NSLog(@"An error occurred on fetch: %@", errorOrNil);
                 [self.huntCounts addObject:[NSString stringWithFormat:@"0/%@",[_huntDict2 objectForKey:self.subCategoryArray[j]]]];
                 
                 if ([self.subscribedHunts containsObject:hunt_name]) {
+                    
                     UIButton *button = self.thumbnails[j];
-
-                    UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 40, 40)];
+                    
+                    UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                     huntCountLabel.text =self.huntCounts[j];
-                    huntCountLabel.font = [UIFont fontWithName:@"OpenSans" size:15.f];
+                    huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                     huntCountLabel.textAlignment = NSTextAlignmentCenter;
-                    huntCountLabel.textColor = [UIColor grayColor];
+                    huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
+                    huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                     huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                    huntCountLabel.numberOfLines = 0;
-                    [huntCountLabel sizeToFit];
                     huntCountLabel.layer.masksToBounds = NO;
-                   // [button addSubview:huntCountLabel];
+                    huntCountLabel.layer.cornerRadius = 10;
+                    huntCountLabel.clipsToBounds = YES;
+                    [button addSubview:huntCountLabel];
+                    
                 }
                 
                 j++;
@@ -263,9 +285,40 @@
                 
             } else {
                 //got all events back from server -- update table view
-                NSLog(@"featured hunt count = %lu",(unsigned long)objectsOrNil.count);
                 
-                NSLog(@"1");
+                NSMutableArray *array1 = [NSMutableArray new];
+                
+                if (array1.count==0) {
+                    //                    NSLog(@"no lists");
+                }
+                
+                if (objectsOrNil.count>0) {
+                    
+                    for (int a = 0; a<objectsOrNil.count; a++) {
+                        YookaBackend *yooka = objectsOrNil[a];
+                        if (yooka.venueName) {
+                            [array1 addObject:yooka.venueName];
+                        }
+                    }
+                    
+                    NSArray *copy = [array1 copy];
+                    NSInteger index = [copy count] - 1;
+                    
+                    for (id object in [copy reverseObjectEnumerator]) {
+                        if ([array1 indexOfObject:object inRange:NSMakeRange(0, index)] != NSNotFound) {
+                            [array1 removeObjectAtIndex:index];
+                        }
+                        index--;
+                    }
+                    
+                    [_finishedHuntVenues setObject:array1 forKey:self.subCategoryArray[j]];
+                    
+                }else{
+                    
+                    [_finishedHuntVenues setObject:array1 forKey:self.subCategoryArray[j]];
+                    
+                }
+
                 
                 if (objectsOrNil.count >=[[_huntDict2 objectForKey:self.subCategoryArray[j]]integerValue]) {
                     
@@ -278,17 +331,18 @@
                     if ([self.subscribedHunts containsObject:hunt_name]) {
                         UIButton *button = self.thumbnails[j];
 
-                        UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 40, 40)];
+                        UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                         huntCountLabel.text =self.huntCounts[j];
-                        //                 NSLog(@"try = %@",_inProgressHuntNames[k]);
-                        huntCountLabel.font = [UIFont fontWithName:@"Montserrat-Bold" size:15.f];
+                        huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                         huntCountLabel.textAlignment = NSTextAlignmentCenter;
-                        huntCountLabel.textColor = [UIColor redColor];
+                        huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
+                        huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                         huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                        huntCountLabel.numberOfLines = 0;
-                        [huntCountLabel sizeToFit];
                         huntCountLabel.layer.masksToBounds = NO;
-                       // [button addSubview:huntCountLabel];
+                        huntCountLabel.layer.cornerRadius = 10;
+                        huntCountLabel.clipsToBounds = YES;
+                        [button addSubview:huntCountLabel];
+                        
                         j++;
                         [self getMyHuntCounts];
                         
@@ -299,27 +353,25 @@
                     
                 }else{
                     
-
 //                    [self.inProgressHuntNames addObject:_subscribedHuntNames[j]];
                     [self.huntCounts addObject:[NSString stringWithFormat:@"%lu/%@",(unsigned long)objectsOrNil.count,[_huntDict2 objectForKey:self.subCategoryArray[j]]]];
                     
                     if ([self.subscribedHunts containsObject:hunt_name]) {
+                        
                         UIButton *button = self.thumbnails[j];
-
-                        UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 40, 40)];
+                        
+                        UILabel *huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 43, 20)];
                         huntCountLabel.text =self.huntCounts[j];
-                        huntCountLabel.font = [UIFont fontWithName:@"Montserrat-Bold" size:15.f];
+                        huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.f];
                         huntCountLabel.textAlignment = NSTextAlignmentCenter;
-                        huntCountLabel.textColor = [UIColor redColor];
+                        huntCountLabel.textColor = [self colorWithHexString:@"f8f8f8"];
+                        huntCountLabel.backgroundColor = [[self colorWithHexString:@"9a8e92"] colorWithAlphaComponent:0.7];
                         huntCountLabel.adjustsFontSizeToFitWidth = YES;
-                        huntCountLabel.numberOfLines = 0;
-                        [huntCountLabel sizeToFit];
-                        //                 huntCountLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-                        //                 huntCountLabel.layer.shadowRadius = 1;
-                        //                 huntCountLabel.layer.shadowOpacity = 1;
-                        //                 huntCountLabel.layer.shadowOffset = CGSizeMake(1.0, 3.0);
                         huntCountLabel.layer.masksToBounds = NO;
-                       // [button addSubview:huntCountLabel];
+                        huntCountLabel.layer.cornerRadius = 10;
+                        huntCountLabel.clipsToBounds = YES;
+                        [button addSubview:huntCountLabel];
+                        
                         j++;
                         [self getMyHuntCounts];
                         
@@ -384,7 +436,7 @@
                  
                  UILabel *huntLabel = [[UILabel alloc]initWithFrame:CGRectMake(9, 139, 150, 33)];
                  
-                 huntLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:11.f];
+                 huntLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:11.f];
                  huntLabel.textAlignment = NSTextAlignmentLeft;
                  
                  NSString *string = [hunt_name uppercaseString];
@@ -392,7 +444,7 @@
                  
                  if (string) {
                      NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-                     float spacing = 1.2f;
+                     float spacing = 1.f;
                      [attributedString addAttribute:NSKernAttributeName
                                               value:@(spacing)
                                               range:NSMakeRange(0, [string length])];
@@ -448,7 +500,7 @@
                           
                           UILabel *huntLabel = [[UILabel alloc]initWithFrame:CGRectMake(9, 139, 150, 33)];
                           
-                          huntLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:11.f];
+                          huntLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:11.f];
                           huntLabel.textAlignment = NSTextAlignmentLeft;
                           
                           NSString *string = [hunt_name uppercaseString];
@@ -456,7 +508,7 @@
                           
                           if (string) {
                               NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-                              float spacing = 1.2f;
+                              float spacing = 1.f;
                               [attributedString addAttribute:NSKernAttributeName
                                                        value:@(spacing)
                                                        range:NSMakeRange(0, [string length])];
@@ -545,6 +597,7 @@
         media.emailId = self.myEmail;
         media.subscribedHunts = self.subscribedHunts;
         media.unsubscribedHunts = self.unsubscribedHunts;
+        media.finishedHuntVenues = [_finishedHuntVenues objectForKey:self.subCategoryArray[b]];
         [self presentViewController:media animated:NO completion:nil];
         
     }else{

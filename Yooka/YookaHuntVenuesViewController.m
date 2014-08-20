@@ -32,6 +32,8 @@
 #import "UIImage+Crop.h"
 #import "UIImage+Screenshot.h"
 #import "Flurry.h"
+#import <QuartzCore/QuartzCore.h>
+#import <QuartzCore/CALayer.h>
 
 @interface YookaHuntVenuesViewController ()
 {
@@ -105,6 +107,8 @@
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     }
     
+    NSLog(@"finished hunt venues = %@",self.finishedHuntVenues);
+    
     k=0;
     p=0;
     count = 0,size=0;
@@ -149,12 +153,11 @@
             [alert show];
         }
         
-        CGSize screenSize = [[UIScreen mainScreen] bounds].size;
         
         if (INTERFACE_IS_PHONE) {
-            if (screenSize.height > 480.0f) {
+            if (isiPhone5) {
                 
-                self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 60, 400, 600)];
+                self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 60, 320, 600)];
                 //Always center the dot and zoom in to an apropriate zoom level when position changes
                 //        [_mapView setUserTrackingMode:MKUserTrackingModeFollow];
                 self.mapView.delegate = self;
@@ -164,11 +167,6 @@
                 MKCoordinateRegion newRegion;
                 newRegion.center.latitude = _currentLocation.coordinate.latitude;
                 newRegion.center.longitude = _currentLocation.coordinate.longitude;
-                
-                //    NSLog(@"%f",_currentLocation.coordinate.latitude);
-                //    NSLog(@"%f",_currentLocation.coordinate.longitude);
-                //    newRegion.center.latitude = [_latitude doubleValue];
-                //    newRegion.center.longitude = [_longitude doubleValue];
                 
                 newRegion.span.latitudeDelta = 0.122872;
                 newRegion.span.longitudeDelta = 0.119863;
@@ -186,36 +184,73 @@
                 _featuredRestaurants = [NSArray new];
                 _selectedRestaurant = [NSMutableArray new];
                 
+                CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, 329.f);
+                
+                self.restaurantScrollView = [[UIScrollView alloc] initWithFrame:screenRect];
+                self.restaurantScrollView.contentSize= self.view.bounds.size;
+                self.restaurantScrollView.frame = CGRectMake(0.f, 285+285, 320.f, self.restaurantScrollView.frame.size.height);
+                [self.restaurantScrollView setContentSize:CGSizeMake(320, contentSize)];
+                [self.restaurantScrollView setBackgroundColor:[UIColor whiteColor]];
+                [self.view addSubview:self.restaurantScrollView];
+                
                 self.menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [self.menuBtn setFrame:CGRectMake(0, 225, 320, 60)];
+                [self.menuBtn setFrame:CGRectMake(0, 225+283, 320, 60)];
                 [self.menuBtn setTitle:nil forState:UIControlStateNormal];
-                [self.menuBtn addTarget:self action:@selector(checkedMenu:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+                [self.menuBtn addTarget:self action:@selector(checkedMenu) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
                 [self.menuBtn setBackgroundColor:[UIColor whiteColor]];
+                self.menuBtn.layer.shadowColor = [self colorWithHexString:@"cccccc"].CGColor;
+                self.menuBtn.layer.shadowOffset = CGSizeMake(0, 3);
+                self.menuBtn.layer.shadowOpacity = 1;
+                self.menuBtn.layer.shadowRadius = 1.0;
+                self.menuBtn.clipsToBounds = NO;
                 [self.view addSubview:self.menuBtn];
+                
+                UIImageView *grey_line_1 = [[UIImageView alloc]initWithFrame:CGRectMake(60, 0, 0.5, 60)];
+                [grey_line_1 setBackgroundColor:[self colorWithHexString:@"cccccc"]];
+                [self.menuBtn addSubview:grey_line_1];
+                
+                UIImageView *grey_line_2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 0.5, 60)];
+                [grey_line_2 setBackgroundColor:[self colorWithHexString:@"cccccc"]];
+                [self.menuBtn addSubview:grey_line_2];
                 
                 self.menuBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.menuBtn2 setFrame:CGRectMake(0, 508, 320, 60)];
                 [self.menuBtn2 setTitle:nil forState:UIControlStateNormal];
-                [self.menuBtn2 addTarget:self action:@selector(checkedMenu2:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+                [self.menuBtn2 addTarget:self action:@selector(checkedMenu2) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
                 [self.menuBtn2 setBackgroundColor:[UIColor whiteColor]];
                 [self.view addSubview:self.menuBtn2];
                 
                 [self.menuBtn2 setHidden:YES];
                 
-                self.huntTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake( 65, 20, 190, 20)];
-                self.huntTitleLabel.text = [_huntTitle uppercaseString];
-                self.huntTitleLabel.textColor = [UIColor lightGrayColor];
-                self.huntTitleLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0];
+                self.huntTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake( 65, 10, 190, 40)];
+                NSString *string = [NSString stringWithFormat:@"%@",[_huntTitle uppercaseString]];
+                NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc]initWithString:string];
+                NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+                [style setLineSpacing:1];
+                [attrString addAttribute:NSParagraphStyleAttributeName
+                                   value:style
+                                   range:NSMakeRange(0, [string length])];
+                self.huntTitleLabel.attributedText = attrString;
+                self.huntTitleLabel.textColor = [self colorWithHexString:@"6e6e6e"];
+                self.huntTitleLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:20.0];
                 self.huntTitleLabel.adjustsFontSizeToFitWidth = YES;
                 self.huntTitleLabel.textAlignment = NSTextAlignmentCenter;
-                //    self.huntTitleLabel.numberOfLines = 0;
+                self.huntTitleLabel.numberOfLines = 0;
                 [self.huntTitleLabel setBackgroundColor:[UIColor clearColor]];
                 [self.menuBtn addSubview:self.huntTitleLabel];
                 
-                self.huntTitleLabel2 = [[UILabel alloc]initWithFrame:CGRectMake( 65, 20, 190, 20)];
+                UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(65, 30, 190, 25)];
+                dot_label.backgroundColor = [UIColor clearColor];
+                dot_label.text = [NSString stringWithFormat:@"..."];
+                dot_label.textColor = [self colorWithHexString:@"6e6e6e"];
+                dot_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:20.0f];
+                dot_label.textAlignment = NSTextAlignmentCenter;
+                [self.menuBtn addSubview:dot_label];
+                
+                self.huntTitleLabel2 = [[UILabel alloc]initWithFrame:CGRectMake( 65, 10, 190, 40)];
                 self.huntTitleLabel2.text = [_huntTitle uppercaseString];
-                self.huntTitleLabel2.textColor = [UIColor lightGrayColor];
-                self.huntTitleLabel2.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0];
+                self.huntTitleLabel2.textColor = [self colorWithHexString:@"6e6e6e"];
+                self.huntTitleLabel2.font = [UIFont fontWithName:@"OpenSans-Semibold" size:20.0];
                 self.huntTitleLabel2.adjustsFontSizeToFitWidth = YES;
                 self.huntTitleLabel2.textAlignment = NSTextAlignmentCenter;
                 //    self.huntTitleLabel2.numberOfLines = 0;
@@ -229,14 +264,6 @@
                 [self.profileImageView setBackgroundColor:[UIColor whiteColor]];
                 [self.menuBtn addSubview:self.profileImageView];
                 
-                UIImageView *gray_line = [[UIImageView alloc]initWithFrame:CGRectMake(65, 0, 1, 60)];
-                [gray_line setBackgroundColor:[self colorWithHexString:@"f4f4f4"]];
-                [self.menuBtn addSubview:gray_line];
-                
-                UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(260, 0, 60, 60)];
-                [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-                [self.menuBtn addSubview:blue_bg];
-                
                 self.profileImageView2 = [[UIImageView alloc]initWithFrame:CGRectMake(14, 11, 37, 37)];
                 self.profileImageView2.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
                 [self.profileImageView2 setContentMode:UIViewContentModeScaleAspectFill];
@@ -244,13 +271,6 @@
                 [self.profileImageView2 setBackgroundColor:[UIColor whiteColor]];
                 [self.menuBtn2 addSubview:self.profileImageView2];
                 
-                UIImageView *gray_line_2 = [[UIImageView alloc]initWithFrame:CGRectMake(65, 0, 1, 60)];
-                [gray_line_2 setBackgroundColor:[self colorWithHexString:@"f4f4f4"]];
-                [self.menuBtn2 addSubview:gray_line_2];
-                
-                UIImageView *blue_bg_2 = [[UIImageView alloc]initWithFrame: CGRectMake(260, 0, 60, 60)];
-                [blue_bg_2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
-                [self.menuBtn2 addSubview:blue_bg_2];
                 
                 if ([self.emailId isEqualToString:[KCSUser activeUser].email]) {
                     
@@ -277,18 +297,19 @@
                 }
                 
                 
-                CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, 329.f);
-                
-                self.restaurantScrollView = [[UIScrollView alloc] initWithFrame:screenRect];
-                self.restaurantScrollView.contentSize= self.view.bounds.size;
-                self.restaurantScrollView.frame = CGRectMake(0.f, 285.f, 320.f, self.restaurantScrollView.frame.size.height);
-                [self.restaurantScrollView setContentSize:CGSizeMake(320, contentSize)];
-                [self.restaurantScrollView setBackgroundColor:[self colorWithHexString:@"f0f0f0"]];
-                [self.view addSubview:self.restaurantScrollView];
+
                 
                 [self getFeaturedRestaurants];
                 
                 if (self.my_hunt_count) {
+                    
+                    UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                    [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                    [self.menuBtn addSubview:blue_bg];
+                    
+                    UIImageView *blue_bg2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                    [blue_bg2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                    [self.menuBtn2 addSubview:blue_bg2];
                     
                     self.huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake( 260, 15, 60, 30)];
                     self.huntCountLabel.text = [NSString stringWithFormat:@"%@",self.my_hunt_count];
@@ -299,13 +320,16 @@
                                               value:@(spacing5)
                                               range:NSMakeRange(0, [self.huntCountLabel2.text length])];
                     
-                    self.huntCountLabel.attributedText = attributedString5;                self.huntCountLabel.textColor = [UIColor whiteColor];
+                    self.huntCountLabel.attributedText = attributedString5;
+                    self.huntCountLabel.textColor = [UIColor whiteColor];
                     self.huntCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0];
                     self.huntCountLabel.adjustsFontSizeToFitWidth = YES;
                     self.huntCountLabel.textAlignment = NSTextAlignmentCenter;
                     self.huntCountLabel.numberOfLines = 0;
                     [self.huntCountLabel setBackgroundColor:[UIColor clearColor]];
                     [self.menuBtn addSubview:self.huntCountLabel];
+                    
+
                     
                     self.huntCountLabel2 = [[UILabel alloc]initWithFrame:CGRectMake( 260, 15, 60, 30)];
                     self.huntCountLabel2.text = [NSString stringWithFormat:@"%@",self.my_hunt_count];
@@ -350,11 +374,11 @@
                 [_backBtn setFrame:CGRectMake(0, 0, 60, 60)];
                 [_backBtn setTitle:@"" forState:UIControlStateNormal];
                 [_backBtn setBackgroundColor:[UIColor clearColor]];
-                //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+//                [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
                 [_backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
                 [self.view addSubview:_backBtn];
                 
-                //    [self showPopUp];
+//                [self showPopUp];
                 
             }else{
                 
@@ -391,16 +415,16 @@
                 _selectedRestaurant = [NSMutableArray new];
                 
                 self.menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                [self.menuBtn setFrame:CGRectMake(0, 225, 320, 60)];
+                [self.menuBtn setFrame:CGRectMake(0, 225+283, 320, 60)];
                 [self.menuBtn setTitle:nil forState:UIControlStateNormal];
-                [self.menuBtn addTarget:self action:@selector(checkedMenu:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+                [self.menuBtn addTarget:self action:@selector(checkedMenu) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
                 [self.menuBtn setBackgroundColor:[UIColor whiteColor]];
                 [self.view addSubview:self.menuBtn];
                 
                 self.menuBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.menuBtn2 setFrame:CGRectMake(0, 508, 320, 60)];
                 [self.menuBtn2 setTitle:nil forState:UIControlStateNormal];
-                [self.menuBtn2 addTarget:self action:@selector(checkedMenu2:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+                [self.menuBtn2 addTarget:self action:@selector(checkedMenu2) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
                 [self.menuBtn2 setBackgroundColor:[UIColor whiteColor]];
                 [self.view addSubview:self.menuBtn2];
                 
@@ -487,8 +511,10 @@
                 self.restaurantScrollView.contentSize= self.view.bounds.size;
                 self.restaurantScrollView.frame = CGRectMake(0.f, 285.f, 320.f, self.restaurantScrollView.frame.size.height);
                 [self.restaurantScrollView setContentSize:CGSizeMake(320, contentSize)];
-                [self.restaurantScrollView setBackgroundColor:[self colorWithHexString:@"f0f0f0"]];
+                [self.restaurantScrollView setBackgroundColor:[UIColor whiteColor]];
                 [self.view addSubview:self.restaurantScrollView];
+                
+                [self.restaurantScrollView setHidden:YES];
                 
                 [self getFeaturedRestaurants];
                 
@@ -559,6 +585,8 @@
                 [self.view addSubview:_backBtn];
                 
                 
+                
+                
             }
         }
     }else{
@@ -613,257 +641,6 @@
 
 }
 
-- (void)showPopUp
-{
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        if (isiPhone5) {
-            
-            /*Do iPhone 5 stuff here.*/
-            self.modalView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 586)];
-            _modalView2.opaque = NO;
-            _modalView2.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.85f];
-            _modalView2.tag = 101;
-            [self.view addSubview:_modalView2];
-            
-            [self.view bringSubviewToFront:_modalView2];
-            
-            UIImageView *purpleBg = [[UIImageView alloc]initWithFrame:CGRectMake(40, 85, 240, 400)];
-            purpleBg.image = [UIImage imageNamed:@"postcard.jpg"];
-            [self.modalView2 addSubview:purpleBg];
-            
-            UIImageView *x_box = [[UIImageView alloc]initWithFrame:CGRectMake(240, 95, 34, 34)];
-            x_box.image = [UIImage imageNamed:@"x-box.png"];
-            [self.modalView2 addSubview:x_box];
-            
-            UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [closeBtn  setFrame:CGRectMake(240, 95, 34, 34)];
-            [closeBtn setBackgroundColor:[UIColor clearColor]];
-            [closeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [closeBtn.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:17.0]];
-            [closeBtn setTitle:@"X" forState:UIControlStateNormal];
-            [closeBtn addTarget:self action:@selector(closeBtn2) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:closeBtn];
-            
-            UILabel *label6 = [[UILabel alloc]initWithFrame:CGRectMake(71, 342, 185, 16)];
-            label6.text = @"YOU'VE COMPLETED";
-            label6.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label6.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label6];
-            
-            UILabel *label7 = [[UILabel alloc]initWithFrame:CGRectMake(117, 361, 93, 16)];
-            label7.text = @"THE HUNT";
-            label7.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label7.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label7];
-            
-            UIButton *fbBtn = [[UIButton alloc]initWithFrame:CGRectMake(97, 400, 38, 38)];
-            [fbBtn setBackgroundImage:[UIImage imageNamed:@"facebook.png"] forState:UIControlStateNormal];
-            [fbBtn addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:fbBtn];
-            
-            UIButton *twitterBtn = [[UIButton alloc]initWithFrame:CGRectMake(140, 400, 38, 38)];
-            [twitterBtn setBackgroundImage:[UIImage imageNamed:@"twitter.png"] forState:UIControlStateNormal];
-            [twitterBtn addTarget:self action:@selector(twitterBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:twitterBtn];
-            
-            UIButton *instaBtn = [[UIButton alloc]initWithFrame:CGRectMake(183, 400, 38, 38)];
-            [instaBtn setBackgroundImage:[UIImage imageNamed:@"instagram123.png"] forState:UIControlStateNormal];
-            [instaBtn addTarget:self action:@selector(instaBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:instaBtn];
-            
-            UIImageView *arrowView = [[UIImageView alloc]initWithFrame:CGRectMake(95, 448, 30, 20)];
-            arrowView.image = [UIImage imageNamed:@"orange_arrow.png"];
-            [self.modalView2 addSubview:arrowView];
-            
-            UILabel *label8 = [[UILabel alloc]initWithFrame:CGRectMake(134, 446, 160, 22)];
-            label8.text = @"SHARE IT";
-            label8.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label8.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label8];
-            
-        } else {
-            
-            /*Do iPhone Classic stuff here.*/
-            self.modalView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 586)];
-            _modalView2.opaque = NO;
-            _modalView2.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.85f];
-            _modalView2.tag = 101;
-            [self.view addSubview:_modalView2];
-            
-            [self.view bringSubviewToFront:_modalView2];
-            
-            UIImageView *purpleBg = [[UIImageView alloc]initWithFrame:CGRectMake(40, 35, 240, 400)];
-            purpleBg.image = [UIImage imageNamed:@"purplebackground.png"];
-            [self.modalView2 addSubview:purpleBg];
-            
-            UIImageView *x_box = [[UIImageView alloc]initWithFrame:CGRectMake(240, 45, 34, 34)];
-            x_box.image = [UIImage imageNamed:@"x-box.png"];
-            [self.modalView2 addSubview:x_box];
-            
-            UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [closeBtn  setFrame:CGRectMake(240, 45, 34, 34)];
-            [closeBtn setBackgroundColor:[UIColor clearColor]];
-            [closeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [closeBtn.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:17.0]];
-            [closeBtn setTitle:@"X" forState:UIControlStateNormal];
-            [closeBtn addTarget:self action:@selector(closeBtn2) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:closeBtn];
-            
-            UIImageView *chatbubble = [[UIImageView alloc]initWithFrame:CGRectMake(95, 52, 132, 123)];
-            chatbubble.image = [UIImage imageNamed:@"chatbubble.png"];
-            [self.modalView2 addSubview:chatbubble];
-            
-            UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 82, 75, 12)];
-            label1.text = @"GOOD JOB!";
-            label1.font = [UIFont fontWithName:@"OpenSans" size:12.f];
-            label1.textColor = [UIColor purpleColor];
-            [self.modalView2 addSubview:label1];
-            
-            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(105, 58, 125, 26)];
-            label2.text = @"HURRAY";
-            label2.font = [UIFont fontWithName:@"OpenSans" size:26.f];
-            label2.textColor = [UIColor purpleColor];
-            [self.modalView2 addSubview:label2];
-            
-            UILabel *label3 = [[UILabel alloc]initWithFrame:CGRectMake(103, 105, 76, 12)];
-            label3.text = @"WAY TO GO!";
-            label3.font = [UIFont fontWithName:@"OpenSans" size:12.f];
-            label3.textColor = [UIColor purpleColor];
-            [self.modalView2 addSubview:label3];
-            
-            UILabel *label4 = [[UILabel alloc]initWithFrame:CGRectMake(180, 108, 45, 7)];
-            label4.text = @"YOU DID IT";
-            label4.font = [UIFont fontWithName:@"OpenSans" size:7.f];
-            label4.textColor = [UIColor purpleColor];
-            [self.modalView2 addSubview:label4];
-            
-            UILabel *label5 = [[UILabel alloc]initWithFrame:CGRectMake(138, 120, 85, 15)];
-            label5.text = @"AWESOME";
-            label5.font = [UIFont fontWithName:@"OpenSans" size:15.f];
-            label5.textColor = [UIColor purpleColor];
-            [self.modalView2 addSubview:label5];
-            
-            UIImageView *badgeView = [[UIImageView alloc]initWithFrame:CGRectMake(86, 175, 143, 100)];
-            badgeView.image = [UIImage imageNamed:@"badge.png"];
-            badgeView.contentMode = UIViewContentModeScaleAspectFit;
-            [self.modalView2 addSubview:badgeView];
-            
-            NSString *logoUrl = _huntImageUrl;
-            
-//            UIImageView *badgeView2 = [[UIImageView alloc]initWithFrame:CGRectMake(130, 200, 55, 55)];
-//            badgeView2.contentMode = UIViewContentModeScaleAspectFit;
-//            [badgeView2 setImageWithURL:[NSURL URLWithString:logoUrl]
-//                           placeholderImage:nil
-//                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//                                      
-//                                      UIImageView *badgeView3 = [[UIImageView alloc]initWithFrame:CGRectMake(125, 237, 72, 27)];
-//                                      badgeView3.contentMode = UIViewContentModeCenter;
-//                                      badgeView3.image = [UIImage imageNamed:@"yooka.png"];
-//                                      UIColor *color = [UIColor colorWithRed:240/255.0f green:119/255.0f blue:36/255.0f alpha:1.0f];
-//                                      badgeView3.backgroundColor = color;
-//                                      [self.modalView2 addSubview:badgeView3];
-//                                      
-//                                  }];
-//            [self.modalView2 addSubview:badgeView2];
-            
-            SDWebImageManager *manager = [SDWebImageManager sharedManager];
-            [manager downloadWithURL:[NSURL URLWithString:logoUrl]
-                             options:0
-                            progress:^(NSInteger receivedSize, NSInteger expectedSize)
-             {
-                 // progression tracking code
-             }
-                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
-             {
-                 if (image)
-                 {
-                     // do something with image
-                     UIImageView *badgeView2 = [[UIImageView alloc]initWithFrame:CGRectMake(130, 200, 55, 55)];
-                     badgeView2.contentMode = UIViewContentModeScaleAspectFit;
-                     badgeView2.image = image;
-                     [self.modalView2 addSubview:badgeView2];
-                     
-                     UIImageView *badgeView3 = [[UIImageView alloc]initWithFrame:CGRectMake(125, 237, 72, 27)];
-                     badgeView3.contentMode = UIViewContentModeCenter;
-                     badgeView3.image = [UIImage imageNamed:@"yooka.png"];
-                     UIColor *color = [UIColor colorWithRed:240/255.0f green:119/255.0f blue:36/255.0f alpha:1.0f];
-                     badgeView3.backgroundColor = color;
-                     [self.modalView2 addSubview:badgeView3];
-
-                 }
-             }];
-
-//            [[[AsyncImageDownloader alloc] initWithMediaURL:logoUrl successBlock:^(UIImage *image)  {
-//                
-//                UIImageView *badgeView2 = [[UIImageView alloc]initWithFrame:CGRectMake(130, 200, 55, 55)];
-//                badgeView2.contentMode = UIViewContentModeScaleAspectFit;
-//                badgeView2.image = image;
-//                [self.modalView2 addSubview:badgeView2];
-//                
-//                UIImageView *badgeView3 = [[UIImageView alloc]initWithFrame:CGRectMake(125, 237, 72, 27)];
-//                badgeView3.contentMode = UIViewContentModeCenter;
-//                badgeView3.image = [UIImage imageNamed:@"yooka.png"];
-//                UIColor *color = [UIColor colorWithRed:240/255.0f green:119/255.0f blue:36/255.0f alpha:1.0f];
-//                badgeView3.backgroundColor = color;
-//                [self.modalView2 addSubview:badgeView3];
-//
-//            } failBlock:^(NSError *error) {
-//                //        NSLog(@"Failed to download image due to %@!", error);
-//            }] startDownload];
-            
-            UILabel *label6 = [[UILabel alloc]initWithFrame:CGRectMake(71, 292, 185, 16)];
-            label6.text = @"YOU'VE COMPLETED";
-            label6.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label6.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label6];
-            
-            UILabel *label7 = [[UILabel alloc]initWithFrame:CGRectMake(117, 321, 93, 16)];
-            label7.text = @"THE HUNT";
-            label7.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label7.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label7];
-            
-            UIButton *fbBtn = [[UIButton alloc]initWithFrame:CGRectMake(97, 350, 38, 38)];
-            [fbBtn setBackgroundImage:[UIImage imageNamed:@"facebook.png"] forState:UIControlStateNormal];
-            [fbBtn addTarget:self action:@selector(fbBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:fbBtn];
-            
-            UIButton *twitterBtn = [[UIButton alloc]initWithFrame:CGRectMake(140, 350, 38, 38)];
-            [twitterBtn setBackgroundImage:[UIImage imageNamed:@"twitter.png"] forState:UIControlStateNormal];
-            [twitterBtn addTarget:self action:@selector(twitterBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:twitterBtn];
-            
-            UIButton *instaBtn = [[UIButton alloc]initWithFrame:CGRectMake(183, 350, 38, 38)];
-            [instaBtn setBackgroundImage:[UIImage imageNamed:@"instagram123.png"] forState:UIControlStateNormal];
-            [instaBtn addTarget:self action:@selector(instaBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.modalView2 addSubview:instaBtn];
-            
-            //    UIButton *tumblrBtn = [[UIButton alloc]initWithFrame:CGRectMake(186, 360, 38, 38)];
-            //    [tumblrBtn setBackgroundImage:[UIImage imageNamed:@"tumblr.png"] forState:UIControlStateNormal];
-            //    [tumblrBtn addTarget:self action:@selector(tumblrBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            //    [self.modalView addSubview:tumblrBtn];
-            //    
-            //    UIButton *pinterestBtn = [[UIButton alloc]initWithFrame:CGRectMake(229, 360, 38, 38)];
-            //    [pinterestBtn setBackgroundImage:[UIImage imageNamed:@"pinterest.png"] forState:UIControlStateNormal];
-            //    [pinterestBtn addTarget:self action:@selector(pinterestBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            //    [self.modalView addSubview:pinterestBtn];
-            
-            UIImageView *arrowView = [[UIImageView alloc]initWithFrame:CGRectMake(95, 398, 30, 20)];
-            arrowView.image = [UIImage imageNamed:@"orange_arrow.png"];
-            [self.modalView2 addSubview:arrowView];
-            
-            UILabel *label8 = [[UILabel alloc]initWithFrame:CGRectMake(134, 396, 160, 22)];
-            label8.text = @"SHARE IT";
-            label8.font = [UIFont fontWithName:@"OpenSans" size:17.f];
-            label8.textColor = [UIColor whiteColor];
-            [self.modalView2 addSubview:label8];
-        }
-    } else {
-        /*Do iPad stuff here.*/
-    }
-        
-}
 
 - (void)fbBtnTouched:(id)sender
 {
@@ -1187,7 +964,7 @@
     return YES;
 }
 
-- (void)checkedMenu:(id)sender {
+- (void)checkedMenu {
     NSLog(@"button pressed");
     [self zoomOut2];
     
@@ -1195,25 +972,27 @@
     
     [UIView animateWithDuration:0.5 animations:^{
         CGAffineTransform matOne;
+        CGAffineTransform matTwo;
         if (isiPhone5) {
-            matOne = CGAffineTransformMakeTranslation(0, 283);
+            matOne = CGAffineTransformMakeTranslation(0, 0);
+            matTwo = CGAffineTransformMakeTranslation(0, 283);
         }else{
             matOne = CGAffineTransformMakeTranslation(0, 283-88);
         }
         [self.menuBtn setTransform:matOne];
         [self.restaurantScrollView setTransform:matOne];
-        [self.infoScrollView setTransform:matOne];
-        [self.modalView setTransform:matOne];
+        [self.infoScrollView setTransform:matTwo];
+        [self.modalView setTransform:matTwo];
 
      }  completion:^(BOOL finished)
      {
-         [self.menuBtn addTarget:self action:@selector(checkedMenu2:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+         [self.menuBtn addTarget:self action:@selector(checkedMenu2) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
 
      }];
     
 }
 
-- (void)checkedMenu2:(id)sender {
+- (void)checkedMenu2{
     NSLog(@"button 2 pressed");
     [self zoomOut];
     
@@ -1225,15 +1004,17 @@
     [self.infoScrollView setHidden:NO];
     [self.modalView setHidden:NO];
     [UIView animateWithDuration:0.5 animations:^{
-        CGAffineTransform matOne = CGAffineTransformMakeTranslation(0, 0);
+        CGAffineTransform matTwo;
+        CGAffineTransform matOne = CGAffineTransformMakeTranslation(0, -283);
+        matTwo = CGAffineTransformMakeTranslation(0, 0);
         [self.menuBtn setTransform:matOne];
         [self.restaurantScrollView setTransform:matOne];
-        [self.infoScrollView setTransform:matOne];
-        [self.modalView setTransform:matOne];
+        [self.infoScrollView setTransform:matTwo];
+        [self.modalView setTransform:matTwo];
     }  completion:^(BOOL finished)
      {
 
-         [self.menuBtn addTarget:self action:@selector(checkedMenu:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+         [self.menuBtn addTarget:self action:@selector(checkedMenu) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
          
      }];
 }
@@ -1338,7 +1119,7 @@
                 //            if (resizeRect.size.height > maxSize.height)
                 //                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
                 
-                resizeRect = CGRectMake(0.f, 0.f, 35.f, 35.f);
+                resizeRect = CGRectMake(0.f, 0.f, 22.f, 35.f);
                 
                 resizeRect.origin = CGPointMake(0.0, 0.0);
                 UIGraphicsBeginImageContext(resizeRect.size);
@@ -1352,9 +1133,9 @@
                 //            UIImageView *sfIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SFIcon.png"]];
                 //            annotationView.leftCalloutAccessoryView = sfIconView;
                 
-                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -2, 35, 25)];
+                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(-6.5, -3, 35, 25)];
                 tagLabel.textColor = [UIColor whiteColor];
-                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:11.0];
+                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:10.0];
                 tagLabel.textAlignment = NSTextAlignmentCenter;
                 tagLabel.tag = 42;
                 [flagAnnotationView addSubview:tagLabel];
@@ -1375,7 +1156,7 @@
                 //            if (resizeRect.size.height > maxSize.height)
                 //                resizeRect.size = CGSizeMake(resizeRect.size.width / resizeRect.size.height * maxSize.height, maxSize.height);
                 
-                resizeRect = CGRectMake(0.f, 0.f, 35.f, 38.f);
+                resizeRect = CGRectMake(0.f, 0.f, 22.f, 35.f);
                 
                 resizeRect.origin = CGPointMake(0.0, 0.0);
                 UIGraphicsBeginImageContext(resizeRect.size);
@@ -1389,9 +1170,9 @@
                 //            UIImageView *sfIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SFIcon.png"]];
                 //            annotationView.leftCalloutAccessoryView = sfIconView;
                 
-                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -2, 35, 25)];
+                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(-6.5, -3, 35, 25)];
                 tagLabel.textColor = [UIColor whiteColor];
-                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:11.0];
+                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:10.0];
                 tagLabel.textAlignment = NSTextAlignmentCenter;
                 tagLabel.tag = 42;
                 [flagAnnotationView addSubview:tagLabel];
@@ -1403,7 +1184,7 @@
                 // size the flag down to the appropriate size
                 CGRect resizeRect;
                 
-                resizeRect = CGRectMake(0.f, 0.f, 35.f, 38.f);
+                resizeRect = CGRectMake(0.f, 0.f, 22.f, 35.f);
                 
                 resizeRect.origin = CGPointMake(0.0, 0.0);
                 UIGraphicsBeginImageContext(resizeRect.size);
@@ -1417,9 +1198,9 @@
                 //            UIImageView *sfIconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"SFIcon.png"]];
                 //            annotationView.leftCalloutAccessoryView = sfIconView;
                 
-                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 1, 35, 25)];
+                UILabel *tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(-6.5, -3, 35, 25)];
                 tagLabel.textColor = [UIColor whiteColor];
-                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:11.0];
+                tagLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:10.0];
                 tagLabel.textAlignment = NSTextAlignmentCenter;
                 tagLabel.tag = 42;
                 [flagAnnotationView addSubview:tagLabel];
@@ -1427,7 +1208,7 @@
             }
             
             // offset the flag annotation so that the flag pole rests on the map coordinate
-            flagAnnotationView.centerOffset = CGPointMake( flagAnnotationView.centerOffset.x + flagAnnotationView.image.size.width/2, flagAnnotationView.centerOffset.y - flagAnnotationView.image.size.height/2 );
+            flagAnnotationView.centerOffset = CGPointMake( (flagAnnotationView.centerOffset.x + flagAnnotationView.image.size.width/2)+25.f, (flagAnnotationView.centerOffset.y - flagAnnotationView.image.size.height/2)-15.f );
             
         }
         else
@@ -1719,7 +1500,7 @@
             
         } else {
             //got all events back from server -- update table view
-            NSLog(@"featured restaurant = %@",objectsOrNil);
+//            NSLog(@"featured restaurant = %@",objectsOrNil);
             _featuredRestaurants = [NSArray arrayWithArray:objectsOrNil];
             if ([_huntDone isEqualToString:@"YES"]) {
                 
@@ -1757,7 +1538,7 @@
         
         y = (count * 70);
         
-        new_dish_frame = CGRectMake(0, y, 320, 70);
+        new_dish_frame = CGRectMake(0, y+3, 320, 70);
         
         self.DishView = [[UIView alloc]initWithFrame:new_dish_frame];
         [self.DishView setBackgroundColor:[UIColor clearColor]];
@@ -1770,16 +1551,18 @@
                  
                  UIImageView *bg_image = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 70)];
                  [bg_image setImage:image];
-                 [bg_image setContentMode:UIViewContentModeCenter];
+                 [bg_image setContentMode:UIViewContentModeScaleAspectFill];
                  [bg_image setClipsToBounds:YES];
                  [self.DishView addSubview:bg_image];
                                   
-                 UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
+                 UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 72)];
                  modal_view.opaque = NO;
-                 //                                              modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                 [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                 [modal_view setImage:[UIImage imageNamed:@"mapshadow123.png"]];
                  [self.DishView addSubview:modal_view];
                  
+                 UIImageView *white_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 69.25, 320, .75)];
+                 [white_line setBackgroundColor:[UIColor whiteColor]];
+                 [self.DishView addSubview:white_line];
                  
                  NSString *dish = yooka.tag;
                  if (dish) {
@@ -1805,13 +1588,24 @@
                  dot_label.textAlignment = NSTextAlignmentCenter;
                  [self.DishView addSubview:dot_label];
                  
-                 self.dishNumber = [[UILabel alloc]initWithFrame:CGRectMake(30, 15, 15, 30)];
-                 [self.dishNumber setBackgroundColor:[UIColor clearColor]];
-                 self.dishNumber.textColor = [UIColor whiteColor];
-                 [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
-                 self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
-                 self.dishNumber.textAlignment = NSTextAlignmentLeft;
-                 [self.DishView addSubview:self.dishNumber];
+                 if ([_finishedHuntVenues containsObject:yooka.Restaurant]) {
+                     
+                     UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                     [check_mark setBackgroundColor:[UIColor clearColor]];
+                     [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                     [self.DishView addSubview:check_mark];
+                     
+                 }else{
+                     
+                     self.dishNumber = [[UILabel alloc]initWithFrame:CGRectMake(30, 15, 15, 30)];
+                     [self.dishNumber setBackgroundColor:[UIColor clearColor]];
+                     self.dishNumber.textColor = [UIColor whiteColor];
+                     [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
+                     self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
+                     self.dishNumber.textAlignment = NSTextAlignmentLeft;
+                     [self.DishView addSubview:self.dishNumber];
+                     
+                 }
                  
                  self.dishButton = [UIButton buttonWithType:UIButtonTypeCustom];
                  [self.dishButton  setFrame:CGRectMake( 0, 0, 320, 70)];
@@ -1822,7 +1616,7 @@
                  
                  UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                  [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                 [self.DishView addSubview:white_border_line];
+//                 [self.DishView addSubview:white_border_line];
                  
                  [self.restaurantScrollView addSubview:self.DishView];
                  
@@ -1854,18 +1648,20 @@
                           
                           UIImageView *bg_image = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 70)];
                           [bg_image setImage:image];
-                          [bg_image setContentMode:UIViewContentModeCenter];
+                          [bg_image setContentMode:UIViewContentModeScaleAspectFill];
                           [bg_image setClipsToBounds:YES];
                           [self.DishView addSubview:bg_image];
                           
                           [[SDImageCache sharedImageCache] storeImage:image forKey:yooka.popuppic];
                           
-                          UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
+                          UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 72)];
                           modal_view.opaque = NO;
-                          //                                              modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                          [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                          [modal_view setImage:[UIImage imageNamed:@"mapshadow123.png"]];
                           [self.DishView addSubview:modal_view];
                           
+                          UIImageView *white_line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 69.25, 320, .75)];
+                          [white_line setBackgroundColor:[UIColor whiteColor]];
+                          [self.DishView addSubview:white_line];
                           
                           NSString *dish = yooka.tag;
                           if (dish) {
@@ -1880,8 +1676,26 @@
                           venue_label.textColor = [UIColor whiteColor];
                           venue_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0f];
                           venue_label.textAlignment = NSTextAlignmentCenter;
-                          
                           [self.DishView addSubview:venue_label];
+                          
+                          if ([_finishedHuntVenues containsObject:yooka.Restaurant]) {
+                              
+                              UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                              [check_mark setBackgroundColor:[UIColor clearColor]];
+                              [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                              [self.DishView addSubview:check_mark];
+                              
+                          }else{
+                              
+                              self.dishNumber = [[UILabel alloc]initWithFrame:CGRectMake(30, 15, 15, 30)];
+                              [self.dishNumber setBackgroundColor:[UIColor clearColor]];
+                              self.dishNumber.textColor = [UIColor whiteColor];
+                              [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
+                              self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
+                              self.dishNumber.textAlignment = NSTextAlignmentLeft;
+                              [self.DishView addSubview:self.dishNumber];
+                              
+                          }
                           
                           UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 35, 270, 25)];
                           dot_label.backgroundColor = [UIColor clearColor];
@@ -1908,7 +1722,7 @@
                           
                           UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                           [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                          [self.DishView addSubview:white_border_line];
+//                          [self.DishView addSubview:white_border_line];
                           
                           [self.restaurantScrollView addSubview:self.DishView];
                           
@@ -1981,7 +1795,7 @@
                     
 //                    [self.dishUrlDict setObject:dishUrl forKey:self.finishedHuntVenues[k]];
                     
-                             [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:dishUrl]
+                             [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:yooka.popuppic]
                          options:0
                          progress:^(NSInteger receivedSize, NSInteger expectedSize)
                              {
@@ -2003,20 +1817,28 @@
                                      
                                      UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
                                      modal_view.opaque = NO;
-//                                     modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                                     [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                                     [modal_view setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.25f]];
                                      [dish_view addSubview:modal_view];
+                                     
+                                     UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                                     [check_mark setBackgroundColor:[UIColor clearColor]];
+                                     [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                                     [dish_view addSubview:check_mark];
+                                     
+                                     NSString *dish = yooka.tag;
+                                     if (dish) {
+                                         self.restaurantName = yooka.Dishes[0];
+                                     }else{
+                                         self.restaurantName = yooka.Restaurant;
+                                     }
                                      
                                      UILabel *venue_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 15, 270, 30)];
                                      venue_label.backgroundColor = [UIColor clearColor];
-                                     venue_label.text = [NSString stringWithFormat:@" %@",[restaurant_name uppercaseString]];
+                                     venue_label.text = [NSString stringWithFormat:@" %@",[self.restaurantName uppercaseString]];
                                      venue_label.textColor = [UIColor whiteColor];
                                      venue_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0f];
                                      venue_label.textAlignment = NSTextAlignmentCenter;
-//                                     venue_label.layer.shadowColor = [[UIColor blackColor] CGColor];
-//                                     venue_label.layer.shadowRadius = 1;
-//                                     venue_label.layer.shadowOpacity = 1;
-//                                     venue_label.layer.shadowOffset = CGSizeMake(2.0, 3.0);
+                                     
                                      [dish_view addSubview:venue_label];
                                      
                                      UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 35, 270, 25)];
@@ -2027,21 +1849,24 @@
                                      dot_label.textAlignment = NSTextAlignmentCenter;
                                      [dish_view addSubview:dot_label];
                                      
-                                     UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
-                                     [check_mark setBackgroundColor:[UIColor clearColor]];
-                                     [check_mark setImage:[UIImage imageNamed:@"check.png"]];
-                                     [dish_view addSubview:check_mark];
+                                     self.dishNumber = [[UILabel alloc]initWithFrame:CGRectMake(30, 15, 15, 30)];
+                                     [self.dishNumber setBackgroundColor:[UIColor clearColor]];
+                                     self.dishNumber.textColor = [UIColor whiteColor];
+                                     [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
+                                     self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
+                                     self.dishNumber.textAlignment = NSTextAlignmentLeft;
+                                     [dish_view addSubview:self.dishNumber];
                                      
-                                     UIButton *dish_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                                     [dish_button  setFrame:CGRectMake( 0, 0, 320, 70)];
-                                     [dish_button setBackgroundColor:[UIColor clearColor]];
-                                     dish_button.tag = k;
-                                     [dish_button addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
-                                     [dish_view addSubview:dish_button];
+                                     self.dishButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                                     [self.dishButton  setFrame:CGRectMake( 0, 0, 320, 70)];
+                                     [self.dishButton setBackgroundColor:[UIColor clearColor]];
+                                     self.dishButton.tag = p;
+                                     [self.dishButton addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
+                                     [dish_view addSubview:self.dishButton];
                                      
-                                     UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 1)];
+                                     UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                                      [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                                     [dish_view addSubview:white_border_line];
+                                     //                          [self.DishView addSubview:white_border_line];
                                      
                                      [self.restaurantScrollView addSubview:dish_view];
                                      
@@ -2081,10 +1906,13 @@
                                               
                                               UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
                                               modal_view.opaque = NO;
-//                                              modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                                              [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                                              [modal_view setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.25f]];
                                               [dish_view addSubview:modal_view];
                                               
+                                              UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                                              [check_mark setBackgroundColor:[UIColor clearColor]];
+                                              [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                                              [dish_view addSubview:check_mark];
                                               
                                               NSString *dish = yooka.tag;
                                               if (dish) {
@@ -2099,10 +1927,7 @@
                                               venue_label.textColor = [UIColor whiteColor];
                                               venue_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0f];
                                               venue_label.textAlignment = NSTextAlignmentCenter;
-//                                              venue_label.layer.shadowColor = [[UIColor blackColor] CGColor];
-//                                              venue_label.layer.shadowRadius = 1;
-//                                              venue_label.layer.shadowOpacity = 1;
-//                                              venue_label.layer.shadowOffset = CGSizeMake(2.0, 3.0);
+                                              
                                               [dish_view addSubview:venue_label];
                                               
                                               UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 35, 270, 25)];
@@ -2117,20 +1942,20 @@
                                               [self.dishNumber setBackgroundColor:[UIColor clearColor]];
                                               self.dishNumber.textColor = [UIColor whiteColor];
                                               [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
-                                              self.dishNumber.text = [NSString stringWithFormat:@"%d",k+1];
+                                              self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
                                               self.dishNumber.textAlignment = NSTextAlignmentLeft;
                                               [dish_view addSubview:self.dishNumber];
                                               
                                               self.dishButton = [UIButton buttonWithType:UIButtonTypeCustom];
                                               [self.dishButton  setFrame:CGRectMake( 0, 0, 320, 70)];
                                               [self.dishButton setBackgroundColor:[UIColor clearColor]];
-                                              self.dishButton.tag = k;
+                                              self.dishButton.tag = p;
                                               [self.dishButton addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
                                               [dish_view addSubview:self.dishButton];
                                               
                                               UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                                               [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                                              [dish_view addSubview:white_border_line];
+                                              //                          [self.DishView addSubview:white_border_line];
                                               
                                               [self.restaurantScrollView addSubview:dish_view];
                                               
@@ -2180,10 +2005,13 @@
                              
                              UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
                              modal_view.opaque = NO;
-//                             modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                             [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                             [modal_view setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.25f]];
                              [dish_view addSubview:modal_view];
                              
+                             UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                             [check_mark setBackgroundColor:[UIColor clearColor]];
+                             [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                             [dish_view addSubview:check_mark];
                              
                              NSString *dish = yooka.tag;
                              if (dish) {
@@ -2198,10 +2026,7 @@
                              venue_label.textColor = [UIColor whiteColor];
                              venue_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0f];
                              venue_label.textAlignment = NSTextAlignmentCenter;
-//                             venue_label.layer.shadowColor = [[UIColor blackColor] CGColor];
-//                             venue_label.layer.shadowRadius = 1;
-//                             venue_label.layer.shadowOpacity = 1;
-//                             venue_label.layer.shadowOffset = CGSizeMake(2.0, 3.0);
+                             
                              [dish_view addSubview:venue_label];
                              
                              UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 35, 270, 25)];
@@ -2216,22 +2041,23 @@
                              [self.dishNumber setBackgroundColor:[UIColor clearColor]];
                              self.dishNumber.textColor = [UIColor whiteColor];
                              [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
-                             self.dishNumber.text = [NSString stringWithFormat:@"%d",k+1];
+                             self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
                              self.dishNumber.textAlignment = NSTextAlignmentLeft;
                              [dish_view addSubview:self.dishNumber];
                              
                              self.dishButton = [UIButton buttonWithType:UIButtonTypeCustom];
                              [self.dishButton  setFrame:CGRectMake( 0, 0, 320, 70)];
                              [self.dishButton setBackgroundColor:[UIColor clearColor]];
-                             self.dishButton.tag = k;
+                             self.dishButton.tag = p;
                              [self.dishButton addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
                              [dish_view addSubview:self.dishButton];
                              
-                             UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 1)];
+                             UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                              [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                             [dish_view addSubview:white_border_line];
+                             //                          [self.DishView addSubview:white_border_line];
                              
                              [self.restaurantScrollView addSubview:dish_view];
+
                              
                              CGSize screenSize = [[UIScreen mainScreen] bounds].size;
                              
@@ -2278,10 +2104,13 @@
                          
                          UIImageView *modal_view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 70)];
                          modal_view.opaque = NO;
-//                         modal_view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.45f];
-                         [modal_view setImage:[UIImage imageNamed:@"shadow_maplist.png"]];
+                         [modal_view setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.25f]];
                          [dish_view addSubview:modal_view];
                          
+                         UIImageView *check_mark = [[UIImageView alloc]initWithFrame:CGRectMake(25, 15, 30, 30)];
+                         [check_mark setBackgroundColor:[UIColor clearColor]];
+                         [check_mark setImage:[UIImage imageNamed:@"check.png"]];
+                         [dish_view addSubview:check_mark];
                          
                          NSString *dish = yooka.tag;
                          if (dish) {
@@ -2296,10 +2125,7 @@
                          venue_label.textColor = [UIColor whiteColor];
                          venue_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:17.0f];
                          venue_label.textAlignment = NSTextAlignmentCenter;
-//                         venue_label.layer.shadowColor = [[UIColor blackColor] CGColor];
-//                         venue_label.layer.shadowRadius = 1;
-//                         venue_label.layer.shadowOpacity = 1;
-//                         venue_label.layer.shadowOffset = CGSizeMake(2.0, 3.0);
+                         
                          [dish_view addSubview:venue_label];
                          
                          UILabel *dot_label = [[UILabel alloc]initWithFrame:CGRectMake(45, 35, 270, 25)];
@@ -2314,20 +2140,20 @@
                          [self.dishNumber setBackgroundColor:[UIColor clearColor]];
                          self.dishNumber.textColor = [UIColor whiteColor];
                          [self.dishNumber setFont:[UIFont fontWithName:@"OpenSans-Bold" size:25]];
-                         self.dishNumber.text = [NSString stringWithFormat:@"%d",k+1];
+                         self.dishNumber.text = [NSString stringWithFormat:@"%d",p+1];
                          self.dishNumber.textAlignment = NSTextAlignmentLeft;
                          [dish_view addSubview:self.dishNumber];
                          
                          self.dishButton = [UIButton buttonWithType:UIButtonTypeCustom];
                          [self.dishButton  setFrame:CGRectMake( 0, 0, 320, 70)];
                          [self.dishButton setBackgroundColor:[UIColor clearColor]];
-                         self.dishButton.tag = k;
+                         self.dishButton.tag = p;
                          [self.dishButton addTarget:self action:@selector(buttonAction1:) forControlEvents:UIControlEventTouchUpInside];
                          [dish_view addSubview:self.dishButton];
                          
-                         UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 1)];
+                         UIView *white_border_line = [[UIView alloc]initWithFrame:CGRectMake(0, 69, 320, 2)];
                          [white_border_line setBackgroundColor:[UIColor whiteColor]];
-                         [dish_view addSubview:white_border_line];
+                         //                          [self.DishView addSubview:white_border_line];
                          
                          [self.restaurantScrollView addSubview:dish_view];
                          
@@ -2515,7 +2341,278 @@
     [self.mapView addAnnotations:self.mapAnnotations];
     [self zoomToFitMapAnnotations:self.mapView];
     
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = [[ud objectForKey:@"maplist_screen"]intValue];
+    
+    
+        [UIView animateWithDuration:0.5 animations:^{
+            CGAffineTransform matOne = CGAffineTransformMakeTranslation(0, -283);
+            [self.menuBtn setTransform:matOne];
+            [self.restaurantScrollView setTransform:matOne];
+            [self.infoScrollView setTransform:matOne];
+            [self.modalView setTransform:matOne];
+        }  completion:^(BOOL finished)
+         {
+             
+             [self.menuBtn addTarget:self action:@selector(checkedMenu) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragInside];
+             
+             if(launches == 0){
+             
+             [self.menuBtn setUserInteractionEnabled:NO];
+             [self.uploadButton setEnabled:NO];
+             [self.restaurantScrollView setUserInteractionEnabled:NO];
+             
+             self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+             [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+             [self.view addSubview:self.instruction_screen_1];
+             
+             UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(130, 235, 60, 60)];
+             [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+             [self.instruction_screen_1 addSubview:pointing_finger];
+             
+             CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+             hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+             hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+             hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+             hover.autoreverses = YES; // Animate back to normal afterwards
+             hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+             hover.repeatCount = INFINITY; // The number of times the animation should repeat
+             [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+             
+             UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 190, 300, 30)];
+             instruction1.textColor = [UIColor whiteColor];
+             instruction1.text = @"Click here to learn more about this location";
+             instruction1.textAlignment = NSTextAlignmentCenter;
+             instruction1.adjustsFontSizeToFitWidth = YES;
+             [self.instruction_screen_1 addSubview:instruction1];
+             
+             self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+             [self.next_button setFrame:CGRectMake(0, 285, 320, 70)];
+             [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+             [self.next_button setBackgroundColor:[UIColor clearColor]];
+             [self.view addSubview:self.next_button];
+             
+             CGRect r = self.instruction_screen_1.bounds;
+             CGRect r2 = CGRectMake(0,290,320,70); // adjust this as desired!
+             UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+             CGContextRef c = UIGraphicsGetCurrentContext();
+             CGContextAddRect(c, r2);
+             CGContextAddRect(c, r);
+             CGContextEOClip(c);
+             CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+             CGContextFillRect(c, r);
+             UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+             UIGraphicsEndImageContext();
+             CALayer* mask = [CALayer layer];
+             mask.frame = r;
+             mask.contents = (id)maskim.CGImage;
+             self.instruction_screen_1.layer.mask = mask;
+                 
+             }
+
+             
+         }];
+
+    
 }
+
+- (void)next_action:(id)sender{
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self buttonAction1:0];
+    
+    self.instruction_screen_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 355)];
+    [self.instruction_screen_2 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_2];
+    
+    self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cover_button setFrame:CGRectMake(0, 285, 320, 70)];
+    [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cover_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.cover_button];
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(260, 500, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"scroll-vertical.png"]];
+    [self.instruction_screen_2 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -30.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 310, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Scroll down for more info";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_2 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 250, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_2 addSubview:next_label];
+    
+    self.next_button_2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button_2 setFrame:CGRectMake(250, 250, 100, 30)];
+    [self.next_button_2 addTarget:self action:@selector(next_action_2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button_2 setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button_2];
+    
+}
+
+- (void)cover_action:(id)sender{
+    
+}
+
+- (void)next_action_2:(id)sender{
+    
+    [self.instruction_screen_2 removeFromSuperview];
+    [self.next_button_2 removeFromSuperview];
+    
+    self.instruction_screen_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_3 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_3];
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(130, 430, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+    [self.instruction_screen_3 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 380, 300, 60)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Capture your moment here\n by taking a pic!";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    instruction1.numberOfLines = 0;
+    [self.instruction_screen_3 addSubview:instruction1];
+    
+    UIImageView *camera_image = [[UIImageView alloc]initWithFrame:CGRectMake(133, 502, 50, 50)];
+    [camera_image setImage:[UIImage imageNamed:@"camera_blue.png"]];
+    [self.instruction_screen_3 addSubview:camera_image];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 250, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_3 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 250, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_3:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_3:(id)sender
+{
+    [self.instruction_screen_3 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_4 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_4 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_4];
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(265, 285, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+    [self.instruction_screen_4 addSubview:pointing_finger];
+    
+    self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cover_button setFrame:CGRectMake(0, 285, 320, 70)];
+    [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cover_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.cover_button];
+    
+    UIButton *cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [cover_button setFrame:CGRectMake(0, 355, 320, 45)];
+    [cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [cover_button setBackgroundColor:[UIColor whiteColor]];
+    [self.instruction_screen_4 addSubview:cover_button];
+    
+    UILabel *title_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 365, 310, 22)];
+    title_label.adjustsFontSizeToFitWidth = YES;
+    title_label.text = @"Information";
+    title_label.textColor = [self colorWithHexString:@"7c7a7a"];
+    title_label.textAlignment = NSTextAlignmentLeft;
+    title_label.font = [UIFont fontWithName:@"OpenSans" size:22.0];
+    title_label.autoresizesSubviews = YES;
+    title_label.clipsToBounds = YES;
+    [self.instruction_screen_4 addSubview:title_label];
+
+    UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(290, 365, 14, 20)];
+    [arrow setBackgroundColor:[UIColor clearColor]];
+    arrow.image=[UIImage imageNamed:@"next_information.png"];
+    [self.instruction_screen_4 addSubview: arrow];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 250, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Click here to learn more";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_4 addSubview:instruction1];
+    
+//    CGRect r = self.instruction_screen_4.bounds;
+//    CGRect r2 = CGRectMake(0,355,320,45); // adjust this as desired!
+//    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+//    CGContextRef c = UIGraphicsGetCurrentContext();
+//    CGContextAddRect(c, r2);
+//    CGContextAddRect(c, r);
+//    CGContextEOClip(c);
+//    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+//    CGContextFillRect(c, r);
+//    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    CALayer* mask = [CALayer layer];
+//    mask.frame = r;
+//    mask.contents = (id)maskim.CGImage;
+//    self.instruction_screen_4.layer.mask = mask;
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 500, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_4 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_4:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_4:(id)sender{
+    [self.instruction_screen_4 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    [self.menuBtn setUserInteractionEnabled:YES];
+    [self.uploadButton setEnabled:YES];
+    [self.restaurantScrollView setUserInteractionEnabled:YES];
+    [self.restaurantTitleButton setUserInteractionEnabled:YES];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = 1;
+    [ud setObject:[NSNumber numberWithInt:launches] forKey:@"maplist_screen"];
+    
+}
+
 
 - (void)addAnnotation2
 {
@@ -2585,8 +2682,8 @@
     
     self.infoScrollView = [[UIScrollView alloc] initWithFrame:screenRect];
     self.infoScrollView.contentSize= self.view.bounds.size;
-    self.infoScrollView.frame = CGRectMake(0.f, 70.f, 320.f, 320.f);
-    [self.infoScrollView setContentSize:CGSizeMake(320, 440)];
+    self.infoScrollView.frame = CGRectMake(0.f, 70, 320.f, 320.f);
+    [self.infoScrollView setContentSize:CGSizeMake(320, 500)];
     [self.infoScrollView setBackgroundColor:[UIColor whiteColor]];
     [self.modalView addSubview:self.infoScrollView];
     
@@ -2730,28 +2827,19 @@
                 
                 [Flurry logEvent:@"List_Venue_Clicked" withParameters:articleParams];
                 
-                UILabel *title_label = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, 320, 22)];
+                UILabel *title_label = [[UILabel alloc]initWithFrame:CGRectMake(10, 15, 310, 22)];
                 title_label.adjustsFontSizeToFitWidth = YES;
-                title_label.text = @"INFORMATION";
-                title_label.textColor = [UIColor lightGrayColor];
-                title_label.textAlignment = NSTextAlignmentCenter;
-                title_label.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.0];
+                title_label.text = @"Information";
+                title_label.textColor = [self colorWithHexString:@"7c7a7a"];
+                title_label.textAlignment = NSTextAlignmentLeft;
+                title_label.font = [UIFont fontWithName:@"OpenSans" size:22.0];
                 title_label.autoresizesSubviews = YES;
                 title_label.clipsToBounds = YES;
                 [self.infoScrollView addSubview:title_label];
                 
-                UIImageView *info_icon = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 43)];
-                [info_icon setBackgroundColor:[UIColor clearColor]];
-                info_icon.image=[UIImage imageNamed:@"info_icon.png"];
-                [self.infoScrollView addSubview: info_icon];
-                
-                UIImageView *gray_line3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 42, 320, 1)];
-                [gray_line3 setBackgroundColor:[self colorWithHexString:@"f4f4f4"]];
+                UIImageView *gray_line3 = [[UIImageView alloc]initWithFrame:CGRectMake(10, 47, 310, .5)];
+                [gray_line3 setBackgroundColor:[self colorWithHexString:@"7c7a7a"]];
                 [self.infoScrollView addSubview:gray_line3];
-                
-                UIImageView *gray_line4 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 1)];
-                [gray_line4 setBackgroundColor:[self colorWithHexString:@"f4f4f4"]];
-                [self.infoScrollView addSubview:gray_line4];
                 
                 self.restaurantTitleButton = [[UIButton alloc]initWithFrame:CGRectMake(270, 0, 50, 40)];
                 //                [self.restaurantTitleButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
@@ -2761,67 +2849,65 @@
                 //[self.restaurantTitleButton setBackgroundImage:[UIImage imageNamed:@"next_information.png"] forState:UIControlStateNormal];
                 [self.infoScrollView addSubview:self.restaurantTitleButton];
                 
-                UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(20, 5, 20, 33)];
+                UIImageView *arrow = [[UIImageView alloc]initWithFrame:CGRectMake(20, 12, 14, 20)];
                 [arrow setBackgroundColor:[UIColor clearColor]];
                 arrow.image=[UIImage imageNamed:@"next_information.png"];
                 [self.restaurantTitleButton addSubview: arrow];
                 
                 self.restaurantDescriptionLabel = [[UILabel alloc]init];
-                self.restaurantDescriptionLabel.textColor = [UIColor lightGrayColor];
-                self.restaurantDescriptionLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:11.0];
+                self.restaurantDescriptionLabel.textColor = [self colorWithHexString:@"7c7a7a"];
+                self.restaurantDescriptionLabel.font = [UIFont fontWithName:@"OpenSans" size:14.0];
                 self.restaurantDescriptionLabel.textAlignment = NSTextAlignmentLeft;
                 self.restaurantDescriptionLabel.numberOfLines = 0;
                 [self.restaurantDescriptionLabel setBackgroundColor:[UIColor clearColor]];
                 
-                CGSize labelSize = CGSizeMake(300, 150);
+                CGSize labelSize = CGSizeMake(300, 500);
                 CGSize theStringSize = [yooka.RestaurantDescription sizeWithFont:self.restaurantDescriptionLabel.font constrainedToSize:labelSize lineBreakMode:_restaurantDescriptionLabel.lineBreakMode];
                 //    NSLog(@"string size = %f %f",theStringSize.width,theStringSize.height);
                 
-                if (theStringSize.height>80.0) {
-                    
-                    self.gridScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(10, 60, 300, 100)];
-                    self.gridScrollView.contentSize= self.view.bounds.size;
-                    [self.infoScrollView addSubview:_gridScrollView];
-                    [self.gridScrollView setContentSize:CGSizeMake(300, theStringSize.height+70)];
-                    self.gridScrollView.showsHorizontalScrollIndicator = NO;
-                    self.restaurantDescriptionLabel.frame = CGRectMake(self.restaurantDescriptionLabel.frame.origin.x, _restaurantDescriptionLabel.frame.origin.y, theStringSize.width, theStringSize.height);
-                    [self.restaurantDescriptionLabel setText:yooka.RestaurantDescription];
-                    [self.restaurantDescriptionLabel sizeToFit];
-                    self.restaurantDescriptionLabel.textAlignment = NSTextAlignmentLeft;
-                    [self.gridScrollView addSubview:self.restaurantDescriptionLabel];
-                    
-                }else{
-                    
-                    self.restaurantDescriptionLabel.frame = CGRectMake(10, 60, 300, 100);
-                    [self.restaurantDescriptionLabel setText:yooka.RestaurantDescription];
+                self.restaurantDescriptionLabel.frame = CGRectMake(10, 55, theStringSize.width, theStringSize.height);
+//                [self.restaurantDescriptionLabel setText:yooka.RestaurantDescription];
+                NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc]initWithString:yooka.RestaurantDescription];
+                NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+                [style setLineSpacing:2];
+                [attrString addAttribute:NSParagraphStyleAttributeName
+                                   value:style
+                                   range:NSMakeRange(0, [yooka.RestaurantDescription length])];
+                self.restaurantDescriptionLabel.attributedText = attrString;
                     [self.restaurantDescriptionLabel sizeToFit];
                     self.restaurantDescriptionLabel.textAlignment = NSTextAlignmentLeft;
                     [self.infoScrollView addSubview:self.restaurantDescriptionLabel];
                     
-                }
+                    UIImageView *gray_line4 = [[UIImageView alloc]initWithFrame:CGRectMake(10, theStringSize.height+90, 310, .5)];
+                    [gray_line4 setBackgroundColor:[self colorWithHexString:@"7c7a7a"]];
+                    [self.infoScrollView addSubview:gray_line4];
+                    
+                    self.youMight = [[UILabel alloc]initWithFrame:CGRectMake(10, theStringSize.height+100, 210, 22)];
+                    self.youMight.text = @"We Recommend";
+                    self.youMight.textColor = [self colorWithHexString:@"7c7a7a"];
+                    self.youMight.textAlignment = NSTextAlignmentLeft;
+                    self.youMight.font = [UIFont fontWithName:@"OpenSans" size:22.f];
+                    self.youMight.autoresizesSubviews = YES;
+                    self.youMight.clipsToBounds = YES;
+                    [self.infoScrollView addSubview:self.youMight];
                 
-                self.youMight = [[UILabel alloc]initWithFrame:CGRectMake(10, 160, 210, 22)];
-                self.youMight.text = @"RECOMMENDED DISHES :";
-                self.youMight.textColor = [UIColor lightGrayColor];
-                self.youMight.textAlignment = NSTextAlignmentLeft;
-                self.youMight.font = [UIFont fontWithName:@"OpenSans-Semibold" size:11.0];
-                self.youMight.autoresizesSubviews = YES;
-                self.youMight.clipsToBounds = YES;
-                [self.infoScrollView addSubview:self.youMight];
-                
-                UILabel *dishName = [[UILabel alloc]initWithFrame:CGRectMake(10, 180, 300, 40)];
-                NSString *string2 = [self.selectedDishes componentsJoinedByString:@", "];
-                dishName.text = string2;
-                dishName.textColor = [UIColor lightGrayColor];
-                dishName.textAlignment = NSTextAlignmentLeft;
-                dishName.font = [UIFont fontWithName:@"OpenSans-Semibold" size:11.0];
-                dishName.autoresizesSubviews = YES;
-                dishName.clipsToBounds = YES;
-                dishName.numberOfLines = 0;
-                [dishName setBackgroundColor:[UIColor clearColor]];
-                [dishName sizeToFit];
-                [self.infoScrollView addSubview:dishName];
-                
+                UIImageView *gray_line5 = [[UIImageView alloc]initWithFrame:CGRectMake(10, theStringSize.height+130, 310, .5)];
+                [gray_line5 setBackgroundColor:[self colorWithHexString:@"7c7a7a"]];
+                [self.infoScrollView addSubview:gray_line5];
+
+                    UILabel *dishName = [[UILabel alloc]initWithFrame:CGRectMake(10, theStringSize.height+140, 300, 40)];
+                    NSString *string2 = [self.selectedDishes componentsJoinedByString:@", "];
+                    dishName.text = string2;
+                    dishName.textColor = [self colorWithHexString:@"7c7a7a"];
+                    dishName.textAlignment = NSTextAlignmentLeft;
+                    dishName.font = [UIFont fontWithName:@"OpenSans" size:14.0];
+                    dishName.autoresizesSubviews = YES;
+                    dishName.clipsToBounds = YES;
+                    dishName.numberOfLines = 0;
+                    [dishName setBackgroundColor:[UIColor clearColor]];
+                    [dishName sizeToFit];
+                    [self.infoScrollView addSubview:dishName];
+
                 self.closeButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.closeButton2  setFrame:CGRectMake(0, 0, 320, 70)];
                 [self.closeButton2 setBackgroundColor:[UIColor clearColor]];
@@ -2829,11 +2915,33 @@
                 [self.modalView addSubview:self.closeButton2];
                 
                 if ([_emailId isEqualToString:[KCSUser activeUser].email]) {
-                    self.uploadButton = [[UIButton alloc]initWithFrame:CGRectMake(133, 500, 45, 45)];
-                    [self.uploadButton setImage:[UIImage imageNamed:@"camera_blue.png"] forState:UIControlStateNormal];
-                    [self.uploadButton addTarget:self action:@selector(uploadBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+                    self.uploadButton = [[UIButton alloc]initWithFrame:CGRectMake(130, 600, 55, 55)];
+                    [self.uploadButton setImage:[UIImage imageNamed:@"map_camera.png"] forState:UIControlStateNormal];
                     self.uploadButton.tag = b;
                     [self.view addSubview:self.uploadButton];
+                    
+                    
+                    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                    int launches = [[ud objectForKey:@"maplist_screen"]intValue];
+                    
+                    if(launches == 0){
+                        [self.uploadButton setUserInteractionEnabled:NO];
+                    }
+                    
+                    [UIView animateWithDuration:1.0 animations:^{
+                        CGAffineTransform matOne;
+                        if (isiPhone5) {
+                            matOne = CGAffineTransformMakeTranslation(0, -100);
+                        }else{
+                            matOne = CGAffineTransformMakeTranslation(0, -100);
+                        }
+                        [self.uploadButton setTransform:matOne];
+                        
+                    }  completion:^(BOOL finished)
+                     {
+                         [self.uploadButton addTarget:self action:@selector(uploadBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+                         
+                     }];
                 }
                 
             }
@@ -2841,10 +2949,6 @@
 }
 
 - (void)buttonAction2:(id)sender {
-    
-//    if ([[UIScreen mainScreen] bounds].size.height == 568) {
-//
-//        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
     
             [self.modalView removeFromSuperview];
             
@@ -2895,23 +2999,9 @@
             [self.restaurantTitleButton2 addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
             [self.modalView addSubview:self.restaurantTitleButton2];
             
-            //            self.restaurantTitleButton = [[FUIButton alloc]initWithFrame:CGRectMake(19, 15, 214, 43)];
-            //            self.restaurantTitleButton.buttonColor = _yookaGreen;
-            //            self.restaurantTitleButton.shadowColor = _yookaGreen2;
-            //            self.restaurantTitleButton.shadowHeight = 3.0f;
-            //            self.restaurantTitleButton.cornerRadius = 6.0f;
-            //            self.restaurantTitleButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:16.0];
-            //            self.restaurantTitleButton.titleLabel.adjustsFontSizeToFitWidth=YES;
-            //            [self.restaurantTitleButton setTitle:yooka.Restaurant forState:UIControlStateNormal];
-            //            [self.restaurantTitleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            //            [self.restaurantTitleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-            //            self.restaurantTitleButton.tag = b;
-            //            [self.restaurantTitleButton addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
-            //            [self.modalView addSubview:self.restaurantTitleButton];
-            
             self.restaurantDescriptionLabel = [[UILabel alloc]init];
             self.restaurantDescriptionLabel.textColor = [UIColor grayColor];
-            self.restaurantDescriptionLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+            self.restaurantDescriptionLabel.font = [UIFont fontWithName:@"OpenSans" size:16.0];
             self.restaurantDescriptionLabel.textAlignment = NSTextAlignmentLeft;
             self.restaurantDescriptionLabel.numberOfLines = 0;
             
@@ -3092,10 +3182,10 @@
     NSLog(@"lat = %@",lat);
     NSLog(@"lon = %@",lon);
     
-    [self.mapView setFrame:CGRectMake(-60, 60, 400, 200)];
+    [self.mapView setFrame:CGRectMake(0, 60, 320, 200)];
     
     CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([lat doubleValue], [lon doubleValue]);
-    [self moveCenterByOffset:CGPointMake(0, 0) from:coord];
+    [self moveCenterByOffset:CGPointMake(0.35, -0.15) from:coord];
     
 }
 
@@ -3124,7 +3214,7 @@
 
 -(void)zoomOut
 {
-    [self.mapView setFrame:CGRectMake(0, 60, 400, 600)];
+    [self.mapView setFrame:CGRectMake(0, 60, 320, 600)];
     
     CLLocationCoordinate2D topLeftCoord;
     topLeftCoord.latitude = -90;
@@ -3158,7 +3248,7 @@
 
 -(void)zoomOut2
 {
-    [self.mapView setFrame:CGRectMake(0, 60, 400, 600)];
+    [self.mapView setFrame:CGRectMake(0, 60, 320, 600)];
     
     CLLocationCoordinate2D topLeftCoord;
     topLeftCoord.latitude = -90;
@@ -3212,6 +3302,14 @@
             //                         NSLog(@"An error occurred on fetch: %@", errorOrNil);
             _my_hunt_count = @"0";
             
+            UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+            [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.menuBtn addSubview:blue_bg];
+            
+            UIImageView *blue_bg2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+            [blue_bg2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.menuBtn2 addSubview:blue_bg2];
+            
             self.huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(260, 15, 60, 30)];
             self.huntCountLabel.text = [NSString stringWithFormat:@"0/%@",_hunt_count];
             NSMutableAttributedString *attributedString5 = [[NSMutableAttributedString alloc] initWithString:self.huntCountLabel.text];
@@ -3252,6 +3350,15 @@
             //got all events back from server -- update table view
             //                        NSLog(@"featured hunt count = %@",objectsOrNil);
             if (!objectsOrNil || !objectsOrNil.count) {
+                
+                UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                [self.menuBtn addSubview:blue_bg];
+                
+                UIImageView *blue_bg2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                [blue_bg2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                [self.menuBtn2 addSubview:blue_bg2];
+                
                 _my_hunt_count = @"0";
                 _huntDone = @"NO";
                 self.huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake( 260, 15, 60, 30)];
@@ -3317,6 +3424,14 @@
                     
                     if (array1.count >= [_hunt_count integerValue]) {
                         
+                        UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                        [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                        [self.menuBtn addSubview:blue_bg];
+                        
+                        UIImageView *blue_bg2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                        [blue_bg2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                        [self.menuBtn2 addSubview:blue_bg2];
+                        
                         _huntDone = @"YES";
                         self.huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake( 260, 15, 60, 30)];
                         self.huntCountLabel.text = [NSString stringWithFormat:@"%@/%@",_hunt_count,_hunt_count];
@@ -3339,6 +3454,14 @@
                         [self.menuBtn2 addSubview:self.huntCountLabel2];
                         
                     }else{
+                        
+                        UIImageView *blue_bg = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                        [blue_bg setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                        [self.menuBtn addSubview:blue_bg];
+                        
+                        UIImageView *blue_bg2 = [[UIImageView alloc]initWithFrame:CGRectMake(320-60, 0, 60, 60)];
+                        [blue_bg2 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+                        [self.menuBtn2 addSubview:blue_bg2];
                         
                         _huntDone = @"NO";
                         self.huntCountLabel = [[UILabel alloc]initWithFrame:CGRectMake( 260, 15, 60, 30)];

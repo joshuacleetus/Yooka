@@ -16,6 +16,7 @@
 #import "PulsingHaloLayer.h"
 #import "MultiplePulsingHaloLayer.h"
 #import "Flurry.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface YookaFeaturedHuntViewController ()
 @property (nonatomic, strong) MultiplePulsingHaloLayer *mutiHalo;
@@ -98,12 +99,11 @@
     
     self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.doneButton setFrame:CGRectMake(260, 15, 50, 50)];
-    //[self.doneButton setTitle:@"X" forState:UIControlStateNormal];
+//    [self.doneButton setTitle:@"X" forState:UIControlStateNormal];
     [self.doneButton setBackgroundImage:[UIImage imageNamed:@"whitex.png"] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.doneButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:25]];
-
-    //            [editProfileBtn setBackgroundImage:[[UIImage imageNamed:@"logoutbtn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+//    [self.doneButton setBackgroundImage:[[UIImage imageNamed:@"logoutbtn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(dismissView:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.doneButton];
     
@@ -124,7 +124,7 @@
 //    [self.view addSubview:self.descriptionImage];
     
     self.descriptionLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 300, 320, 20)];
-    self.descriptionLabel.textColor = [self colorWithHexString:@"afaeae"];
+    self.descriptionLabel.textColor = [self colorWithHexString:@"6e6e6e"];
     self.descriptionLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:14.0];
     NSString *string = @"INFORMATION";
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
@@ -190,7 +190,7 @@
     
     self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(70, 510, 40, 40)];
     self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
-    //    [self.profileImageView.layer setBorderWidth:4.0];
+//    [self.profileImageView.layer setBorderWidth:4.0];
     [self.profileImageView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
     [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.profileImageView setClipsToBounds:YES];
@@ -222,7 +222,6 @@
                                      alpha:1.0];
     layer.backgroundColor = color.CGColor;
     [self.view.layer insertSublayer:self.halo below:self.profileImageView.layer];
-    
     
     if (self.subscribedHunts.count) {
         NSLog(@"subscribed hunts");
@@ -283,7 +282,7 @@
             self.huntDescription = yooka.Description;
             
             self.huntDescriptionLabel = [[UILabel alloc]init];
-            self.huntDescriptionLabel.textColor = [self colorWithHexString:@"afaeae"];
+            self.huntDescriptionLabel.textColor = [self colorWithHexString:@"6e6e6e"];
             self.huntDescriptionLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:12.0];
             self.huntDescriptionLabel.textAlignment = NSTextAlignmentJustified;
             self.huntDescriptionLabel.numberOfLines = 0;
@@ -317,9 +316,111 @@
                 
             }
             
+            if(isiPhone5){
+                
+                NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                int launches = [[ud objectForKey:@"huntstarting_screen"]intValue];
+                
+                if(launches == 0){
+                    
+                    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 240, 320, 338)];
+                    [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                    [self.view addSubview:self.instruction_screen_1];
+                    
+                    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(150, -30, 60, 60)];
+                    [pointing_finger setImage:[UIImage imageNamed:@"swipe_left.png"]];
+                    [self.instruction_screen_1 addSubview:pointing_finger];
+                    
+                    UILabel *copy = [[UILabel alloc]initWithFrame:CGRectMake(5, 40, 320, 30)];
+                    copy.text = @"Preview our 7 best locations!";
+                    copy.textColor = [UIColor whiteColor];
+                    copy.textAlignment = NSTextAlignmentCenter;
+                    [self.instruction_screen_1 addSubview:copy];
+                    
+                    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+                    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+                    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+                    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(-20.0, 0.0)]; // y increases downwards on iOS
+                    hover.autoreverses = YES; // Animate back to normal afterwards
+                    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+                    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+                    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+                    
+                    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 200, 100, 30)];
+                    next_label.textColor = [UIColor whiteColor];
+                    next_label.text = @"NEXT-->";
+                    [self.instruction_screen_1 addSubview:next_label];
+                    
+                    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [self.next_button setFrame:CGRectMake(250, 440, 100, 30)];
+                    [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+                    [self.next_button setBackgroundColor:[UIColor clearColor]];
+                    [self.view addSubview:self.next_button];
+                    
+                    [self.startButton setUserInteractionEnabled:NO];
+                    
+                }
+
+            }
+            
         }
     } withProgressBlock:nil];
 
+}
+
+- (void)next_action:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 500)];
+    [self.instruction_screen_2 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_2];
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(150, 530, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"tap_down.png"]];
+    [self.instruction_screen_2 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -5.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 460, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Press here to see these places!";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_2 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 350, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_2 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 350, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_2:(id)sender{
+    
+    [self.instruction_screen_2 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    [self.startButton setUserInteractionEnabled:YES];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = 1;
+    
+    [ud setObject:[NSNumber numberWithInt:launches] forKey:@"huntstarting_screen"];
+    
 }
 
 - (void)checkSubscribedHunts
@@ -393,11 +494,12 @@
                     [self.startButton.titleLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:15]];
                     self.startButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
                     [self.view addSubview:self.startButton];
+                    
                 }else{
                     
                     NSLog(@"got no featured hunts");
-
                     [self getFeaturedHunts];
+                    
                 }
                 
             }
@@ -818,7 +920,7 @@
             
         } else {
             //got all events back from server -- update table view
-            NSLog(@"featured restaurant = %@",objectsOrNil);
+//            NSLog(@"featured restaurant = %@",objectsOrNil);
             
             _featuredRestaurants = [NSArray arrayWithArray:objectsOrNil];
             [self makePicsScrollView];

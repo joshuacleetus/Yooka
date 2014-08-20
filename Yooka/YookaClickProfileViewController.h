@@ -43,25 +43,37 @@
 @property (nonatomic, strong) IBOutlet UIImageView *completedImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *feedImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *profileImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImageView3;
 @property (nonatomic, strong) IBOutlet UIImageView *profileShadowImageView;
-
 @property (nonatomic, strong) IBOutlet UIImageView *dialImageView;
-@property (strong, nonatomic) UIButton *backBtn;
+
+@property (strong, nonatomic) IBOutlet UIButton *backBtn;
+@property (strong, nonatomic) IBOutlet UIButton *backBtn3;
+
 @property (strong, nonatomic) IBOutlet UIImageView* backBtnImage;
+@property (strong, nonatomic) IBOutlet UIImageView* backBtnImage3;
+
 @property (strong, nonatomic) IBOutlet UILabel* categoryLabel;
 @property (strong, nonatomic) IBOutlet UILabel* titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel* profileLabel;
+@property (strong, nonatomic) IBOutlet UILabel* profileLabel3;
 
 @property (nonatomic, strong) NSString *userFullName;
 
 @property (strong, nonatomic) IBOutlet UIImageView* settingsImage;
 @property (strong, nonatomic) IBOutlet UILabel* editLabel;
 @property (strong, nonatomic) IBOutlet UILabel* listLabel;
+@property (strong, nonatomic) IBOutlet UILabel* listLabel3;
 @property (strong, nonatomic) IBOutlet UILabel* listCountLabel;
+@property (strong, nonatomic) IBOutlet UILabel* listCountLabel3;
 @property (strong, nonatomic) IBOutlet UILabel* followersLabel;
+@property (strong, nonatomic) IBOutlet UILabel* followersLabel3;
 @property (strong, nonatomic) IBOutlet UILabel* followersCountLabel;
+@property (strong, nonatomic) IBOutlet UILabel* followersCountLabel3;
 @property (strong, nonatomic) IBOutlet UILabel* followingLabel;
+@property (strong, nonatomic) IBOutlet UILabel* followingLabel3;
 @property (strong, nonatomic) IBOutlet UILabel* followingCountLabel;
+@property (strong, nonatomic) IBOutlet UILabel* followingCountLabel3;
 
 @property (strong, nonatomic) IBOutlet UIView* progressView;
 @property (strong, nonatomic) IBOutlet UIView* completedView;
@@ -134,13 +146,20 @@
 @property (nonatomic, strong) NSMutableDictionary *huntDict7;
 
 @property (nonatomic, strong) IBOutlet UIButton *userFollowingBtn;
+@property (nonatomic, strong) IBOutlet UIButton *userFollowingBtn3;
+
 @property (nonatomic, strong) IBOutlet UIButton *userFollowersBtn;
+@property (nonatomic, strong) IBOutlet UIButton *userFollowersBtn3;
 
 @property (nonatomic, strong) IBOutlet FUIButton *followBtn;
 @property (nonatomic, strong) IBOutlet FUIButton *followBtn2;
 @property (nonatomic, strong) IBOutlet FUIButton *unFollowBtn;
 @property (nonatomic, strong) IBOutlet FUIButton *unFollowBtn2;
 
+@property (nonatomic, strong) IBOutlet FUIButton *followBtnc;
+@property (nonatomic, strong) IBOutlet FUIButton *followBtn2c;
+@property (nonatomic, strong) IBOutlet FUIButton *unFollowBtnc;
+@property (nonatomic, strong) IBOutlet FUIButton *unFollowBtn2c;
 
 @property (nonatomic, strong) IBOutlet UIButton *button;
 

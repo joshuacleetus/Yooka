@@ -79,7 +79,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     _timeArray = [NSMutableArray new];
     _avgArray = [NSMutableArray new];
-    contentSize = 170;
+    contentSize = 80;
     contentSize2 = 0;
     
     self.newsfeed_caption = [NSMutableArray new];
@@ -88,6 +88,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
     self.newsfeed_dishname = [NSMutableArray new];
     self.newsfeed_huntname = [NSMutableArray new];
     self.newsfeed_kinvey_id = [NSMutableArray new];
+    self.newsfeed_kinveyid = [NSMutableArray new];
     self.newsfeed_postdate = [NSMutableArray new];
     self.newsfeed_posttype = [NSMutableArray new];
     self.newsfeed_postvote = [NSMutableArray new];
@@ -105,31 +106,13 @@ const NSInteger yookaThumbnailSpace3 = 5;
     self.sponsored_hunt_names = [NSMutableArray new];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    _huntDict1 = [defaults objectForKey:@"huntDescription"];
-//    _huntDict2 = [defaults objectForKey:@"huntCount"];
-//    _huntDict3 = [defaults objectForKey:@"huntLogoUrl"];
-//    _huntDict4 = [defaults objectForKey:@"huntPicsUrl"];
-//    _huntDict5 = [defaults objectForKey:@"huntLocations"];
-//    _huntDict6 = [defaults objectForKey:@"huntPicUrl"];
     
     // GET THE SUBSCRIBED HUNT NAMES
     self.subscribedHunts = [defaults objectForKey:@"subscribedHuntNames"];
     self.unSubscribedHunts = [defaults objectForKey:@"unsubscribedHuntNames"];
     self.huntPicUrlDict = [defaults objectForKey:@"huntPicUrl"];
     
-//    for (NSString *familyName in [UIFont familyNames]) {
-//        NSLog(@"%@", familyName);
-//        for (NSString *fontName in [UIFont fontNamesForFamilyName:familyName]) {
-//            NSLog(@"\t%@",fontName);
-//        }
-//    }
-    
-    [self checkSponsoredHunts];
-    
-    
-//    [self.tabBarController.tabBar addObserver:self forKeyPath:@"selectedItem" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:nil];
-    
-    //    [self showActivityIndicator];
+//    [self checkSponsoredHunts];
     self.myEmail = [[KCSUser activeUser] email];
     
     self.reload_toggle = @"YES";
@@ -145,17 +128,11 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     self.tabBarController.delegate = self;
     
-//    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-//    self.navigationController.navigationBar.backgroundColor = color;
-//    [self.navigationController.navigationBar setBarTintColor:color];
-//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-    
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yooka.png"]];
     
     [_gridScrollView removeFromSuperview];
     
     [self.view setBackgroundColor:[self colorWithHexString:@"f0f0f0"]];
-    
     
     UIImageView *top_bar = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
     [top_bar setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
@@ -181,6 +158,10 @@ const NSInteger yookaThumbnailSpace3 = 5;
     _gridScrollView.frame = CGRectMake(0.f, 60.f, 320.f, self.view.frame.size.height);
     self.gridScrollView.delegate = self;
     [self.view addSubview:_gridScrollView];
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(testRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.gridScrollView addSubview:refreshControl];
     
     UILabel *subtitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 0, 120, 8)];
     subtitleLabel.textAlignment = NSTextAlignmentLeft;
@@ -214,36 +195,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
     self.hunts_pages.currentPageIndicatorTintColor = [self colorWithHexString:@"75bfea"];
     self.hunts_pages.backgroundColor = [UIColor clearColor];
 
-    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    self.newsfeed_kinvey_id = [userDefaults objectForKey:@"newsfeedKinveyid"];
-    
-//    NSLog(@"kinvey id array = %@", self.newsfeed_kinvey_id);
-    
-//    if (self.newsfeed_kinvey_id.count==20) {
-//        NSLog(@"cached");
-//        self.cache_toggle = @"YES";
-//        self.newsfeed_caption = [userDefaults objectForKey:@"newsfeedCaption"];
-//        self.newsfeed_userid = [userDefaults objectForKey:@"newsfeedUserid"];
-//        self.newsfeed_kinvey_id = [userDefaults objectForKey:@"newsfeedKinveyid"];
-//        self.newsfeed_huntname = [userDefaults objectForKey:@"newsfeedHuntname"];
-//        self.newsfeed_dishname = [userDefaults objectForKey:@"newsfeedDishname"];
-//        self.newsfeed_posttype = [userDefaults objectForKey:@"newsfeedPosttype"];
-//        self.newsfeed_postdate = [userDefaults objectForKey:@"newsfeedPostdate"];
-//        self.newsfeed_postvote = [userDefaults objectForKey:@"newsfeedPostvote"];
-//        self.newsfeed_userfullname = [userDefaults objectForKey:@"newsfeedUserfullname"];
-//        self.newsfeed_venuename = [userDefaults objectForKey:@"newsfeedVenuename"];
-//        self.newsfeed_venueaddress = [userDefaults objectForKey:@"newsfeedVenueaddress"];
-//        self.newsfeed_venuestate = [userDefaults objectForKey:@"newsfeedVenuestate"];
-//        
-////        [self setupImageWithMaximumLikes];
-//        [self layoutCacheNewsFeed:0];
-//        
-//    }else{
-//        self.cache_toggle = @"NO";
-////        [self setupImageWithMaximumLikes];
-//        [self setupNewsFeed];
-//    }
+    self.newsfeed_kinveyid = [userDefaults objectForKey:@"newsfeedKinveyid"];
     
     [self setupNewsFeed];
     
@@ -278,6 +231,357 @@ const NSInteger yookaThumbnailSpace3 = 5;
     [self.view addSubview:self.navButton2];
     
     [self.navButton2 setHidden:YES];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = [[ud objectForKey:@"newsfeed_screen"]intValue];
+    
+    if(launches == 0){
+        
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_1 setImage:[UIImage imageNamed:@"newsfeed_instruction2.png"]];
+    [self.view addSubview:self.instruction_screen_1];
+    
+    UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [bg_color setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.instruction_screen_1 addSubview:bg_color];
+    
+    CGRect r = bg_color.bounds;
+    CGRect r2 = CGRectMake( 0, 55, 320, 250); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    bg_color.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(120, 320, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 380, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"See what lists your friends are doing!”";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 500, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+        
+    }
+    
+    UIButton *top_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [top_button setFrame:CGRectMake( 60, 0, 320-60, 60)];
+    [top_button addTarget:self action:@selector(topBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:top_button];
+    
+}
+
+- (void)topBtnClicked:(id)sender{
+    
+    [UIScrollView animateWithDuration:.5f animations:^{
+        [self.gridScrollView setContentOffset:CGPointMake(0, 0)];
+    }];
+    
+    
+}
+
+- (void)testRefresh:(UIRefreshControl *)refreshControl
+{
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Loading data..."];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [NSThread sleepForTimeInterval:3];
+        
+        [self reloadView];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [refreshControl endRefreshing];
+            
+            NSLog(@"refresh end");
+        });
+    });
+}
+
+- (void)next_action:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_1 setImage:[UIImage imageNamed:@"newsfeed_instruction2.png"]];
+    [self.view addSubview:self.instruction_screen_1];
+    
+    UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [bg_color setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.instruction_screen_1 addSubview:bg_color];
+
+    CGRect r = bg_color.bounds;
+    CGRect r2 = CGRectMake( 270, 120, 50, 45); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    bg_color.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(260, 180, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 250, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Click here to learn more about this list";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 500, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_2:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 622)];
+    [self.instruction_screen_1 setImage:[UIImage imageNamed:@"newsfeed_instruction.png"]];
+    [self.view addSubview:self.instruction_screen_1];
+    
+    UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [bg_color setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.instruction_screen_1 addSubview:bg_color];
+    
+    CGRect r = bg_color.bounds;
+    CGRect r2 = CGRectMake( 0, 60, 320, 335); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    bg_color.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(150, 410, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 470, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"See what people are doing in the city";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 510, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_3:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_3:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 622)];
+    [self.instruction_screen_1 setImage:[UIImage imageNamed:@"newsfeed_instruction.png"]];
+    [self.view addSubview:self.instruction_screen_1];
+    
+    UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [bg_color setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.instruction_screen_1 addSubview:bg_color];
+    
+    CGRect r = bg_color.bounds;
+    CGRect r2 = CGRectMake( 273, 355, 35, 30); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    bg_color.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(270, 400, 60, 55)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 470, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Like the picture";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 510, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_4:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_4:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 622)];
+    [self.instruction_screen_1 setImage:[UIImage imageNamed:@"newsfeed_instruction.png"]];
+    [self.view addSubview:self.instruction_screen_1];
+    
+    UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [bg_color setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.instruction_screen_1 addSubview:bg_color];
+    
+    CGRect r = bg_color.bounds;
+    CGRect r2 = CGRectMake( 247, 355, 25, 25); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    bg_color.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake( 235, 400, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 470, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"% of people that would get it again";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 510, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 500, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_5:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_5:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = 1;
+    
+    [ud setObject:[NSNumber numberWithInt:launches] forKey:@"newsfeed_screen"];
+
     
 }
 
@@ -375,7 +679,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     // -- show hunts
     total_featured_hunts = [self.sponsored_hunt_names count];
     self.topScrollView.contentSize = CGSizeMake(self.topScrollView.frame.size.width * total_featured_hunts, self.topScrollView.frame.size.height);
-    
     self.hunts_pages.numberOfPages = total_featured_hunts;
     self.hunts_pages.currentPage = 0;
     
@@ -385,8 +688,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
 - (void)fillUnSubscribedHuntImages
 {
-    
-
     
     if(self.working == YES)
     {
@@ -440,14 +741,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
                      [user_button addTarget:self action:@selector(feat_button_clicked:) forControlEvents:UIControlEventTouchUpInside];
                      [self.FeaturedView addSubview:user_button];
                      
-//                     self.feat_button = [UIButton buttonWithType:UIButtonTypeCustom];
-//                     [self.feat_button  setFrame:CGRectMake(0, 0, 320 * k, 100)];
-//                     [self.feat_button setBackgroundColor:[UIColor blackColor]];
-//                     [self.feat_button addTarget:self action:@selector(feat_button_clicked:) forControlEvents:UIControlEventTouchUpInside];
-//                     [self.topScrollView addSubview:self.feat_button];
-//            
-                     
-                     
                      NSMutableAttributedString *attributedString6 = [[NSMutableAttributedString alloc] initWithString:string6];
                      float spacing6 = 1.5f;
                      [attributedString6 addAttribute:NSKernAttributeName
@@ -464,8 +757,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
                  }
              }];
-            
-
             
         }
     }
@@ -514,13 +805,31 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
     
 }
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    float scrollOffset = scrollView.contentOffset.y;
+    
+    if (scrollOffset < -50)
+    {
+        // then we are at the top
+//        NSLog(@"scroll offset = %f",scrollOffset);
+//        if([self.reload_toggle isEqualToString:@"YES"]){
+//            self.reload_toggle = @"NO";
+////            NSLog(@"reload toggle = %@",self.reload_toggle);
+//            if (self.newsFeed.count>0) {
+//                [self performSelector:@selector(reloadView) withObject:nil afterDelay:3.0];
+//            }
+//        }
+    }
+}
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     float scrollViewHeight = scrollView.frame.size.height;
     float scrollContentSizeHeight = scrollView.contentSize.height;
     float scrollOffset = scrollView.contentOffset.y;
-    
-//    NSLog(@"scroll offset = %f",scrollOffset);
     
     CGFloat pageWidth = scrollView.frame.size.width;
     float fractionalPage = scrollView.contentOffset.x / pageWidth;
@@ -531,36 +840,28 @@ const NSInteger yookaThumbnailSpace3 = 5;
     }
     
     
+    
     if (scrollOffset < -50)
     {
         // then we are at the top
-//        NSLog(@"scroll offset = %f",scrollOffset);
-        if([self.reload_toggle isEqualToString:@"YES"]){
-            self.reload_toggle = @"NO";
-//            NSLog(@"reload toggle = %@",self.reload_toggle);
-            if (self.newsFeed.count>0) {
+//        NSLog(@"scroll offset Y = %f",scrollOffset);
+//        if([self.reload_toggle isEqualToString:@"YES"]){
+//            self.reload_toggle = @"NO";
+////            NSLog(@"reload toggle = %@",self.reload_toggle);
+//            if (self.newsfeed_kinvey_id.count>0) {
 //                [self reloadView];
-            }
-        }
+//            }
+//        }
     }
     else if (scrollOffset > 10)
     {
-
-//        if (self.thumbnails.count<2 && self.thumbnails>0) {
-//            
-//            if ([self.cache_toggle isEqualToString:@"YES"]) {
-//                [self layoutCacheNewsFeed:1];
-//            }else{
-//                [self layoutNewsFeed:1];
-//            }
-//        }
 
         if (scrollOffset > 25) {
             if (self.thumbnails.count<3) {
                 if ([self.cache_toggle isEqualToString:@"YES"]) {
                     //[self layoutCacheNewsFeed:2];
                 }else{
-                    [self layoutNewsFeed:2];
+//                    [self layoutNewsFeed:2];
                 }
             }
             
@@ -569,7 +870,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                     if ([self.cache_toggle isEqualToString:@"YES"]) {
                      //   [self layoutCacheNewsFeed:3];
                     }else{
-                        [self layoutNewsFeed:3];
+//                        [self layoutNewsFeed:3];
                     }
                 }
                 
@@ -730,8 +1031,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
                                                     }
 
-
                                                 }
+                                                
                                             }
 
                                         }
@@ -745,7 +1046,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
                     }
 
                 }
-                
 
             }
         }
@@ -754,9 +1054,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     {
         // then we are at the end
     }
-    
-    
-    
 }
 
 -(UIColor*)colorWithHexString:(NSString*)hex
@@ -833,6 +1130,9 @@ const NSInteger yookaThumbnailSpace3 = 5;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self stopActivityIndicator];
+    
+    
 
     
 }
@@ -845,7 +1145,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
 }
 
 - (void)showActivityIndicator {
-
     UIActivityIndicatorView *activityIndicator =
     [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(145, -50, 27, 27)];
     [activityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
@@ -909,14 +1208,12 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     if ((networkStatus == ReachableViaWiFi) || (networkStatus == ReachableViaWWAN)) {
         
-//        [self showActivityIndicator];
-        
         KCSQuery* query = [KCSQuery queryOnField:@"deleted" withExactMatchForValue:@"NO"];
         KCSQuery* query2 = [KCSQuery queryOnField:@"yooka_private" withExactMatchForValue:@"NO"];
         KCSQuery* query3 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query,query2, nil];
         KCSQuerySortModifier* sortByDate = [[KCSQuerySortModifier alloc] initWithField:@"postDate" inDirection:kKCSDescending];
         [query3 addSortModifier:sortByDate]; //sort the return by the date field
-        [query3 setLimitModifer:[[KCSQueryLimitModifier alloc] initWithLimit:15]]; //just get back 10 results
+        [query3 setLimitModifer:[[KCSQueryLimitModifier alloc] initWithLimit:5]]; //just get back 10 results
         [self.updateStore2 queryWithQuery:query3 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
             //        [self performSelector:@selector(stopLoading) withObject:nil afterDelay:1.0]; //too fast transition feels weird
             //            [self.refreshControl endRefreshing];
@@ -925,57 +1222,23 @@ const NSInteger yookaThumbnailSpace3 = 5;
                 _newsFeed2 = [NSMutableArray arrayWithArray:objectsOrNil];
                 
                 YookaBackend *yooka = _newsFeed2[0];
-                UIImage* image = yooka.dishImage;
-                if (image) {
-//                    NSLog(@"yes image");
-                }else{
-//                    NSLog(@"no image");
-                }
-                
-//                NSLog(@"reload toggle 3= %@",self.reload_toggle);
-                
-                NSString *kinveyId = [NSString stringWithFormat:@"%@",[_newsFeed[0] objectForKey:@"_id"]];
-//                NSLog(@"kinvey id = %@",kinveyId);
-//                NSLog(@"kinvey id 2 = %@",yooka.kinveyId);
 
-                if ([kinveyId isEqualToString:yooka.kinveyId]) {
-//                    NSLog(@"same");
+                if ([yooka.kinveyId isEqualToString:[self.newsFeed[0] objectForKey:@"_id"]]) {
+                    NSLog(@"same");
                     k=0;
-//                    [self loadlikes];
-                    //[self loadlikes22];
-//                    self.reload_toggle = @"YES";
-                    [self stopActivityIndicator];
+                    self.reload_toggle = @"YES";
                     
                 }else{
                     
-//                    NSLog(@"not same");
-                    [_gridScrollView removeFromSuperview];
+                    NSLog(@"not same");
                     
-                    CGRect screenRect = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
-                    _gridScrollView=[[UIScrollView alloc] initWithFrame:screenRect];
-                    _gridScrollView.contentSize= self.view.bounds.size;
-                    _gridScrollView.frame = CGRectMake(0.f, 60.f, 320.f, self.view.frame.size.height);
-                    [self.view addSubview:_gridScrollView];
+                    self.reload_toggle = @"YES";
+                    [self.delegate didSelectViewWithName2:@"YookaNewsFeedViewController"];
                     
-                    contentSize = 275;
-                    
-//                    [self setupImageWithMaximumLikes];
-                    [self setupNewsFeed];
-                   // [self setupImageWithMaximumLikes];
-
                 }
-
-                UIImageView *top_bar = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
-                [top_bar setBackgroundColor:[self colorWithHexString:@"75bfea"]];
-                [self.view addSubview:top_bar];
-                
-                [self.view addSubview:self.navButton];
                 
             }else{
-//                NSLog(@"newfeed= %@",errorOrNil);
-//                NSLog(@"reload toggle 2= %@",self.reload_toggle);
                 self.reload_toggle = @"YES";
-                [self stopActivityIndicator];
             }
         } withProgressBlock:nil];
         
@@ -1108,9 +1371,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     k=0;
         
     _userEmails = [NSMutableArray new];
-    
-    [self showActivityIndicator];
-    
     _userNames = [NSMutableArray new];
     _newsFeed = [NSMutableArray new];
     _thumbnails = [NSMutableArray new];
@@ -1118,6 +1378,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
     _likersData = [NSMutableArray new];
     _userEmails = [NSMutableArray new];
     _userPicUrls = [NSMutableArray new];
+    self.newsfeed_kinvey_id = [NSMutableArray new];
         
     _collectionName1 = @"yookaPosts2";
     _customEndpoint1 = @"Posts";
@@ -1135,7 +1396,10 @@ const NSInteger yookaThumbnailSpace3 = 5;
 //                    NSLog(@"results 1 = %@",_newsFeed[0]);
                     [self layoutNewsFeed:0];
                     [self layoutNewsFeed:1];
-
+                    [self layoutNewsFeed:2];
+                    [self layoutNewsFeed:3];
+                    
+                    [self checkForOldImagesAndDestroyIt];
                     
                 }else{
 //                    NSLog(@"User Search Results = \n %@",results);
@@ -1162,6 +1426,37 @@ const NSInteger yookaThumbnailSpace3 = 5;
         
     }
     
+}
+
+- (void)checkForOldImagesAndDestroyIt{
+    
+    NSMutableArray *new_array = [NSMutableArray new];
+    
+    int q = 0;
+    for (q=0; q<self.newsFeed.count; q++) {
+        [new_array addObject:[self.newsFeed[q] objectForKey:@"_id"]];
+    }
+    if (q==self.newsFeed.count) {
+
+        NSMutableSet *intersection = [NSMutableSet setWithArray:new_array];
+        [intersection intersectSet:[NSSet setWithArray:self.newsfeed_kinveyid]];
+        NSArray *resultArray = [intersection allObjects];
+        if (self.newsfeed_kinveyid.count>0) {
+            if (resultArray.count==0) {
+                NSLog(@"nothing common");
+                int l2=0;
+                for (l2=0; l2<self.newsfeed_kinveyid.count; l2++) {
+                    [[SDImageCache sharedImageCache] removeImageForKey:self.newsfeed_kinveyid[l2]];
+                    NSLog(@"deleted image with id %@",self.newsfeed_kinveyid[l2]);
+                }
+            }else{
+                NSLog(@"something common");
+            }
+        }else{
+            NSLog(@"no saved kinvey id");
+        }
+
+    }
 }
 
 - (void)average:(NSMutableArray*)array
@@ -1193,444 +1488,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     }
 }
 
-//- (void)layoutCacheNewsFeed:(int)num
-//{
-//
-//    UITapGestureRecognizer *tapOnce = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapOnce:)];
-//    UITapGestureRecognizer *tapTwice = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapTwice:)];
-//    UITapGestureRecognizer *tapTrice = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapThrice:)];
-//    
-//    tapOnce.numberOfTapsRequired = 1;
-//    //        tapTwice.numberOfTapsRequired = 2;
-//    tapTrice.numberOfTapsRequired = 3;
-//    //stops tapOnce from overriding tapTwice
-//    [tapOnce requireGestureRecognizerToFail:tapTrice];
-//    
-//    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-//                                                                  (num*yookaThumbnailHeight3)+307,
-//                                                                  yookaThumbnailWidth3,
-//                                                                  yookaThumbnailHeight3)];
-//    button.tag = 0;
-//    button.userInteractionEnabled = YES;
-//    //        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-//    [button addGestureRecognizer:tapOnce]; //remove the other button action which calls method `button`
-//    [button addGestureRecognizer:tapTwice];
-//    [button addGestureRecognizer:tapTrice];
-//    
-//    [button setBackgroundColor:[UIColor whiteColor]]; //a7a7a7
-//    
-//    [self.gridScrollView addSubview:button];
-//    [self.thumbnails addObject:button];
-//    
-//    [_gridScrollView setContentSize:CGSizeMake(320, contentSize+contentSize2)];
-//    
-//    NSLog(@"self newsfeed huntnames = %@",self.newsfeed_posttype);
-//    
-//    NSString *string = [NSString stringWithFormat:@"image%d",num];;
-//    NSString *string2 = [NSString stringWithFormat:@"userimage%d",num];;
-//
-//    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-//    
-//    NSData* imageData = [ud objectForKey:string];
-//    UIImage* image = [UIImage imageWithData:imageData];
-//    
-//    NSData* imageData2 = [ud objectForKey:string2];
-//    UIImage* image2 = [UIImage imageWithData:imageData2];
-//    
-//    if(image){
-//        NSLog(@"yes image");
-//    }else{
-//        NSLog(@"no image");
-//    }
-//    
-//    if(image2){
-//        NSLog(@"yes image");
-//    }else{
-//        NSLog(@"no image");
-//    }
-//    
-//    UIImageView *blueBg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 45)];
-//    [blueBg setBackgroundColor:[self colorWithHexString:@"75bfea"]];
-//    [button addSubview:blueBg];
-//    
-//    if ([self.newsfeed_posttype[num] isEqualToString:@"started hunt"]) {
-//        
-////        UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(53, 7, 260, 30)];
-////        userLabel.textColor = [UIColor whiteColor];
-////        userLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.0];
-////        userLabel.text = [self.newsfeed_caption[num] uppercaseString];
-////        [userLabel setBackgroundColor:[UIColor clearColor]];
-////        userLabel.textAlignment = NSTextAlignmentLeft;
-////        userLabel.adjustsFontSizeToFitWidth = YES;
-////        //                     userLabel.numberOfLines = 0;
-////        [button addSubview:userLabel];
-//        
-//        UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 45, 320, 250)];
-//        [buttonImage setBackgroundColor:[UIColor clearColor]];
-//        buttonImage.contentMode = UIViewContentModeTopLeft;
-//        buttonImage.clipsToBounds = YES;
-//        buttonImage.opaque = YES;
-//        buttonImage.image = image;
-//        [button addSubview:buttonImage];
-//        
-//        UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 4.5, 10-7.5, 38, 38)];
-//        buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
-//        [buttonImage4.layer setBorderWidth:2.0];
-//        buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
-//        [buttonImage4.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-//        [buttonImage4 setContentMode:UIViewContentModeScaleAspectFit];
-//        buttonImage4.clipsToBounds = YES;
-//        buttonImage4.image = image2;
-//        buttonImage4.opaque = YES;
-//        [button addSubview:buttonImage4];
-//        
-//        UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [user_button  setFrame:CGRectMake(5, 5-7.5, 38, 38)];
-//        [user_button setBackgroundColor:[UIColor clearColor]];
-//        user_button.tag = num;
-//        [user_button addTarget:self action:@selector(user_button_Action:) forControlEvents:UIControlEventTouchUpInside];
-//        [button addSubview:user_button];
-//        
-//        UIButton *joinButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [joinButton setFrame:CGRectMake(80, 45+250-2, 145, 45)];
-//        [joinButton setBackgroundColor:[UIColor clearColor]];
-//        [joinButton setTag:num];
-//        //                                                           NSLog(@"sub hunts = %@",self.subscribedHunts);
-//        
-//        if ([self.subscribedHunts containsObject:self.newsfeed_huntname[num]]) {
-//            
-//            UIImageView *joinBtn = [[UIImageView alloc]initWithFrame:CGRectMake(80, 45+250-2,45,45)];
-//            joinBtn.image=[UIImage imageNamed:@"activate_icon.png"];
-//            [button addSubview:joinBtn];
-//            //                         [joinButton setBackgroundImage:[[UIImage imageNamed:@"activate_icon.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-//            
-//        }else{
-//            UIImageView *joinBtn2 = [[UIImageView alloc]initWithFrame:CGRectMake(80, 45+250-2,45,45)];
-//            joinBtn2.image=[UIImage imageNamed:@"nonactive_icon.png"];
-//            [button addSubview:joinBtn2];
-//            //                         [joinButton setBackgroundImage:[[UIImage imageNamed:@"nonactive_icon.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-//        }
-//        
-//        [joinButton addTarget:self action:@selector(gotoFeaturedHunts:)
-//             forControlEvents:UIControlEventTouchUpInside];
-//        [button addSubview:joinButton];
-//        
-//        if ([self.subscribedHunts containsObject:self.newsfeed_huntname[num]]) {
-//            
-//            NSString *myString1 =@"ACTIVE";
-//            
-//            UILabel* sub_label = [[UILabel alloc] initWithFrame:CGRectMake(130, 45+250, 200, 35)];
-//            sub_label.text = [NSString stringWithFormat:@"%@",myString1];
-//            sub_label.textColor = [UIColor lightGrayColor];
-//            [sub_label setFont:[UIFont fontWithName:@"OpenSans-Regular" size:19]];
-//            sub_label.textAlignment = NSTextAlignmentLeft;
-//            [button addSubview:sub_label];
-//            
-//        }else{
-//            
-//            NSString *myString1 =@"ACTIVATE";
-//            
-//            UILabel* sub_label = [[UILabel alloc] initWithFrame:CGRectMake(130, 45+250, 200, 35)];
-//            sub_label.text = [NSString stringWithFormat:@"%@",myString1];
-//            sub_label.textColor = [UIColor lightGrayColor];
-//            [sub_label setFont:[UIFont fontWithName:@"OpenSans-Regular" size:19]];
-//            sub_label.textAlignment = NSTextAlignmentLeft;
-//            [button addSubview:sub_label];
-//        }
-//        
-//        NSDate *createddate = self.newsfeed_postdate[num];
-//        NSDate *now = [NSDate date];
-//        NSString *str;
-//        NSMutableString *myString = [NSMutableString string];
-//        
-//        NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
-//        if (secondsBetween<60) {
-//            int duration = secondsBetween;
-//            str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<3600) {
-//            int duration = secondsBetween / 60;
-//            str = [NSString stringWithFormat:@"%d min",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<86400){
-//            int duration = secondsBetween / 3600;
-//            str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<604800){
-//            int duration = secondsBetween / 86400;
-//            str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else {
-//            int duration = secondsBetween / 604800;
-//            if(duration==1) {
-//                str = [NSString stringWithFormat:@"%d week",duration]; //%d or %i both is ok.
-//            }else{
-//                str = [NSString stringWithFormat:@"%d weeks",duration]; //%d or %i both is ok.
-//            }
-//            [myString appendString:str];
-//        }
-//        
-//        UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(13, 312+26, 70, 12)];
-//        time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
-//        time_label.textColor = [UIColor grayColor];
-//        [time_label setFont:[UIFont fontWithName:@"OpenSans-Regular" size:8]];
-//        time_label.textAlignment = NSTextAlignmentLeft;
-//        [button addSubview:time_label];
-//        
-//        [_gridScrollView addSubview:button];
-//        
-//    }else{
-//        
-//        UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 4.5, 10-7.5, 38, 38)];
-//        buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
-//        [buttonImage4.layer setBorderWidth:2.0];
-//        buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
-//        [buttonImage4.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-//        [buttonImage4 setContentMode:UIViewContentModeScaleAspectFit];
-//        buttonImage4.clipsToBounds = YES;
-//        buttonImage4.image = image2;
-//        buttonImage4.opaque = YES;
-//        [button addSubview:buttonImage4];
-//        
-//        UIButton *user_button = [UIButton buttonWithType:UIButtonTypeCustom];
-//        [user_button  setFrame:CGRectMake(5, 5-7.5, 38, 38)];
-//        [user_button setBackgroundColor:[UIColor clearColor]];
-//        user_button.tag = num;
-//        [user_button addTarget:self action:@selector(user_button_Action:) forControlEvents:UIControlEventTouchUpInside];
-//        [button addSubview:user_button];
-//        
-//        NSString *venueName = self.newsfeed_venuename[num];
-//        NSString *venueAddress = self.newsfeed_venueaddress[num];
-//        NSString *venueState = self.newsfeed_venuestate[num];
-//        
-//        if([venueAddress length]>0){
-//            UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 21, 200, 20)];
-//            venueLabel.textColor = [UIColor whiteColor];
-//            [venueLabel setFont:[UIFont fontWithName:@"OpenSans-Regular" size:8]];
-//            venueLabel.text = [NSString stringWithFormat:@"%@, %@",[venueAddress uppercaseString],[venueState uppercaseString]];
-//            venueLabel.textAlignment = NSTextAlignmentLeft;
-//            venueLabel.adjustsFontSizeToFitWidth = YES;
-//            [venueLabel setBackgroundColor:[UIColor clearColor]];
-//            [button addSubview:venueLabel];
-//        }
-//        
-//        UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(53, 0, 260, 30)];
-//        userLabel.textColor = [UIColor whiteColor];
-//        userLabel.font = [UIFont fontWithName:@"OpenSans" size:10.0];
-//        
-//        UILabel *userLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(53, 15, 260, 30)];
-//        userLabel2.textColor = [UIColor whiteColor];
-//        userLabel2.font = [UIFont fontWithName:@"OpenSans" size:9.0];
-//        
-//        if ([self.newsfeed_posttype[num] isEqualToString:@"hunt"]) {
-//            
-//            userLabel.text = [NSString stringWithFormat:@"%@ IS AT %@",[self.newsfeed_userfullname[num] uppercaseString],[venueName uppercaseString]];
-////                                              NSLog(@"type yes");
-//            userLabel2.text = [self.newsfeed_caption[num] uppercaseString];
-//            
-//        }else{
-//            userLabel.frame = CGRectMake(53, 1, 250, 30);
-//            userLabel.textColor = [UIColor whiteColor];
-//            userLabel.font = [UIFont fontWithName:@"OpenSans" size:10.0];
-////                                              NSLog(@"type no");
-//            userLabel.text = [NSString stringWithFormat:@"%@ IS AT %@",[self.newsfeed_userfullname[num] uppercaseString],[venueName uppercaseString]];
-//        }
-//        userLabel.textAlignment = NSTextAlignmentLeft;
-//        userLabel.adjustsFontSizeToFitWidth = YES;
-//        [button addSubview:userLabel];
-//        
-//        userLabel2.textAlignment = NSTextAlignmentLeft;
-//        userLabel2.adjustsFontSizeToFitWidth = YES;
-//        [button addSubview:userLabel2];
-//        
-//        if ([venueName length]>0){
-//            
-//            UIButton *rest_arrow = [UIButton buttonWithType:UIButtonTypeCustom];
-//            [rest_arrow  setFrame:CGRectMake(280, 0, 40, 45)];
-//            [rest_arrow setBackgroundColor:[UIColor clearColor]];
-//            rest_arrow.tag = num;
-//            [rest_arrow addTarget:self action:@selector(restaurant_button:) forControlEvents:UIControlEventTouchUpInside];
-//            [button addSubview:rest_arrow];
-//            
-//            UIImageView *arrow_2 = [[UIImageView alloc]initWithFrame:CGRectMake( 295, 15, 17, 17)];
-//            arrow_2.image = [UIImage imageNamed:@"forward_arrow.png"];
-//            [button addSubview:arrow_2];
-//            
-//        }
-//        
-//        UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 45, 320, 250)];
-//        [buttonImage setBackgroundColor:[UIColor clearColor]];
-//        buttonImage.contentMode = UIViewContentModeScaleToFill;
-//        buttonImage.clipsToBounds = YES;
-//        buttonImage.opaque = YES;
-//        buttonImage.image = image;
-//        [button addSubview:buttonImage];
-//        
-//        CGRect cropRect = CGRectMake(0, 190, 320, 60);
-//        UIImage *inputImage = [image crop:cropRect];
-//        
-//        UIImage *blurredImage = [self blur:inputImage];
-//        
-//        UIImageView *blurred_view = [[UIImageView alloc]initWithFrame:CGRectMake(0, 235, 320, 60)];
-//        blurred_view.image = blurredImage;
-//        [button addSubview:blurred_view];
-//        
-//        UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 245, 300, 25)];
-//        dishLabel.textColor = [UIColor whiteColor];
-//        [dishLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
-//        dishLabel.text = [self.newsfeed_dishname[num] uppercaseString];
-//        dishLabel.textAlignment = NSTextAlignmentLeft;
-//        dishLabel.adjustsFontSizeToFitWidth = YES;
-//        // dishLabel.numberOfLines = 0;
-//        // [dishLabel sizeToFit];
-//        dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-//        dishLabel.layer.shadowRadius = 1;
-//        dishLabel.layer.shadowOpacity = 1;
-//        dishLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
-//        dishLabel.layer.masksToBounds = NO;
-//        dishLabel.backgroundColor = [UIColor clearColor];
-//        [button addSubview:dishLabel];
-//        
-//        UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 230+50, 190, 25)];
-//        captionLabel.textColor = [UIColor whiteColor];
-//        [captionLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
-//        captionLabel.text = [NSString stringWithFormat:@"\"%@\"",self.newsfeed_caption[num]];
-//        captionLabel.textAlignment = NSTextAlignmentLeft;
-//        captionLabel.adjustsFontSizeToFitWidth = YES;
-////        captionLabel.numberOfLines = 0;
-////        captionLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-////        captionLabel.layer.shadowRadius = 1;
-////        captionLabel.layer.shadowOpacity = 1;
-////        captionLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
-////        [captionLabel sizeToFit];
-////        captionLabel.layer.masksToBounds = NO;
-//        captionLabel.backgroundColor = [UIColor clearColor];
-//        [button addSubview:captionLabel];
-//        
-//        NSDate *createddate = self.newsfeed_postdate[num];
-//        NSDate *now = [NSDate date];
-//        NSString *str;
-//        NSMutableString *myString = [NSMutableString string];
-//        
-//        NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
-//        if (secondsBetween<60) {
-//            int duration = secondsBetween;
-//            str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<3600) {
-//            int duration = secondsBetween / 60;
-//            str = [NSString stringWithFormat:@"%d min",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<86400){
-//            int duration = secondsBetween / 3600;
-//            str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else if (secondsBetween<604800){
-//            int duration = secondsBetween / 86400;
-//            str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
-//            [myString appendString:str];
-//        }else {
-//            int duration = secondsBetween / 604800;
-//            if(duration==1) {
-//                str = [NSString stringWithFormat:@"%d week",duration]; //%d or %i both is ok.
-//            }else{
-//                str = [NSString stringWithFormat:@"%d weeks",duration]; //%d or %i both is ok.
-//            }
-//            [myString appendString:str];
-//        }
-//        
-//        UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(13, 312+26, 70, 12)];
-//        time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
-//        time_label.textColor = [UIColor grayColor];
-//        [time_label setFont:[UIFont fontWithName:@"Helvetica" size:8]];
-//        time_label.textAlignment = NSTextAlignmentLeft;
-//        [button addSubview:time_label];
-//        
-////        NSString *kinveyId = [self.newsfeed_kinvey_id objectAtIndex:num];
-////        NSLog(@"kinveyId = %@",self.newsfeed_kinvey_id[num]);
-//        
-//        //        NSLog(@"index = %d",num);
-//        
-//        UIImageView *off_whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(0, 45+250, 320, 40)];
-//        //[off_whitebox setBackgroundColor:[self colorWithHexString:@"fafafa"]];
-//        [off_whitebox setBackgroundColor:[UIColor whiteColor]];
-//        [button addSubview:off_whitebox];
-//        
-//        UIView *gray = [[UIView alloc] initWithFrame:CGRectMake(120, 0, 1, 40)];
-//        gray.backgroundColor = [self colorWithHexString:@"cccccc"];
-//        [off_whitebox addSubview:gray];
-//        
-//        UIView *gray2 = [[UIView alloc] initWithFrame:CGRectMake(195, 0, 1, 40)];
-//        gray2.backgroundColor = [self colorWithHexString:@"cccccc"];
-//        [off_whitebox addSubview:gray2];
-//        
-//        UIView *gray3 = [[UIView alloc] initWithFrame:CGRectMake(265, 0, 1, 40)];
-//        gray3.backgroundColor = [self colorWithHexString:@"cccccc"];
-//        [off_whitebox addSubview:gray3];
-//        
-//        UIView *gray_h = [[UIView alloc] initWithFrame:CGRectMake(0, 39, 320, 2)];
-//        gray_h.backgroundColor = [self colorWithHexString:@"cccccc"];
-//        [off_whitebox addSubview:gray_h];
-//        
-//        UIView *gray_h2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 0.7)];
-//        gray_h2.backgroundColor = [self colorWithHexString:@"cccccc"];
-//        [off_whitebox addSubview:gray_h2];
-//        
-//        UIImageView *red_heart2 = [[UIImageView alloc]initWithFrame:CGRectMake(128, -2, 45, 45)];
-//        red_heart2.image = [UIImage imageNamed:@"Before_like.png"];
-//        [off_whitebox addSubview:red_heart2];
-//        
-//        UIImageView *taxi = [[UIImageView alloc]initWithFrame:CGRectMake(2, 0, 43, 43)];
-//        taxi.image = [UIImage imageNamed:@"random_photo_icon.png"];
-//        [off_whitebox addSubview:taxi];
-//        
-//        UILabel *nycLabel = [[UILabel alloc]initWithFrame:CGRectMake(47, 8, 50, 25)];
-//        nycLabel.textColor = [self colorWithHexString:@"cccccc"];
-//        [nycLabel setFont:[UIFont fontWithName:@"Montserrat-Bold" size:20]];
-//        nycLabel.text = [NSString stringWithFormat:@"NYC"];
-//        nycLabel.textAlignment = NSTextAlignmentCenter;
-//        nycLabel.adjustsFontSizeToFitWidth = YES;
-//        nycLabel.backgroundColor = [UIColor clearColor];
-//        [off_whitebox addSubview:nycLabel];
-//        
-//        UILabel *dotsLabel = [[UILabel alloc]initWithFrame:CGRectMake(270, -15, 50, 50)];
-//        dotsLabel.textColor = [self colorWithHexString:@"cccccc"];
-//        [dotsLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:35]];
-//        dotsLabel.text = [NSString stringWithFormat:@"..."];
-//        dotsLabel.textAlignment = NSTextAlignmentCenter;
-//        dotsLabel.adjustsFontSizeToFitWidth = YES;
-//        dotsLabel.backgroundColor = [UIColor clearColor];
-//        [off_whitebox addSubview:dotsLabel];
-//        
-//        UILabel *rateLabel = [[UILabel alloc]initWithFrame:CGRectMake(228, 375-68, 30, 15)];
-//        rateLabel.backgroundColor=[UIColor clearColor];
-//        [rateLabel setFont:[UIFont fontWithName:@"Montserrat-Regular" size:13]];
-//        if ([self.newsfeed_postvote[num] isEqualToString:@"YAY"]) {
-//            
-//            UIImageView *check = [[UIImageView alloc]initWithFrame:CGRectMake(197, 45+235+83-68, 35, 35)];
-//            check.image = [UIImage imageNamed:@"check2.png"];
-//            [button addSubview:check];
-//            
-//            rateLabel.textColor = [self colorWithHexString:@"18af80"];
-//            rateLabel.text = [NSString stringWithFormat:@"100%%"];
-//        }else{
-//            
-//            UIImageView *check = [[UIImageView alloc]initWithFrame:CGRectMake(197, 363+9-68, 33, 25)];
-//            check.image = [UIImage imageNamed:@"red_x.png"];
-//            [button addSubview:check];
-//            
-//            rateLabel.textColor = [self colorWithHexString:@"f38686"];
-//            rateLabel.text = [NSString stringWithFormat:@"0%%"];
-//        }
-//        rateLabel.textAlignment = NSTextAlignmentLeft;
-//        rateLabel.adjustsFontSizeToFitWidth = YES;
-//        [button addSubview:rateLabel];
-//        
-//        [_gridScrollView addSubview:button];
-//    
-//    }
-//}
-
 - (void)user_button_Action:(id)sender
 {
     
@@ -1660,7 +1517,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     NSString *hunt_name = [_newsFeed[num] objectForKey:@"HuntName"];
     NSDate *created_date = [_newsFeed[num] objectForKey:@"postDate"];
     NSString *post_type = [_newsFeed[num] objectForKey:@"postType"];
-    
     
     if (caption) {
         [self.newsfeed_caption addObject:caption];
@@ -1717,18 +1573,16 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    
-    
     if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"started hunt"]) {
     
         button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                  contentSize2+100,
+                                                                  contentSize2+10,
                                                                   yookaThumbnailWidth3,
                                                                   305)];
         contentSize2 = contentSize2 + 305;
     }else{
         button = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                contentSize2+100,
+                                                                contentSize2+10,
                                                                 yookaThumbnailWidth3,
                                                                 325)];
         contentSize2 = contentSize2 + 325;
@@ -1736,7 +1590,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
     }
     button.tag = 0;
     button.userInteractionEnabled = YES;
-    //        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     [button addGestureRecognizer:tapOnce]; //remove the other button action which calls method `button`
     [button addGestureRecognizer:tapTwice];
     [button addGestureRecognizer:tapTrice];
@@ -1756,33 +1610,21 @@ const NSInteger yookaThumbnailSpace3 = 5;
         
         UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 55, 305, 225)];
         [buttonImage setBackgroundColor:[UIColor clearColor]];
-        buttonImage.contentMode = UIViewContentModeTopLeft;
+        buttonImage.contentMode = UIViewContentModeScaleAspectFill;
         //buttonImage.layer.cornerRadius = 5.0;
         buttonImage.clipsToBounds = YES;
         buttonImage.opaque = YES;
         buttonImage.image = nil;
         
-
-        
-        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:hunt_pic_url]
-                                                            options:0
-                                                           progress:^(NSInteger receivedSize, NSInteger expectedSize)
+        [[SDImageCache sharedImageCache] queryDiskCacheForKey:kinveyId done:^(UIImage *image, SDImageCacheType cacheType)
          {
-             // progression tracking code
-         }
-                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-         {
-             if (image && finished)
-             {
-                 
-
-                 
+             if (image) {
                  
                  [UIView animateWithDuration:1.0f
                                   animations:^{
                                       buttonImage.alpha = 0.f;
                                   } completion:^(BOOL finished) {
-                 
+                                      
                                       UIImageView *whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 10, 305, 45)];
                                       [whitebox setBackgroundColor:[UIColor whiteColor]];
                                       whitebox.layer.shadowRadius = 0;
@@ -1804,24 +1646,20 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                       whitebox2.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
                                       [button addSubview:whitebox2];
                                       
-//                                      UIImageView *transparent_view = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 195, 305, 45)];
-//                                      transparent_view.backgroundColor = [[self colorWithHexString:@"4c4a4a"] colorWithAlphaComponent:0.5f];
-//                                      [button addSubview:transparent_view];
-                                      
                                       [self getUserImage:num];
                                       
-                                          NSString *string = [NSString stringWithFormat:@"image%d",num];
-                                          NSData *imgData = UIImagePNGRepresentation(image);
-                                          [ud setObject:imgData forKey:string];
-                                          [ud synchronize];
-                                          
-
+                                      NSString *string = [NSString stringWithFormat:@"image%d",num];
+                                      NSData *imgData = UIImagePNGRepresentation(image);
+                                      [ud setObject:imgData forKey:string];
+                                      [ud synchronize];
+                                      
+                                      
                                       [UIView animateWithDuration:1.0f
                                                        animations:^{
                                                            buttonImage.alpha = 1;
-
+                                                           
                                                        } completion:^(BOOL finished) {
-                 
+                                                           
                                                            
                                                            if ([self.subscribedHunts containsObject:hunt_name]) {
                                                                
@@ -1832,7 +1670,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                                [joinButton setBackgroundColor:[UIColor clearColor]];
                                                                [joinButton setTag:num];
                                                                
-                                                               UIImageView *joinBtn = [[UIImageView alloc]initWithFrame:CGRectMake(271, 63,50,45)];
+                                                               UIImageView *joinBtn = [[UIImageView alloc]initWithFrame:CGRectMake(275, 63,45,45)];
                                                                joinBtn.image=[UIImage imageNamed:@"ribbon.png"];
                                                                [button addSubview:joinBtn];
                                                                
@@ -1843,8 +1681,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                                [joinButton addTarget:self action:@selector(gotoFeaturedHunts:)
                                                                     forControlEvents:UIControlEventTouchUpInside];
                                                                [button addSubview:joinButton];
-
-
+                                                               
                                                            }
                                                            
                                                            NSDate *createddate = [_newsFeed[num] objectForKey:@"postDate"];
@@ -1892,12 +1729,139 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                            //                 [self imageLikes:num];
                                                        }];
                                   }];
-                
+                 
              }else{
                  
+                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:hunt_pic_url]
+                                                                     options:0
+                                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                  {
+                      // progression tracking code
+                  }
+                                                                   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                  {
+                      if (image && finished)
+                      {
+                          
+                          [UIView animateWithDuration:1.0f
+                                           animations:^{
+                                               buttonImage.alpha = 0.f;
+                                           } completion:^(BOOL finished) {
+                                               
+                                               UIImageView *whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 10, 305, 45)];
+                                               [whitebox setBackgroundColor:[UIColor whiteColor]];
+                                               whitebox.layer.shadowRadius = 0;
+                                               whitebox.layer.shadowOpacity = 1;
+                                               whitebox.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                                               whitebox.layer.masksToBounds = NO;
+                                               whitebox.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                                               [button addSubview:whitebox];
+                                               
+                                               buttonImage.image = image;
+                                               [button addSubview:buttonImage];
+                                               
+                                               [[SDImageCache sharedImageCache] storeImage:image forKey:kinveyId];
+                                               
+                                               UIImageView *whitebox2 = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 280, 305, 10)];
+                                               [whitebox2 setBackgroundColor:[UIColor whiteColor]];
+                                               whitebox2.layer.shadowRadius = 0;
+                                               whitebox2.layer.shadowOpacity = 1;
+                                               whitebox2.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                                               whitebox2.layer.masksToBounds = NO;
+                                               whitebox2.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                                               [button addSubview:whitebox2];
+                                               
+                                               [self getUserImage:num];
+                                               
+                                               NSString *string = [NSString stringWithFormat:@"image%d",num];
+                                               NSData *imgData = UIImagePNGRepresentation(image);
+                                               [ud setObject:imgData forKey:string];
+                                               [ud synchronize];
+                                               
+                                               
+                                               [UIView animateWithDuration:1.0f
+                                                                animations:^{
+                                                                    buttonImage.alpha = 1;
+                                                                    
+                                                                } completion:^(BOOL finished) {
+                                                                    
+                                                                    
+                                                                    if ([self.subscribedHunts containsObject:hunt_name]) {
+                                                                        
+                                                                    }else{
+                                                                        
+                                                                        UIButton *joinButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                                                                        [joinButton setFrame:CGRectMake(271, 65,50,40)];
+                                                                        [joinButton setBackgroundColor:[UIColor clearColor]];
+                                                                        [joinButton setTag:num];
+                                                                        
+                                                                        UIImageView *joinBtn = [[UIImageView alloc]initWithFrame:CGRectMake(275, 63,45,45)];
+                                                                        joinBtn.image=[UIImage imageNamed:@"ribbon.png"];
+                                                                        [button addSubview:joinBtn];
+                                                                        
+                                                                        UIImageView *joinBtn2 = [[UIImageView alloc]initWithFrame:CGRectMake(265, 53,67,67)];
+                                                                        joinBtn2.image=[UIImage imageNamed:@"add_to_button.png"];
+                                                                        [button addSubview:joinBtn2];
+                                                                        
+                                                                        [joinButton addTarget:self action:@selector(gotoFeaturedHunts:)
+                                                                             forControlEvents:UIControlEventTouchUpInside];
+                                                                        [button addSubview:joinButton];
+                                                                        
+                                                                    }
+                                                                    
+                                                                    NSDate *createddate = [_newsFeed[num] objectForKey:@"postDate"];
+                                                                    NSDate *now = [NSDate date];
+                                                                    NSString *str;
+                                                                    NSMutableString *myString = [NSMutableString string];
+                                                                    
+                                                                    NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+                                                                    
+                                                                    if (secondsBetween<60) {
+                                                                        int duration = secondsBetween;
+                                                                        str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<3600) {
+                                                                        int duration = secondsBetween / 60;
+                                                                        str = [NSString stringWithFormat:@"%d min",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<86400){
+                                                                        int duration = secondsBetween / 3600;
+                                                                        str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<604800){
+                                                                        int duration = secondsBetween / 86400;
+                                                                        str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else {
+                                                                        int duration = secondsBetween / 604800;
+                                                                        if(duration==1) {
+                                                                            str = [NSString stringWithFormat:@"%d week",duration]; //%d or %i both is ok.
+                                                                        }else{
+                                                                            str = [NSString stringWithFormat:@"%d weeks",duration]; //%d or %i both is ok.
+                                                                        }
+                                                                        [myString appendString:str];
+                                                                    }
+                                                                    
+                                                                    UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(253, 13, 50, 12)];
+                                                                    time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
+                                                                    time_label.textColor = [UIColor lightGrayColor];
+                                                                    [time_label setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                                                                    time_label.textAlignment = NSTextAlignmentRight;
+                                                                    [button addSubview:time_label];
+                                                                    
+                                                                    [_gridScrollView addSubview:button];
+                                                                    
+                                                                    //                 [self imageLikes:num];
+                                                                }];
+                                           }];
+                          
+                      }else{
+                          
+                      }
+                  }];
+
              }
          }];
-        
         
     }else{
         
@@ -1911,23 +1875,15 @@ const NSInteger yookaThumbnailSpace3 = 5;
         buttonImage.opaque = YES;
         buttonImage.image = nil;
         
-        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:dishPicUrl]
-                                                            options:0
-                                                           progress:^(NSInteger receivedSize, NSInteger expectedSize)
+        [[SDImageCache sharedImageCache] queryDiskCacheForKey:kinveyId done:^(UIImage *image, SDImageCacheType cacheType)
          {
-             // progression tracking code
-         }
-                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
-         {
-             if (image && finished)
-             {
-                 //                                                      NSLog(@"found image");
+             if (image) {
                  
                  [UIView animateWithDuration:1.0f
                                   animations:^{
                                       buttonImage.alpha = 0.f;
                                   } completion:^(BOOL finished) {
-                 
+                                      
                                       UIImageView *whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 10, 305, 45)];
                                       [whitebox setBackgroundColor:[UIColor whiteColor]];
                                       whitebox.layer.shadowRadius = 0;
@@ -1945,7 +1901,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                       whitebox2.layer.masksToBounds = NO;
                                       whitebox2.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
                                       [button addSubview:whitebox2];
-
+                                      
                                       buttonImage.image = image;
                                       [button addSubview:buttonImage];
                                       
@@ -1961,112 +1917,112 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                            buttonImage.alpha = 1;
                                                            
                                                        } completion:^(BOOL finished) {
-                 
-                 
-                                      if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
                                                            
-                                            UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 225, 300, 25)];
-                                            dishLabel.textColor = [UIColor whiteColor];
-                                            [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
-                                            dishLabel.text = [dishName uppercaseString];
-                                            dishLabel.textAlignment = NSTextAlignmentLeft;
-                                            dishLabel.adjustsFontSizeToFitWidth = YES;
-                                            dishLabel.layer.masksToBounds = NO;
-                                            dishLabel.backgroundColor = [UIColor clearColor];
-                                            [button addSubview:dishLabel];
-                                      
-                                      }else{
+                                                           
+                                                           if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
                                                                
-                                            UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 231, 300, 25)];
-                                            dishLabel.textColor = [UIColor whiteColor];
-                                            [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
-                                            dishLabel.text = [dishName uppercaseString];
-                                            dishLabel.textAlignment = NSTextAlignmentLeft;
-                                            dishLabel.adjustsFontSizeToFitWidth = YES;
-                                            dishLabel.layer.masksToBounds = NO;
-                                            dishLabel.backgroundColor = [UIColor clearColor];
-                                            [button addSubview:dishLabel];
+                                                               UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 225, 300, 25)];
+                                                               dishLabel.textColor = [UIColor whiteColor];
+                                                               [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
+                                                               dishLabel.text = [dishName uppercaseString];
+                                                               dishLabel.textAlignment = NSTextAlignmentLeft;
+                                                               dishLabel.adjustsFontSizeToFitWidth = YES;
+                                                               dishLabel.layer.masksToBounds = NO;
+                                                               dishLabel.backgroundColor = [UIColor clearColor];
+                                                               [button addSubview:dishLabel];
                                                                
-                                    }
+                                                           }else{
+                                                               
+                                                               UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 231, 300, 25)];
+                                                               dishLabel.textColor = [UIColor whiteColor];
+                                                               [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
+                                                               dishLabel.text = [dishName uppercaseString];
+                                                               dishLabel.textAlignment = NSTextAlignmentLeft;
+                                                               dishLabel.adjustsFontSizeToFitWidth = YES;
+                                                               dishLabel.layer.masksToBounds = NO;
+                                                               dishLabel.backgroundColor = [UIColor clearColor];
+                                                               [button addSubview:dishLabel];
+                                                               
+                                                           }
                                                            
-                                            UILabel *captionLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 215+50, 190, 25)];
-                                            captionLabel2.textColor = [UIColor lightGrayColor];
-                                            [captionLabel2 setFont:[UIFont fontWithName:@"OpenSans" size:10.f]];
-                                            captionLabel2.text = [NSString stringWithFormat:@"Comments:"];
-                                            [button addSubview:captionLabel2];
+                                                           UILabel *captionLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 215+50, 190, 25)];
+                                                           captionLabel2.textColor = [UIColor lightGrayColor];
+                                                           [captionLabel2 setFont:[UIFont fontWithName:@"OpenSans" size:10.f]];
+                                                           captionLabel2.text = [NSString stringWithFormat:@"Comments:"];
+                                                           [button addSubview:captionLabel2];
                                                            
-                                            UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 230+50, 190, 25)];
-                                            captionLabel.textColor = [UIColor lightGrayColor];
-                                            [captionLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:10.f]];
-                                            captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
-                                            captionLabel.textAlignment = NSTextAlignmentLeft;
-                                            captionLabel.adjustsFontSizeToFitWidth = YES;
-                                            //captionLabel.numberOfLines = 0;
-                                            //[captionLabel sizeToFit];
-                                            //captionLabel.layer.masksToBounds = NO;
+                                                           UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 230+50, 190, 25)];
+                                                           captionLabel.textColor = [UIColor lightGrayColor];
+                                                           [captionLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:10.f]];
+                                                           captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
+                                                           captionLabel.textAlignment = NSTextAlignmentLeft;
+                                                           captionLabel.adjustsFontSizeToFitWidth = YES;
+                                                           //captionLabel.numberOfLines = 0;
+                                                           //[captionLabel sizeToFit];
+                                                           //captionLabel.layer.masksToBounds = NO;
                                                            
                                                            
-                                            if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
-                                                
+                                                           if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
+                                                               
                                                                // same placement
-                                            }else{
-                                                captionLabel.frame=CGRectMake(20, 230+50, 190, 25);
-                                            }
-
+                                                           }else{
+                                                               captionLabel.frame=CGRectMake(20, 230+50, 190, 25);
+                                                           }
                                                            
-//                                                           captionLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-//                                                           captionLabel.layer.shadowRadius = 1;
-//                                                           captionLabel.layer.shadowOpacity = 1;
-//                                                           captionLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
-                                            captionLabel.backgroundColor = [UIColor clearColor];
-                                            [button addSubview:captionLabel];
                                                            
-                                            NSDate *createddate = [_newsFeed[num] objectForKey:@"postDate"];
-                                            NSDate *now = [NSDate date];
-                                            NSString *str;
-                                            NSMutableString *myString = [NSMutableString string];
+                                                           //                                                           captionLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
+                                                           //                                                           captionLabel.layer.shadowRadius = 1;
+                                                           //                                                           captionLabel.layer.shadowOpacity = 1;
+                                                           //                                                           captionLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
+                                                           captionLabel.backgroundColor = [UIColor clearColor];
+                                                           [button addSubview:captionLabel];
                                                            
-                                            NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
-                                            if (secondsBetween<60) {
-                                                    int duration = secondsBetween;
-                                                    str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
-                                                    [myString appendString:str];
-                                            }else if (secondsBetween<3600) {
+                                                           NSDate *createddate = [_newsFeed[num] objectForKey:@"postDate"];
+                                                           NSDate *now = [NSDate date];
+                                                           NSString *str;
+                                                           NSMutableString *myString = [NSMutableString string];
+                                                           
+                                                           NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+                                                           if (secondsBetween<60) {
+                                                               int duration = secondsBetween;
+                                                               str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
+                                                               [myString appendString:str];
+                                                           }else if (secondsBetween<3600) {
                                                                int duration = secondsBetween / 60;
                                                                str = [NSString stringWithFormat:@"%d min",duration]; //%d or %i both is ok.
                                                                [myString appendString:str];
-                                            }else if (secondsBetween<86400){
+                                                           }else if (secondsBetween<86400){
                                                                int duration = secondsBetween / 3600;
                                                                str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
                                                                [myString appendString:str];
-                                            }else if (secondsBetween<604800){
+                                                           }else if (secondsBetween<604800){
                                                                int duration = secondsBetween / 86400;
                                                                str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
                                                                [myString appendString:str];
-                                            }else {
+                                                           }else {
                                                                int duration = secondsBetween / 604800;
                                                                if(duration==1) {
                                                                    str = [NSString stringWithFormat:@"%d week",duration]; //%d or %i both is ok.
-                                            }else{
+                                                               }else{
                                                                    str = [NSString stringWithFormat:@"%d weeks",duration]; //%d or %i both is ok.
-                                            }
+                                                               }
                                                                [myString appendString:str];
-                                            }
+                                                           }
                                                            
-                                            UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(253, 13, 50, 12)];
-                                            time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
-                                            time_label.textColor = [UIColor lightGrayColor];
-                                            [time_label setFont:[UIFont fontWithName:@"OpenSans" size:7]];
-                                            time_label.textAlignment = NSTextAlignmentRight;
-                                            [button addSubview:time_label];
-                 
-                                            self.circularProgressView = [[LLACircularProgressView alloc] init];
-                                            self.circularProgressView.frame = CGRectMake(220, 280, 30, 30);
-                                            self.circularProgressView.center = CGPointMake(240, 288);
-                                            [self.circularProgressView setBackgroundColor:[UIColor clearColor]];
-                                            [button addSubview:self.circularProgressView];
-                 
-                                            if ([post_vote isEqualToString:@"YAY"]) {
+                                                           UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(253, 13, 50, 12)];
+                                                           time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
+                                                           time_label.textColor = [UIColor lightGrayColor];
+                                                           [time_label setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                                                           time_label.textAlignment = NSTextAlignmentRight;
+                                                           [button addSubview:time_label];
+                                                           
+                                                           self.circularProgressView = [[LLACircularProgressView alloc] init];
+                                                           self.circularProgressView.frame = CGRectMake(220, 280, 30, 30);
+                                                           self.circularProgressView.center = CGPointMake(240, 288);
+                                                           [self.circularProgressView setBackgroundColor:[UIColor clearColor]];
+                                                           [button addSubview:self.circularProgressView];
+                                                           
+                                                           if ([post_vote isEqualToString:@"YAY"]) {
                                                                float percent = 1.f;
                                                                [self tick:percent];
                                                                
@@ -2077,7 +2033,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                                [rate_label setText:@"100%"];
                                                                [button addSubview:rate_label];
                                                                
-                                            }else{
+                                                           }else{
                                                                float percent = 0.f;
                                                                [self tick:percent];
                                                                UILabel *rate_label = [[UILabel alloc]initWithFrame:CGRectMake(215, 283, 50, 10)];
@@ -2086,15 +2042,204 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                                                rate_label.textAlignment = NSTextAlignmentCenter;
                                                                [rate_label setText:@"0%"];
                                                                [button addSubview:rate_label];
-                                        }
+                                                           }
                                                            
-                                        [_gridScrollView addSubview:button];
+                                                           [_gridScrollView addSubview:button];
                                                            
                                                        }];
                                   }];
                  
-
              }else{
+                 
+                 [SDWebImageDownloader.sharedDownloader downloadImageWithURL:[NSURL URLWithString:dishPicUrl]
+                                                                     options:0
+                                                                    progress:^(NSInteger receivedSize, NSInteger expectedSize)
+                  {
+                      // progression tracking code
+                  }
+                                                                   completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+                  {
+                      if (image && finished)
+                      {
+                          //                                                      NSLog(@"found image");
+                          
+                          [UIView animateWithDuration:1.0f
+                                           animations:^{
+                                               buttonImage.alpha = 0.f;
+                                           } completion:^(BOOL finished) {
+                                               
+                                               UIImageView *whitebox = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 10, 305, 45)];
+                                               [whitebox setBackgroundColor:[UIColor whiteColor]];
+                                               whitebox.layer.shadowRadius = 0;
+                                               whitebox.layer.shadowOpacity = 1;
+                                               whitebox.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                                               whitebox.layer.masksToBounds = NO;
+                                               whitebox.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                                               [button addSubview:whitebox];
+                                               
+                                               UIImageView *whitebox2 = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 260, 305, 50)];
+                                               [whitebox2 setBackgroundColor:[UIColor whiteColor]];
+                                               whitebox2.layer.shadowRadius = 0;
+                                               whitebox2.layer.shadowOpacity = 1;
+                                               whitebox2.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+                                               whitebox2.layer.masksToBounds = NO;
+                                               whitebox2.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
+                                               [button addSubview:whitebox2];
+                                               
+                                               buttonImage.image = image;
+                                               [button addSubview:buttonImage];
+                                               
+                                               [[SDImageCache sharedImageCache] storeImage:image forKey:kinveyId];
+                                               
+                                               UIImageView *transparent_view = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 175+45, 305, 45)];
+                                               transparent_view.backgroundColor = [[self colorWithHexString:@"4c4a4a"] colorWithAlphaComponent:0.5f];
+                                               [button addSubview:transparent_view];
+                                               
+                                               [self getUserImage:num];
+                                               [self imageLikes:num];
+                                               
+                                               [UIView animateWithDuration:1.0f
+                                                                animations:^{
+                                                                    buttonImage.alpha = 1;
+                                                                    
+                                                                } completion:^(BOOL finished) {
+                                                                    
+                                                                    
+                                                                    if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
+                                                                        
+                                                                        UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 225, 300, 25)];
+                                                                        dishLabel.textColor = [UIColor whiteColor];
+                                                                        [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
+                                                                        dishLabel.text = [dishName uppercaseString];
+                                                                        dishLabel.textAlignment = NSTextAlignmentLeft;
+                                                                        dishLabel.adjustsFontSizeToFitWidth = YES;
+                                                                        dishLabel.layer.masksToBounds = NO;
+                                                                        dishLabel.backgroundColor = [UIColor clearColor];
+                                                                        [button addSubview:dishLabel];
+                                                                        
+                                                                    }else{
+                                                                        
+                                                                        UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(25, 231, 300, 25)];
+                                                                        dishLabel.textColor = [UIColor whiteColor];
+                                                                        [dishLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:15]];
+                                                                        dishLabel.text = [dishName uppercaseString];
+                                                                        dishLabel.textAlignment = NSTextAlignmentLeft;
+                                                                        dishLabel.adjustsFontSizeToFitWidth = YES;
+                                                                        dishLabel.layer.masksToBounds = NO;
+                                                                        dishLabel.backgroundColor = [UIColor clearColor];
+                                                                        [button addSubview:dishLabel];
+                                                                        
+                                                                    }
+                                                                    
+                                                                    UILabel *captionLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(20, 215+50, 190, 25)];
+                                                                    captionLabel2.textColor = [UIColor lightGrayColor];
+                                                                    [captionLabel2 setFont:[UIFont fontWithName:@"OpenSans" size:10.f]];
+                                                                    captionLabel2.text = [NSString stringWithFormat:@"Comments:"];
+                                                                    [button addSubview:captionLabel2];
+                                                                    
+                                                                    UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 230+50, 190, 25)];
+                                                                    captionLabel.textColor = [UIColor lightGrayColor];
+                                                                    [captionLabel setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:10.f]];
+                                                                    captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
+                                                                    captionLabel.textAlignment = NSTextAlignmentLeft;
+                                                                    captionLabel.adjustsFontSizeToFitWidth = YES;
+                                                                    //captionLabel.numberOfLines = 0;
+                                                                    //[captionLabel sizeToFit];
+                                                                    //captionLabel.layer.masksToBounds = NO;
+                                                                    
+                                                                    
+                                                                    if ([[_newsFeed[num] objectForKey:@"postType"] isEqualToString:@"hunt"]) {
+                                                                        
+                                                                        // same placement
+                                                                    }else{
+                                                                        captionLabel.frame=CGRectMake(20, 230+50, 190, 25);
+                                                                    }
+                                                                    
+                                                                    
+                                                                    //                                                           captionLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
+                                                                    //                                                           captionLabel.layer.shadowRadius = 1;
+                                                                    //                                                           captionLabel.layer.shadowOpacity = 1;
+                                                                    //                                                           captionLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
+                                                                    captionLabel.backgroundColor = [UIColor clearColor];
+                                                                    [button addSubview:captionLabel];
+                                                                    
+                                                                    NSDate *createddate = [_newsFeed[num] objectForKey:@"postDate"];
+                                                                    NSDate *now = [NSDate date];
+                                                                    NSString *str;
+                                                                    NSMutableString *myString = [NSMutableString string];
+                                                                    
+                                                                    NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
+                                                                    if (secondsBetween<60) {
+                                                                        int duration = secondsBetween;
+                                                                        str = [NSString stringWithFormat:@"%d sec",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<3600) {
+                                                                        int duration = secondsBetween / 60;
+                                                                        str = [NSString stringWithFormat:@"%d min",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<86400){
+                                                                        int duration = secondsBetween / 3600;
+                                                                        str = [NSString stringWithFormat:@"%d hrs",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else if (secondsBetween<604800){
+                                                                        int duration = secondsBetween / 86400;
+                                                                        str = [NSString stringWithFormat:@"%d days",duration]; //%d or %i both is ok.
+                                                                        [myString appendString:str];
+                                                                    }else {
+                                                                        int duration = secondsBetween / 604800;
+                                                                        if(duration==1) {
+                                                                            str = [NSString stringWithFormat:@"%d week",duration]; //%d or %i both is ok.
+                                                                        }else{
+                                                                            str = [NSString stringWithFormat:@"%d weeks",duration]; //%d or %i both is ok.
+                                                                        }
+                                                                        [myString appendString:str];
+                                                                    }
+                                                                    
+                                                                    UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(253, 13, 50, 12)];
+                                                                    time_label.text = [NSString stringWithFormat:@"%@ ago",myString];
+                                                                    time_label.textColor = [UIColor lightGrayColor];
+                                                                    [time_label setFont:[UIFont fontWithName:@"OpenSans" size:7]];
+                                                                    time_label.textAlignment = NSTextAlignmentRight;
+                                                                    [button addSubview:time_label];
+                                                                    
+                                                                    self.circularProgressView = [[LLACircularProgressView alloc] init];
+                                                                    self.circularProgressView.frame = CGRectMake(220, 280, 30, 30);
+                                                                    self.circularProgressView.center = CGPointMake(240, 288);
+                                                                    [self.circularProgressView setBackgroundColor:[UIColor clearColor]];
+                                                                    [button addSubview:self.circularProgressView];
+                                                                    
+                                                                    if ([post_vote isEqualToString:@"YAY"]) {
+                                                                        float percent = 1.f;
+                                                                        [self tick:percent];
+                                                                        
+                                                                        UILabel *rate_label = [[UILabel alloc]initWithFrame:CGRectMake(215, 283, 50, 10)];
+                                                                        [rate_label setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:7.0]];
+                                                                        [rate_label setTextColor:[self colorWithHexString:@"a7a7a7"]];
+                                                                        rate_label.textAlignment = NSTextAlignmentCenter;
+                                                                        [rate_label setText:@"100%"];
+                                                                        [button addSubview:rate_label];
+                                                                        
+                                                                    }else{
+                                                                        float percent = 0.f;
+                                                                        [self tick:percent];
+                                                                        UILabel *rate_label = [[UILabel alloc]initWithFrame:CGRectMake(215, 283, 50, 10)];
+                                                                        [rate_label setFont:[UIFont fontWithName:@"OpenSans-SemiBold" size:7.0]];
+                                                                        [rate_label setTextColor:[self colorWithHexString:@"a7a7a7"]];
+                                                                        rate_label.textAlignment = NSTextAlignmentCenter;
+                                                                        [rate_label setText:@"0%"];
+                                                                        [button addSubview:rate_label];
+                                                                    }
+                                                                    
+                                                                    [_gridScrollView addSubview:button];
+                                                                    
+                                                                }];
+                                           }];
+                          
+                          
+                      }else{
+                          
+                      }
+                  }];
                  
              }
          }];
@@ -2104,7 +2249,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
 }
 
 - (void)tick:(float)percent {
-    NSLog(@" percent : %f",percent);
 
     CGFloat progress = percent;
     [self.circularProgressView setProgress:(progress <= 1.00f ? progress : 0.0f) animated:YES];
@@ -2116,6 +2260,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
     UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
     [self.navigationController.navigationBar setBarTintColor:color];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    
+    NSLog(@"yooka check = %@",self.yooka_check);
     
 //    if (self.navigationController.viewControllers.count>1 && [[self.navigationController.viewControllers objectAtIndex:self.navigationController.viewControllers.count-2] isKindOfClass:[YookaPostViewController class]]) {
 //
@@ -2130,10 +2276,9 @@ const NSInteger yookaThumbnailSpace3 = 5;
     // Dispose of any resources that can be recreated.
     [[SDImageCache sharedImageCache] clearMemory];
     [[SDImageCache sharedImageCache] clearDisk];
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+//    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+//    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
     [self reloadView];
-    
     [super didReceiveMemoryWarning];
 
 }
@@ -2160,37 +2305,15 @@ const NSInteger yookaThumbnailSpace3 = 5;
         tapTrice.numberOfTapsRequired = 3;
         //stops tapOnce from overriding tapTwice
         [tapOnce requireGestureRecognizerToFail:tapTrice];
-//        [tapTwice requireGestureRecognizerToFail:tapTrice];
-        
-//        if ([[_newsFeed[item] objectForKey:@"postType"] isEqualToString:@"started hunt"]) {
-//
-//            NSLog(@"type yes");
-//            _button = [[UIButton alloc] initWithFrame:CGRectMake(col*yookaThumbnailWidth3,
-//                                                                 contentSize,
-//                                                                 yookaThumbnailWidth3,
-//                                                                 yookaThumbnailHeight3)];
-//            contentSize += yookaThumbnailHeight3;
-//
-////        }else if([[_newsFeed[item-1] objectForKey:@"postType"] isEqualToString:@"started hunt"]){
-////
-////            _button = [[UIButton alloc] initWithFrame:CGRectMake(col*yookaThumbnailWidth3,
-////                                                                 contentSize,
-////                                                                 yookaThumbnailWidth3,
-////                                                                 yookaThumbnailHeight3)];
-////            contentSize += (yookaThumbnailHeight3);
-//
-//        }else{
         
             _button = [[UIButton alloc] initWithFrame:CGRectMake(col*yookaThumbnailWidth3,
                                                                  (row*yookaThumbnailHeight3)+307,
                                                                  yookaThumbnailWidth3,
                                                                  yookaThumbnailHeight3)];
             contentSize += (yookaThumbnailHeight3);
-//        }
         
         _button.tag = item;
         _button.userInteractionEnabled = YES;
-//        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_button addGestureRecognizer:tapOnce]; //remove the other button action which calls method `button`
         [_button addGestureRecognizer:tapTwice];
         [_button addGestureRecognizer:tapTrice];
@@ -2209,7 +2332,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
     [_gridScrollView setContentSize:CGSizeMake(320, contentSize)];
     
-    //[self loadImages];
 }
 
 - (void)tapOnce:(id)sender
@@ -2224,14 +2346,10 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
 - (void)tapTwice2:(id)sender
 {
-    //    [self.gridScrollView setUserInteractionEnabled:NO];
-    //    NSLog(@"Tap twice");
+
     UIButton* button1 = sender;
     NSUInteger b = button1.tag;
-//    NSLog(@"b=%lu",(unsigned long)b);
-    //    NSLog(@"post data = %@",_newsFeed[view.tag]);
-    //    NSLog(@"likes data = %@",_likesData);
-    //    NSLog(@"likers data = %@",_likersData);
+
     _postLikers = [NSMutableArray new];
     
 
@@ -2248,11 +2366,8 @@ const NSInteger yookaThumbnailSpace3 = 5;
         
         _postId = [_newsFeed5[0] objectForKey:@"_id"];
         
-        
         //[removeHeart setHidden:YES];
         //[removeLike setHidden:YES];
-        
-        
         
         KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"LikesDB" ofClass:[YookaBackend class]];
         KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
@@ -2314,15 +2429,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                         //likesLabel.adjustsFontSizeToFitWidth = YES;
                         [likesLabel setTag:221];
                         [button addSubview:likesLabel];
-                        
-                        //                        UIButton *like_button = [UIButton buttonWithType:UIButtonTypeCustom];
-                        //                        [like_button  setFrame:CGRectMake(205, 210, 35, 35)];
-                        //                        [like_button setBackgroundColor:[UIColor clearColor]];
-                        //                        like_button.tag = 901;
-                        //                        [like_button addTarget:self action:@selector(tapTwice2:) forControlEvents:UIControlEventTouchUpInside];
-                        //                        [button addSubview:like_button];
-                        
-                        //                [self saveSelectedPost];
+
                         [self saveLikes];
                         _likeStatus = @"NO";
                         
@@ -2344,10 +2451,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                         int post_likes = [_postLikes intValue];
                         post_likes=post_likes+1;
                         _postLikes = [NSString stringWithFormat:@"%d",post_likes];
-                        //                    [_likesData replaceObjectAtIndex:view.tag withObject:_postLikes];
                         
-                        //        NSLog(@"likes data 2 = %@",_likesData);
-                        //        NSLog(@"likers data 2 = %@",_likersData);
                         UIView* removeHeart = [button viewWithTag:22];
                         
                         [removeHeart removeFromSuperview];
@@ -2785,7 +2889,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
          {
              if (image) {
                  
-                 NSLog(@"yes image");
                  
                  UIImageView *buttonImage4 = [[UIImageView alloc]initWithFrame:CGRectMake( 12, 10, 55, 55)];
                  buttonImage4.layer.cornerRadius = buttonImage4.frame.size.height / 2;
@@ -2806,10 +2909,9 @@ const NSInteger yookaThumbnailSpace3 = 5;
                  [button addSubview:user_button];
                  
                  NSString *userFullName = [_newsFeed[num] objectForKey:@"userFullName"];
-                 NSLog(@"user full name = %@",userFullName);
                  UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 25, 240, 30)];
                  userLabel.textColor = [UIColor lightGrayColor];
-                 userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                 userLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:12.0];
                  if ([_newsFeed[num] objectForKey:@"postType"]) {
                      //                                              NSLog(@"type yes");
                      userLabel.text = [[_newsFeed[num] objectForKey:@"postCaption"] capitalizedString];
@@ -2841,7 +2943,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
 
              }else{
                  
-                 NSLog(@"no image");
                  _collectionName2 = @"userPicture";
                  _customEndpoint2 = @"NewsFeed";
                  _fieldName2 = @"_id";
@@ -2903,7 +3004,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                           
                                           UILabel *userLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 25, 240, 30)];
                                           userLabel.textColor = [UIColor lightGrayColor];
-                                          userLabel.font = [UIFont fontWithName:@"OpenSans" size:12.0];
+                                          userLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:12.0];
                                           if ([_newsFeed[num] objectForKey:@"postType"]) {
                                               //                                              NSLog(@"type yes");
                                               userLabel.text = [[_newsFeed[num] objectForKey:@"postCaption"] capitalizedString];
@@ -2960,9 +3061,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
         //NOT STARTED A HUNT
         
     }else{
-        
-//            NSString *venueName = [_newsFeed[j] objectForKey:@"venueName"];
-        NSLog(@"try num 2 = %d",num);
 
         if (venueName){
             
@@ -3123,7 +3221,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
                                           else{
 
                                           }
-                                          
                                           
                                           [_gridScrollView addSubview:button];
 
@@ -3399,8 +3496,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
             
         }
         
-        
-        
     }else{
         
         CATransition *transition = [CATransition animation];
@@ -3430,12 +3525,9 @@ const NSInteger yookaThumbnailSpace3 = 5;
         else{
             
             YookaClickProfileViewController *media = [[YookaClickProfileViewController alloc]init];
-            
-            
             media.userFullName = userFullName;
             media.myEmail = userId;
             media.myURL =userPicUrl;
-            
             
             [self presentViewController:media animated:NO completion:nil];
         }
@@ -3462,6 +3554,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
     [self presentViewController:media animated:NO completion:nil];
 
 }
+
 //
 //- (void)commentsBtnTouched:(id)sender{
 //    
@@ -3525,6 +3618,7 @@ const NSInteger yookaThumbnailSpace3 = 5;
 //        }
 //
 //}
+
 - (void)closeBtnTouched:(id)sender{
     
     
@@ -3549,140 +3643,6 @@ const NSInteger yookaThumbnailSpace3 = 5;
     
 
 }
-
-
-
-//- (void)topCommentTouched:(id)sender{
-//
-//    
-//    
-//    if (toggle_toppic==1){
-//        
-//        //do nothing
-//    }
-//    else{
-//        
-//        //UIButton* button1 = sender;
-//        
-//        UIButton* button = [self.thumbnails2 objectAtIndex:0];
-//        
-//        //[button1 setUserInteractionEnabled:NO];
-//        
-//        self.captionModalView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 304-33)];
-//        self.captionModalView.opaque = NO;
-//        self.captionModalView.backgroundColor = [[self colorWithHexString:(@"88888D")] colorWithAlphaComponent:0.7f];
-//        //[self.captionModalView setTag:b];
-//        [self.captionModalView setTag:117];
-//        [button addSubview:self.captionModalView];
-//        
-//        NSString *caption = [self.newsFeed5[0] objectForKey:@"caption"];
-//        
-//        
-//        UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 75, self.captionModalView.frame.size.width-10, self.captionModalView.frame.size.height-75)];
-//        captionLabel.textColor = [UIColor whiteColor];
-//        [captionLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
-//        captionLabel.text = [[NSString stringWithFormat:@"%@",caption]uppercaseString];
-//        captionLabel.textAlignment = NSTextAlignmentCenter;
-//        captionLabel.adjustsFontSizeToFitWidth = YES;
-//        captionLabel.numberOfLines = 0;
-//        [captionLabel sizeToFit];
-//        CGRect myFrame = captionLabel.frame;
-//        
-//        //userLabel.text = [[NSString stringWithFormat:@"%@",userFullName]uppercaseString];
-//        // Resize the frame's width to 280 (320 - margins)
-//        // width could also be myOriginalLabelFrame.size.width
-//        myFrame = CGRectMake(myFrame.origin.x, myFrame.origin.y, self.captionModalView.frame.size.width-10, myFrame.size.height);
-//        captionLabel.frame = myFrame;
-//        [captionLabel setBackgroundColor:[UIColor clearColor]];
-//        
-//        [captionLabel setTag:110];
-//        [self.captionModalView addSubview:captionLabel];
-//        
-//        
-//        NSString *dish = [self.newsFeed5[0] objectForKey:@"dishName"];
-//
-//        UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 45, self.captionModalView.frame.size.width-10, self.captionModalView.frame.size.height-75)];
-//        dishLabel.textColor = [UIColor whiteColor];
-//        [dishLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15]];
-//        dishLabel.text = [[NSString stringWithFormat:@"%@",dish]uppercaseString];
-//        dishLabel.textAlignment = NSTextAlignmentCenter;
-//        dishLabel.adjustsFontSizeToFitWidth = YES;
-//        //dishLabel.numberOfLines = 0;
-//
-//        //[dishLabel sizeToFit];
-//        CGRect myFrame2 = dishLabel.frame;
-//        
-//        //userLabel.text = [[NSString stringWithFormat:@"%@",userFullName]uppercaseString];
-//        // Resize the frame's width to 280 (320 - margins)
-//        // width could also be myOriginalLabelFrame.size.width
-//        myFrame2 = CGRectMake(myFrame2.origin.x, myFrame2.origin.y, self.captionModalView.frame.size.width-10, myFrame2.size.height);
-//        dishLabel.frame = myFrame2;
-//        //dishLabel.layer.borderColor = [UIColor whiteColor].CGColor;
-//        //dishLabel.layer.borderWidth = 2.5;
-//        [dishLabel setBackgroundColor:[UIColor clearColor]];
-//        
-//        [dishLabel setTag:115];
-//        
-//        [self.captionModalView addSubview:dishLabel];
-//        
-//        
-//
-//        
-//        YookaButton* closeButton = [YookaButton buttonWithType:UIButtonTypeCustom];
-//        [closeButton  setFrame:CGRectMake((button.frame.size.width)-105, +183,75,17)];
-//        [closeButton setBackgroundColor:[UIColor clearColor]];
-//        [closeButton setBackgroundImage:[[UIImage imageNamed:@"close_toppic.png"]stretchableImageWithLeftCapWidth:10.0 topCapHeight:10.0] forState:UIControlStateNormal];
-//     
-//        [closeButton setTag:119];
-//        [closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        [closeButton addTarget:self action:@selector(topCloseBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-//        [button addSubview:closeButton];
-//        
-//        closeButton.fourthTag=0;
-//        
-//        toggle_toppic=1;
-//    }
-//}
-- (void)topCloseBtnTouched:(id)sender{
-    
-//    NSLog(@"close button touched");
-    
-    toggle_toppic=0;
-    
-    //[self.captionModalView removeFromSuperview];
-    
-    YookaButton *b3 = (YookaButton*)sender;
-    
-    //UIButton* button1 = sender;
-    NSUInteger b = 0;
-    
-    
-    
-    UIButton* button = [self.thumbnails2 objectAtIndex:b3.fourthTag];
-    
-//    UIButton* button2 = [self.thumbnails2 objectAtIndex:b];
-    
-   // [[button2 viewWithTag:b] setUserInteractionEnabled:YES];
-    
-    
-    //[[_commentButton viewWithTag:b] setUserInteractionEnabled:YES];
-    
-    UIView* removeCaption = [button viewWithTag:110];
-    UIView* removeDish = [button viewWithTag:115];
-    UIView* removeCloseButton = [button viewWithTag:119];
-    UIView* removeCaptionModal = [button viewWithTag:117];
-    
-    [removeDish removeFromSuperview];
-    [removeCaptionModal removeFromSuperview];
-    [removeCloseButton removeFromSuperview];
-    [removeCaption removeFromSuperview];
-    
-    
-    //[self buttonAction2: (NSUInteger) b3.secondTag];
-    
-    
-}
-
 
 - (void)backAction
 {

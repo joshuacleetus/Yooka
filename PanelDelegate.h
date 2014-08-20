@@ -20,5 +20,6 @@
 // NavigationViewController calls this method in its delegate when one of the
 // coloured buttons is tapped.
 - (void)didSelectViewWithName:(NSString *)viewName;
+- (void)didSelectViewWithName2:(NSString *)viewName;
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface YookaSubCategoryViewController : UIViewController{
+@interface YookaSubCategoryViewController : UIViewController<UIScrollViewDelegate>{
     
     int i;
     int j;
@@ -45,5 +45,10 @@
 
 @property (nonatomic, strong) NSString *myEmail;
 @property (nonatomic, strong) NSString *active;
+
+@property (nonatomic, strong) UIImage* category_image;
+
+@property (nonatomic, strong) NSMutableDictionary *finishedHuntVenues;
+
 
 @end

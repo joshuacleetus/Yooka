@@ -25,6 +25,7 @@
 #import "FSConverter.h"
 #import "FSVenue.h"
 #import "Flurry.h"
+#import "MainViewController.h"
 
 #define kOFFSET_FOR_KEYBOARD 155.0
 #define kOFFSET_FOR_KEYBOARD_1 255.0
@@ -333,6 +334,8 @@
             _quickNote.text = @"WRITE A CAPTION...";
             [ _quickNote setUserInteractionEnabled:YES];
             [self.view addSubview:_quickNote];
+            
+
             
             if(self.presentingViewController.presentedViewController == self) {
                 
@@ -704,6 +707,215 @@
 
 }
 
+
+
+-(void)next_action:(id)sender{
+    
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    self.instruction_screen_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_2 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_2];
+    
+    self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+    [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cover_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.cover_button];
+    
+    CGRect r = self.instruction_screen_2.bounds;
+    CGRect r2 = CGRectMake(0,300,320,68); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.instruction_screen_2.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(140, 375, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_2 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 430, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Rate what you got here";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_2 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 490, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_2 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 490, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_2:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_2:(id)sender{
+    
+    [self.instruction_screen_2 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    self.instruction_screen_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_3 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_3];
+    
+    self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+    [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cover_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.cover_button];
+
+    
+    CGRect r = self.instruction_screen_3.bounds;
+    CGRect r2 = CGRectMake(0,380,320,135); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.instruction_screen_3.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(120, 290, 120, 100)];
+    [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+    [self.instruction_screen_3 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 150, 320, 90)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Write a quick comment\nTag the place\nTag the item";
+    instruction1.numberOfLines = 0;
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_3 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 290, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"NEXT-->";
+    [self.instruction_screen_3 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 290, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_3:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+    
+}
+
+- (void)next_action_3:(id)sender{
+    
+    [self.instruction_screen_3 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    self.instruction_screen_4 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_4 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_4];
+    
+    self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+    [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.cover_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.cover_button];
+    
+    CGRect r = self.instruction_screen_4.bounds;
+    CGRect r2 = CGRectMake(0,518,320,50); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.instruction_screen_4.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(120, 400, 120, 100)];
+    [pointing_finger setImage:[UIImage imageNamed:@"pointer2.png"]];
+    [self.instruction_screen_4 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 340, 320, 90)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Share your pic!";
+    instruction1.numberOfLines = 0;
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_4 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 420, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_4 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 420, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action_4:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+    
+}
+
+- (void)next_action_4:(id)sender{
+    
+    [self.instruction_screen_4 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = 1;
+    [ud setObject:[NSNumber numberWithInt:launches] forKey:@"upload_screen"];
+}
+
 - (void)back
 {
     CATransition *transition = [CATransition animation];
@@ -1046,13 +1258,13 @@
     if (_uploadImage) {
 
     }else{
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload photo", @"title")
-                                                        message:nil
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-                                              otherButtonTitles:@"Take a picture",@"Select from gallery",nil];
-        alert.tag=0;
-        [alert show];
+//        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Upload photo", @"title")
+//                                                        message:nil
+//                                                       delegate:self
+//                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+//                                              otherButtonTitles:@"Take a picture",@"Select from gallery",nil];
+//        alert.tag=0;
+//        [alert show];
     }
     
     if (_venueSelected) {
@@ -1100,8 +1312,6 @@
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         if (screenSize.height > 480.0f){
-            
-            
             
             // Whenever a person opens the app, check for a cached session
             if (FBSession.activeSession.isOpen) {
@@ -1158,6 +1368,54 @@
                          [self.view addSubview:profileLabel];
                          
                          //     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                         
+                         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                         int launches = [[ud objectForKey:@"upload_screen"]intValue];
+                         
+                         if(launches == 0){
+                         
+                             self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 190, 320, 568-190)];
+                             [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                             [self.view addSubview:self.instruction_screen_1];
+                             
+                             self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                             [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+                             [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+                             [self.cover_button setBackgroundColor:[UIColor clearColor]];
+                             [self.view addSubview:self.cover_button];
+                             
+                             UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(190, -110, 60, 60)];
+                             [pointing_finger setImage:[UIImage imageNamed:@"leftpointer.png"]];
+                             [self.instruction_screen_1 addSubview:pointing_finger];
+                             
+                             CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+                             hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+                             hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+                             hover.toValue = [NSValue valueWithCGPoint:CGPointMake(-10.0, 0.0)]; // y increases downwards on iOS
+                             hover.autoreverses = YES; // Animate back to normal afterwards
+                             hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+                             hover.repeatCount = INFINITY; // The number of times the animation should repeat
+                             [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+                             
+                             UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, -40, 300, 30)];
+                             instruction1.textColor = [UIColor whiteColor];
+                             instruction1.text = @"Take a pic or pick from your gallery";
+                             instruction1.textAlignment = NSTextAlignmentCenter;
+                             [self.instruction_screen_1 addSubview:instruction1];
+                             
+                             UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 300, 100, 30)];
+                             next_label.textColor = [UIColor whiteColor];
+                             next_label.text = @"NEXT-->";
+                             [self.instruction_screen_1 addSubview:next_label];
+                             
+                             self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                             [self.next_button setFrame:CGRectMake(250, 490, 100, 30)];
+                             [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+                             [self.next_button setBackgroundColor:[UIColor clearColor]];
+                             [self.view addSubview:self.next_button];
+                             
+                         }
+
                          
                          
                      }
@@ -1226,6 +1484,53 @@
                                      profileLabel.textAlignment = NSTextAlignmentCenter;
                                      [self.view addSubview:profileLabel];
                                      
+                                     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+                                     int launches = [[ud objectForKey:@"upload_screen"]intValue];
+                                     
+                                     if(launches == 0){
+                                         
+                                         self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 190, 320, 568-190)];
+                                         [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+                                         [self.view addSubview:self.instruction_screen_1];
+                                         
+                                         self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                                         [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+                                         [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+                                         [self.cover_button setBackgroundColor:[UIColor clearColor]];
+                                         [self.view addSubview:self.cover_button];
+                                         
+                                         UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(190, -110, 60, 60)];
+                                         [pointing_finger setImage:[UIImage imageNamed:@"leftpointer.png"]];
+                                         [self.instruction_screen_1 addSubview:pointing_finger];
+                                         
+                                         CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+                                         hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+                                         hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+                                         hover.toValue = [NSValue valueWithCGPoint:CGPointMake(-10.0, 0.0)]; // y increases downwards on iOS
+                                         hover.autoreverses = YES; // Animate back to normal afterwards
+                                         hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+                                         hover.repeatCount = INFINITY; // The number of times the animation should repeat
+                                         [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+                                         
+                                         UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, -40, 300, 30)];
+                                         instruction1.textColor = [UIColor whiteColor];
+                                         instruction1.text = @"Take a pic or pick from your gallery";
+                                         instruction1.textAlignment = NSTextAlignmentCenter;
+                                         [self.instruction_screen_1 addSubview:instruction1];
+                                         
+                                         UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 300, 100, 30)];
+                                         next_label.textColor = [UIColor whiteColor];
+                                         next_label.text = @"NEXT-->";
+                                         [self.instruction_screen_1 addSubview:next_label];
+                                         
+                                         self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                                         [self.next_button setFrame:CGRectMake(250, 490, 100, 30)];
+                                         [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+                                         [self.next_button setBackgroundColor:[UIColor clearColor]];
+                                         [self.view addSubview:self.next_button];
+                                         
+                                     }
+                                     
                                      
                                  }
                              }];
@@ -1293,6 +1598,38 @@
                          
                          //     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
                          
+                         self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 190, 320, 568-190)];
+                         [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.5f]];
+                         [self.view addSubview:self.instruction_screen_1];
+                         
+                         UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(190, -110, 60, 60)];
+                         [pointing_finger setImage:[UIImage imageNamed:@"leftpointer.png"]];
+                         [self.instruction_screen_1 addSubview:pointing_finger];
+                         
+                         CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+                         hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+                         hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+                         hover.toValue = [NSValue valueWithCGPoint:CGPointMake(-10.0, 0.0)]; // y increases downwards on iOS
+                         hover.autoreverses = YES; // Animate back to normal afterwards
+                         hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+                         hover.repeatCount = INFINITY; // The number of times the animation should repeat
+                         [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+                         
+                         UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(50, -40, 300, 30)];
+                         instruction1.textColor = [UIColor whiteColor];
+                         instruction1.text = @"Click here to upload a picture";
+                         [self.instruction_screen_1 addSubview:instruction1];
+                         
+                         UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 300, 100, 30)];
+                         next_label.textColor = [UIColor whiteColor];
+                         next_label.text = @"NEXT-->";
+                         [self.instruction_screen_1 addSubview:next_label];
+                         
+                         self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+                         [self.next_button setFrame:CGRectMake(250, 490, 100, 30)];
+                         [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+                         [self.next_button setBackgroundColor:[UIColor clearColor]];
+                         [self.view addSubview:self.next_button];
                          
                      }
                  }];
@@ -1372,6 +1709,11 @@
 
         }
     }
+    
+    
+}
+- (void)cover_action:(id)sender{
+    
 }
 
 #pragma mark - pictures
@@ -1980,7 +2322,9 @@
                     [self dismissViewControllerAnimated:NO completion:nil];
                     
                 }else{
-                    [self.delegate didSelectViewWithName:@"YookaNewsFeedViewController"];
+                    
+                    [self.delegate didSelectViewWithName2:@"YookaNewsFeedViewController"];
+                    
                 }
                 
                 _venueSelected = nil;

@@ -13,7 +13,8 @@
 #import "FSVenue.h"
 #import <Reachability.h>
 #import "YookaBackend.h"
-
+#import <QuartzCore/QuartzCore.h>
+#import <QuartzCore/CALayer.h>
 
 @interface YookaMenuViewController ()
 
@@ -164,6 +165,89 @@
         [alert show];
     }
     
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    [super viewDidAppear:animated];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = [[ud objectForKey:@"menu_screen"]intValue];
+    
+    if(launches == 0){
+    
+    self.instruction_screen_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 568)];
+    [self.instruction_screen_1 setBackgroundColor:[[UIColor blackColor]colorWithAlphaComponent:0.8f]];
+    [self.view addSubview:self.instruction_screen_1];
+        
+        self.cover_button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.cover_button setFrame:CGRectMake(0, 0, 320, 568)];
+        [self.cover_button addTarget:self action:@selector(cover_action:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cover_button setBackgroundColor:[UIColor clearColor]];
+        [self.view addSubview:self.cover_button];
+    
+    CGRect r = self.instruction_screen_1.bounds;
+    CGRect r2 = CGRectMake(0, 39, 320, 64); // adjust this as desired!
+    UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextAddRect(c, r2);
+    CGContextAddRect(c, r);
+    CGContextEOClip(c);
+    CGContextSetFillColorWithColor(c, [UIColor blackColor].CGColor);
+    CGContextFillRect(c, r);
+    UIImage* maskim = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CALayer* mask = [CALayer layer];
+    mask.frame = r;
+    mask.contents = (id)maskim.CGImage;
+    self.instruction_screen_1.layer.mask = mask;
+    
+    UIImageView *pointing_finger = [[UIImageView alloc]initWithFrame:CGRectMake(130, 120, 60, 60)];
+    [pointing_finger setImage:[UIImage imageNamed:@"righthand.png"]];
+    [self.instruction_screen_1 addSubview:pointing_finger];
+    
+    CABasicAnimation *hover = [CABasicAnimation animationWithKeyPath:@"position"];
+    hover.additive = YES; // fromValue and toValue will be relative instead of absolute values
+    hover.fromValue = [NSValue valueWithCGPoint:CGPointZero];
+    hover.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, -10.0)]; // y increases downwards on iOS
+    hover.autoreverses = YES; // Animate back to normal afterwards
+    hover.duration = 0.3; // The duration for one part of the animation (0.2 up and 0.2 down)
+    hover.repeatCount = INFINITY; // The number of times the animation should repeat
+    [pointing_finger.layer addAnimation:hover forKey:@"myHoverAnimation"];
+    
+    UILabel *instruction1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 180, 300, 30)];
+    instruction1.textColor = [UIColor whiteColor];
+    instruction1.text = @"Add an item from this place";
+    instruction1.textAlignment = NSTextAlignmentCenter;
+    [self.instruction_screen_1 addSubview:instruction1];
+    
+    UILabel *next_label = [[UILabel alloc]initWithFrame:CGRectMake(250, 490, 100, 30)];
+    next_label.textColor = [UIColor whiteColor];
+    next_label.text = @"DONE";
+    [self.instruction_screen_1 addSubview:next_label];
+    
+    self.next_button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.next_button setFrame:CGRectMake(250, 490, 100, 30)];
+    [self.next_button addTarget:self action:@selector(next_action:) forControlEvents:UIControlEventTouchUpInside];
+    [self.next_button setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.next_button];
+        
+    }
+    
+}
+
+- (void)cover_action:(id)sender{
+    
+}
+
+- (void)next_action:(id)sender{
+    [self.instruction_screen_1 removeFromSuperview];
+    [self.next_button removeFromSuperview];
+    [self.cover_button removeFromSuperview];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    int launches = 1;
+    [ud setObject:[NSNumber numberWithInt:launches] forKey:@"menu_screen"];
 }
 
 - (void)searchButtonClicked:(id)sender

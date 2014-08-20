@@ -10,7 +10,9 @@
 #import <FlatUIKit.h>
 #import <KinveyKit/KinveyKit.h>
 
-@interface YookaSignupViewController : UIViewController<UIAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface YookaSignupViewController : UIViewController<UIAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>{
+    IBOutlet UIButton *resetPasswordBtn;
+}
 
 @property (nonatomic, strong) IBOutlet UIImageView *logoImage;
 @property (nonatomic, strong) IBOutlet UIImageView *signupPanelTop;
@@ -30,5 +32,8 @@
 @property (nonatomic, strong) NSString *userEmail;
 - (IBAction)signUpBtnTouched:(id)sender;
 - (IBAction)takePicture:(id)sender;
+@property (nonatomic,strong) IBOutlet FUIButton *fbBtn;
+
+@property (strong, nonatomic) IBOutlet FUIButton *termsBtn;
 
 @end

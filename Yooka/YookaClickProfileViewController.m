@@ -114,13 +114,29 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.view addSubview:self.profileScrollView];
             [self.profileScrollView setBackgroundColor:[UIColor clearColor]];
             
+            self.feedScrollView = [[UIScrollView alloc] initWithFrame:screenRect4];
+            self.feedScrollView.contentSize= self.view.bounds.size;
+            self.feedScrollView.frame = CGRectMake(0.f, 0.f, 320.f, self.view.frame.size.height);
+            [self.view addSubview:self.feedScrollView];
+            [self.feedScrollView setBackgroundColor:[UIColor whiteColor]];
+            
+            [self.feedScrollView setHidden:YES];
+            
             UIImageView *bg_color = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 278)];
             [bg_color setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
             [self.profileScrollView addSubview:bg_color];
             
+            UIImageView *bg_color_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 278)];
+            [bg_color_3 setBackgroundColor:[self colorWithHexString:@"3ac0ec"]];
+            [self.feedScrollView addSubview:bg_color_3];
+            
             self.backBtnImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
             self.backBtnImage.image = [UIImage imageNamed:@"back_artisse_2.png"];
             [self.profileScrollView addSubview:self.backBtnImage];
+            
+            self.backBtnImage3 = [[UIImageView alloc]initWithFrame:CGRectMake(12, 28, 19, 18)];
+            self.backBtnImage3.image = [UIImage imageNamed:@"back_artisse_2.png"];
+            [self.feedScrollView addSubview:self.backBtnImage3];
             
             self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [self.backBtn setFrame:CGRectMake(10, 20, 40, 40)];
@@ -129,6 +145,14 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
             [self.backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
             [self.profileScrollView addSubview:self.backBtn];
+            
+            self.backBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.backBtn3 setFrame:CGRectMake(10, 20, 40, 40)];
+            [self.backBtn3 setTitle:@"" forState:UIControlStateNormal];
+            [self.backBtn3 setBackgroundColor:[UIColor clearColor]];
+            //    [_backBtn setBackgroundImage:[[UIImage imageNamed:@"dismiss_Btn.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
+            [self.backBtn3 addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+            [self.feedScrollView addSubview:self.backBtn3];
             
             //set profile image background color here.
             self.bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, 320, 220)];
@@ -149,6 +173,13 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             self.titleLabel.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
             [self.profileScrollView addSubview:self.titleLabel];
             
+            UILabel *label3 = [[UILabel alloc]initWithFrame:CGRectMake(30, 25, 260, 22)];
+            label3.textAlignment = NSTextAlignmentCenter;
+            label3.textColor = [UIColor whiteColor];
+            label3.attributedText = attributedString5;
+            label3.font = [UIFont fontWithName:@"OpenSans-SemiBold" size:15.0];
+            [self.feedScrollView addSubview:label3];
+            
             self.profileImageView = [[UIImageView alloc]initWithFrame:CGRectMake(111, 65, 100, 100)];
             self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
             [self.profileImageView.layer setBorderWidth:4.0];
@@ -156,6 +187,14 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.profileImageView setContentMode:UIViewContentModeScaleAspectFill];
             [self.profileImageView setClipsToBounds:YES];
             [self.profileScrollView addSubview:self.profileImageView];
+            
+            self.profileImageView3 = [[UIImageView alloc]initWithFrame:CGRectMake(111, 65, 100, 100)];
+            self.profileImageView3.layer.cornerRadius = self.profileImageView.frame.size.height / 2;
+            [self.profileImageView3.layer setBorderWidth:4.0];
+            [self.profileImageView3.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.profileImageView3 setContentMode:UIViewContentModeScaleAspectFill];
+            [self.profileImageView3 setClipsToBounds:YES];
+            [self.feedScrollView addSubview:self.profileImageView3];
             
                 if (_myURL) {
                     
@@ -173,10 +212,13 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                          {
                              // do something with image
                              [self.profileImageView setImage:image];
+                             [self.profileImageView3 setImage:image];
 
                          }else{
                              UIImage *image = [UIImage imageNamed:@"minion.jpg"];
                              [self.profileImageView setImage:image];
+                             [self.profileImageView3 setImage:image];
+
                          }
                      }];
                     
@@ -195,6 +237,15 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.profileLabel setAdjustsFontSizeToFitWidth:YES];
             [self.profileScrollView addSubview:self.profileLabel];
             
+            self.profileLabel3 = [[UILabel alloc]initWithFrame:CGRectMake( 10, 170, 300, 20)];
+            self.profileLabel3.textAlignment = NSTextAlignmentCenter;
+            self.profileLabel3.textColor = [UIColor whiteColor];
+            self.profileLabel3.text = [_userFullName uppercaseString];
+            self.profileLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:16.0];
+            [self.profileLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.profileLabel3 setAdjustsFontSizeToFitWidth:YES];
+            [self.feedScrollView addSubview:self.profileLabel3];
+            
             self.listCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 230, 107, 25)];
             self.listCountLabel.textAlignment = NSTextAlignmentCenter;
             self.listCountLabel.textColor = [UIColor whiteColor];
@@ -202,13 +253,28 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.listCountLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.listCountLabel];
             
+            self.listCountLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(0, 230, 107, 25)];
+            self.listCountLabel3.textAlignment = NSTextAlignmentCenter;
+            self.listCountLabel3.textColor = [UIColor whiteColor];
+            self.listCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.listCountLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.listCountLabel3];
+            
             self.listLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 250, 107, 25)];
             self.listLabel.textAlignment = NSTextAlignmentCenter;
             self.listLabel.textColor = [UIColor whiteColor];
-            self.listLabel.text = @"LIST";
-            self.listLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            self.listLabel.text = @"LISTS";
+            self.listLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
             [self.listLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.listLabel];
+            
+            self.listLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(0, 250, 107, 25)];
+            self.listLabel3.textAlignment = NSTextAlignmentCenter;
+            self.listLabel3.textColor = [UIColor whiteColor];
+            self.listLabel3.text = @"LISTS";
+            self.listLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
+            [self.listLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.listLabel3];
             
             self.followersCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
             self.followersCountLabel.textAlignment = NSTextAlignmentCenter;
@@ -217,13 +283,28 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.followersCountLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.followersCountLabel];
             
+            self.followersCountLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
+            self.followersCountLabel3.textAlignment = NSTextAlignmentCenter;
+            self.followersCountLabel3.textColor = [UIColor whiteColor];
+            self.followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.followersCountLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.followersCountLabel3];
+            
             self.followersLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 250, 107, 25)];
             self.followersLabel.textAlignment = NSTextAlignmentCenter;
             self.followersLabel.textColor = [UIColor whiteColor];
             self.followersLabel.text = @"FOLLOWERS";
-            self.followersLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            self.followersLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
             [self.followersLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.followersLabel];
+            
+            self.followersLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(107, 250, 107, 25)];
+            self.followersLabel3.textAlignment = NSTextAlignmentCenter;
+            self.followersLabel3.textColor = [UIColor whiteColor];
+            self.followersLabel3.text = @"FOLLOWERS";
+            self.followersLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
+            [self.followersLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.followersLabel3];
             
             [self getFollowerUsers];
             
@@ -234,13 +315,28 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             [self.followingCountLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.followingCountLabel];
             
+            self.followingCountLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(215, 230, 107, 25)];
+            self.followingCountLabel3.textAlignment = NSTextAlignmentCenter;
+            self.followingCountLabel3.textColor = [UIColor whiteColor];
+            self.followingCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.followingCountLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.followingCountLabel3];
+            
             self.followingLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 250, 107, 25)];
             self.followingLabel.textAlignment = NSTextAlignmentCenter;
             self.followingLabel.textColor = [UIColor whiteColor];
             self.followingLabel.text = @"FOLLOWING";
-            self.followingLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.0];
+            self.followingLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
             [self.followingLabel setBackgroundColor:[UIColor clearColor]];
             [self.profileScrollView addSubview:self.followingLabel];
+            
+            self.followingLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(215, 250, 107, 25)];
+            self.followingLabel3.textAlignment = NSTextAlignmentCenter;
+            self.followingLabel3.textColor = [UIColor whiteColor];
+            self.followingLabel3.text = @"FOLLOWING";
+            self.followingLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:9.5];
+            [self.followingLabel3 setBackgroundColor:[UIColor clearColor]];
+            [self.feedScrollView addSubview:self.followingLabel3];
             
             [self getFollowingUsers];
             
@@ -258,7 +354,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             
             self.feedView = [[UIView alloc]initWithFrame:CGRectMake(0, 300, 300, self.view.frame.size.height)];
             [self.feedView setBackgroundColor:[UIColor clearColor]];
-            [self.profileScrollView addSubview:self.feedView];
+            [self.feedScrollView addSubview:self.feedView];
             
             [self.feedView setHidden:YES];
             [self.completedView setHidden:YES];
@@ -409,6 +505,36 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             self.feedButton.tag = 1;
             self.feedButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
             [self.profileScrollView addSubview:self.feedButton];
+            
+            UIButton *progressButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [progressButton3  setFrame:CGRectMake(5, 280, 100, 55)];
+            [progressButton3 setBackgroundColor:[UIColor clearColor]];
+            [progressButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [progressButton3 addTarget:self action:@selector(progressButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [progressButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            progressButton3.tag = 1;
+            progressButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.feedScrollView addSubview:progressButton3];
+            
+            UIButton *completedButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [completedButton3  setFrame:CGRectMake(110, 280, 100, 55)];
+            [completedButton3 setBackgroundColor:[UIColor clearColor]];
+            [completedButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [completedButton3 addTarget:self action:@selector(completedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [completedButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            completedButton3.tag = 1;
+            completedButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.feedScrollView addSubview:completedButton3];
+            
+            UIButton *feedButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [feedButton3  setFrame:CGRectMake(216, 280, 100, 55)];
+            [feedButton3 setBackgroundColor:[UIColor clearColor]];
+            [feedButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [feedButton3 addTarget:self action:@selector(feedButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [feedButton3.titleLabel setFont:[UIFont fontWithName:@"OpenSans" size:18]];
+            feedButton3.tag = 1;
+            feedButton3.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+            [self.feedScrollView addSubview:feedButton3];
             
             [self checkSubscribedHunts];
             [self getMyNewsFeed];
@@ -858,29 +984,42 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
 }
 
 - (void)progressButtonClicked:(id)sender{
-    
-    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize)];
+    [self.feedScrollView setHidden:YES];
+    [self.progressScrollView setHidden:NO];
     [self.progressView setHidden:NO];
     [self.completedView setHidden:YES];
     [self.feedView setHidden:YES];
+    [self.profileScrollView setContentOffset:CGPointMake(0, 0)];
+    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize)];
     
 }
 
 - (void)completedButtonClicked:(id)sender{
-    
-    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize2)];
+    [self.feedScrollView setHidden:YES];
+    [self.progressScrollView setHidden:NO];
     [self.completedView setHidden:NO];
     [self.progressView setHidden:YES];
     [self.feedView setHidden:YES];
+    [self.profileScrollView setContentOffset:CGPointMake(0, 0)];
+    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize2)];
     
 }
 
 - (void)feedButtonClicked:(id)sender{
     
-    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize3+300)];
+    [self.feedScrollView setHidden:NO];
+    [self.progressScrollView setHidden:YES];
     [self.feedView setHidden:NO];
     [self.progressView setHidden:YES];
     [self.completedView setHidden:YES];
+    
+    [self.feedScrollView setContentOffset:CGPointMake(0, 0)];
+    
+    if (self.myPosts.count) {
+        [self.feedScrollView setContentSize:CGSizeMake(320, contentSize3+340)];
+    }else{
+        [self getMyNewsFeed];
+    }
     
 }
 
@@ -995,8 +1134,8 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                     [self.finishedHuntNames addObject:_subscribedHuntNames[(self.subscribedHuntNames.count - j)-1]];
                     [self.finishedHuntCounts addObject:[NSString stringWithFormat:@"%@/%@",[_huntDict2 objectForKey:_subscribedHuntNames[(self.subscribedHuntNames.count - j)-1]],[_huntDict2 objectForKey:_subscribedHuntNames[(self.subscribedHuntNames.count - j)-1]]]];
                     
-                    
                 }else{
+                    
                     [self.inProgressHuntNames addObject:_subscribedHuntNames[(self.subscribedHuntNames.count - j)-1]];
                     [self.inProgressHuntCounts addObject:[NSString stringWithFormat:@"%lu/%@",(unsigned long)objectsOrNil.count,[_huntDict2 objectForKey:_subscribedHuntNames[(self.subscribedHuntNames.count - j)-1]]]];
                     [self fillProgressHunts:j2];
@@ -1012,14 +1151,10 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
         
     }else{
         
-        NSLog(@"finished = %@",_finishedHuntCounts);
-        NSLog(@"in progress = %@",_inProgressHuntCounts);
-        
         NSString *list_count = [NSString stringWithFormat:@"%d",(int)(self.inProgressHuntNames.count+self.finishedHuntNames.count)];
         self.listCountLabel.text = list_count;
+        self.listCountLabel3.text = list_count;
         
-//        k=0;
-//        [self fillProgressHunts];
         l=0;
         [self fillFinishedHunts];
     }
@@ -1032,6 +1167,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                                                                   (row2*169)+35,
                                                                   160,
                                                                   140)];
+    button.tag = num;
     button.userInteractionEnabled = YES;
     [button addTarget:self action:@selector(buttonAction2:) forControlEvents:UIControlEventTouchUpInside];
     ++col2;
@@ -1044,6 +1180,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
     [self.profileScrollView setContentSize:CGSizeMake(320, contentSize)];
     [self.progressView addSubview:button];
     [self.thumbnails2 addObject:button];
+    self.progressView.frame = CGRectMake(0, 300, 320, contentSize);
     
     NSString *picUrl = [_huntDict6 objectForKey:_inProgressHuntNames[num]];
 
@@ -1143,6 +1280,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
         // self.progressView.backgroundColor = [self colorWithHexString:@"f8f8f8"];
         [self.progressView addSubview:button];
         [self.thumbnails2 addObject:button];
+        self.progressView.frame = CGRectMake(0, 300, 320, contentSize);
         
         NSString *picUrl = [_huntDict6 objectForKey:_inProgressHuntNames[k]];
         
@@ -1462,7 +1600,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
     }
     
     if (l==self.finishedHuntNames.count) {
-        self.progressView.frame = CGRectMake(0, 300, 320, contentSize2);
+        self.completedView.frame = CGRectMake(0, 300, 320, contentSize2);
     }
     
 }
@@ -1541,14 +1679,14 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
         
         row++;
         
-        [self.feedView addSubview:_button];
+        [self.feedScrollView addSubview:_button];
         [self.thumbnails addObject:_button];
         
+        [self.feedScrollView setContentSize:CGSizeMake(320, contentSize3+340)];
         
     }
     
-    self.feedView.frame = CGRectMake(0, 300, 320, contentSize3+40);
-    [self.profileScrollView setContentSize:CGSizeMake(320, contentSize3+300)];
+    self.feedView.frame = CGRectMake(0, 300, 320, 300+586);
     
     [self loadImages];
     
@@ -1834,11 +1972,9 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
         
         [button setBackgroundColor:[self colorWithHexString:@"f0f0f0"]];
         
-        
         if ([[self.myPosts[m] objectForKey:@"postType"] isEqualToString:@"started hunt"]) {
             
             NSString *hunt_pic_url = [self.myPosts[m] objectForKey:@"huntPicUrl"];
-            
             
             UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 55, 305, 225)];
             [buttonImage setBackgroundColor:[UIColor clearColor]];
@@ -1856,8 +1992,6 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             whitebox.layer.masksToBounds = NO;
             whitebox.layer.shadowColor = [[[self colorWithHexString:@"bdbdbd"]colorWithAlphaComponent:0.6f]CGColor];
             [button addSubview:whitebox];
-            
-            
             
             UIImageView *whitebox2 = [[UIImageView alloc]initWithFrame:CGRectMake(7.5, 280, 305, 10)];
             [whitebox2 setBackgroundColor:[UIColor whiteColor]];
@@ -1918,8 +2052,7 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                      buttonImage.image = image;
                      [button addSubview:buttonImage];
                      
-                    
-                     
+                     [self.feedScrollView addSubview:button];
                      
                      m++;
                      if (m==self.myPosts.count) {
@@ -2239,286 +2372,6 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                      
                  }
              }];
-            
-            //             }
-            //         }];
-            
-            //        UIButton *button = [self.thumbnails objectAtIndex:i];
-            //
-            //        UIImageView *buttonImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 310, 310)];
-            //        //                [buttonImage2 setBackgroundColor:[UIColor redColor]];
-            //        buttonImage2.image = [UIImage imageNamed:@"YookaPostsBg.png"];
-            //        [button addSubview:buttonImage2];
-            //
-            //        UIImageView *buttonImage = [[UIImageView alloc]initWithFrame:CGRectMake(7, 7, 304, 304)];
-            //        [buttonImage setBackgroundColor:[UIColor clearColor]];
-            //        buttonImage.contentMode = UIViewContentModeScaleAspectFill;
-            //        buttonImage.clipsToBounds = YES;
-            //        [button addSubview:buttonImage];
-            //
-            //        [buttonImage setImageWithURL:[NSURL URLWithString:dishPicUrl]
-            //                       placeholderImage:nil
-            //                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            //
-            //                                  UIImageView *buttonImage3 = [[UIImageView alloc]initWithFrame:CGRectMake( 20, 260, 76, 78)];
-            //                                  buttonImage3.image = [UIImage imageNamed:@"YookaProfilePicbg.png"];
-            //                                  [button addSubview:buttonImage3];
-            //
-            //
-            //                                  UILabel *dishLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, 290, 45)];
-            //                                  dishLabel.textColor = [UIColor whiteColor];
-            //                                  [dishLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:30]];
-            //                                  dishLabel.text = [dishName uppercaseString];
-            //                                  dishLabel.textAlignment = NSTextAlignmentLeft;
-            //                                  dishLabel.adjustsFontSizeToFitWidth = YES;
-            //                                  dishLabel.numberOfLines = 0;
-            //                                  [dishLabel sizeToFit];
-            //                                  dishLabel.layer.shadowColor = [[UIColor blackColor] CGColor];
-            //                                  dishLabel.layer.shadowRadius = 1;
-            //                                  dishLabel.layer.shadowOpacity = 1;
-            //                                  dishLabel.layer.shadowOffset = CGSizeMake(2.0, 5.0);
-            //                                  dishLabel.layer.masksToBounds = NO;
-            //                                  [button addSubview:dishLabel];
-            //
-            //                                  UILabel *venueLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 315, 155, 30)];
-            //                                  venueLabel.textColor = [UIColor orangeColor];
-            //                                  [venueLabel setFont:[UIFont fontWithName:@"OpenSans-Bold" size:20]];
-            //                                  venueLabel.text = venueName;
-            //                                  venueLabel.textAlignment = NSTextAlignmentCenter;
-            //                                  venueLabel.adjustsFontSizeToFitWidth = YES;
-            //                                  [button addSubview:venueLabel];
-            //
-            //                                  UIButton *restaurant_button = [UIButton buttonWithType:UIButtonTypeCustom];
-            //                                  [restaurant_button  setFrame:CGRectMake(100, 315, 155, 30)];
-            //                                  [restaurant_button setBackgroundColor:[UIColor clearColor]];
-            //                                  restaurant_button.tag = i;
-            //                                  [restaurant_button addTarget:self action:@selector(gotoRestaurant:) forControlEvents:UIControlEventTouchUpInside];
-            //                                  [button addSubview:restaurant_button];
-            //
-            //                                  UILabel *addressLabel = [[UILabel alloc]initWithFrame:CGRectMake(220, 345, 90, 12)];
-            //                                  addressLabel.textColor = [UIColor lightGrayColor];
-            //                                  [addressLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-            //                                  addressLabel.text = venueAddress;
-            //                                  addressLabel.textAlignment = NSTextAlignmentRight;
-            //                                  addressLabel.adjustsFontSizeToFitWidth = NO;
-            //                                  [button addSubview:addressLabel];
-            //
-            //                                  NSDate *createddate = [_newsFeed[i] objectForKey:@"postDate"];
-            //                                  NSDate *now = [NSDate date];
-            //                                  NSString *str;
-            //                                  NSMutableString *myString = [NSMutableString string];
-            //
-            //                                  NSTimeInterval secondsBetween = [now timeIntervalSinceDate:createddate];
-            //                                  if (secondsBetween<60) {
-            //                                      int duration = secondsBetween;
-            //                                      str = [NSString stringWithFormat:@"%ds",duration]; //%d or %i both is ok.
-            //                                      [myString appendString:str];
-            //                                  }else if (secondsBetween<3600) {
-            //                                      int duration = secondsBetween / 60;
-            //                                      str = [NSString stringWithFormat:@"%dm",duration]; //%d or %i both is ok.
-            //                                      [myString appendString:str];
-            //                                  }else if (secondsBetween<86400){
-            //                                      int duration = secondsBetween / 3600;
-            //                                      str = [NSString stringWithFormat:@"%dh",duration]; //%d or %i both is ok.
-            //                                      [myString appendString:str];
-            //                                  }else if (secondsBetween<604800){
-            //                                      int duration = secondsBetween / 86400;
-            //                                      str = [NSString stringWithFormat:@"%dd",duration]; //%d or %i both is ok.
-            //                                      [myString appendString:str];
-            //                                  }else {
-            //                                      int duration = secondsBetween / 604800;
-            //                                      str = [NSString stringWithFormat:@"%dw",duration]; //%d or %i both is ok.
-            //                                      [myString appendString:str];
-            //                                  }
-            //
-            //                                  UILabel* time_label = [[UILabel alloc] initWithFrame:CGRectMake(240, 330, 70, 12)];
-            //                                  time_label.text = [NSString stringWithFormat:@"%@",myString];
-            //                                  time_label.textColor = [UIColor grayColor];
-            //                                  [time_label setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-            //                                  time_label.textAlignment = NSTextAlignmentRight;
-            //                                  [button addSubview:time_label];
-            //
-            //                                  UILabel *captionLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 370, 310, 18)];
-            //                                  captionLabel.textColor = [UIColor darkGrayColor];
-            //                                  [captionLabel setFont:[UIFont fontWithName:@"Helvetica-LightOblique" size:15]];
-            //                                  captionLabel.text = [NSString stringWithFormat:@"\"%@\"",caption];
-            //                                  captionLabel.textAlignment = NSTextAlignmentCenter;
-            //                                  captionLabel.adjustsFontSizeToFitWidth = YES;
-            //                                  [button addSubview:captionLabel];
-            //
-            //                                  //                                    KCSCollection *yookaObjects2 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-            //                                  //                                    KCSAppdataStore *store2 = [KCSAppdataStore storeWithCollection:yookaObjects2 options:nil];
-            //                                  //
-            //                                  //                                    KCSQuery* query4 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-            //                                  //                                    KCSQuery* query5 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YAY"];
-            //                                  ////                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-            //                                  //                                    KCSQuery* query7 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query4,query5, nil];
-            //                                  //
-            //                                  //                                    [store2 queryWithQuery:query7 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-            //                                  //                                        if (errorOrNil == nil) {
-            //                                  //
-            //                                  //                                            _yayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-            //                                  ////                                            NSLog(@"TRY 1 postVote = %@",_yayVote);
-            //                                  //
-            //                                  //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-            //                                  //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
-            //                                  //
-            //                                  //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-            //                                  //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
-            //                                  //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-            //                                  //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
-            //                                  //
-            //                                  //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-            //                                  //                                                if (errorOrNil == nil) {
-            //                                  //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-            //                                  ////                                                    NSLog(@"venue name = %@",dishName);
-            //                                  ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
-            //                                  ////                                                    NSLog(@"yay = %@",_yayVote);
-            //                                  ////                                                    NSLog(@"nay = %@",_nayVote);
-            //                                  //
-            //                                  //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
-            //                                  ////                                                    NSLog(@"percentage = %f",percent);
-            //                                  //
-            //                                  //                                                    // Calculate this somehow
-            //                                  //                                                    UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-            //                                  //                                                    barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-            //                                  //                                                    [button addSubview:barImage];
-            //                                  //
-            //                                  //                                                    UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-            //                                  //                                                    barPercentage.image = [UIImage imageNamed:@"100.png"];
-            //                                  //                                                    [button addSubview:barPercentage];
-            //                                  //
-            //                                  //                                                    UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-            //                                  //                                                    voteLabel.textColor = [UIColor whiteColor];
-            //                                  //                                                    [voteLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
-            //                                  //                                                    voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-            //                                  //                                                    voteLabel.textAlignment = NSTextAlignmentCenter;
-            //                                  //                                                    voteLabel.adjustsFontSizeToFitWidth = NO;
-            //                                  //                                                    [button addSubview:voteLabel];
-            //                                  //
-            //                                  //                                                    [_gridScrollView addSubview:button];
-            //                                  //
-            //                                  //                                                    i++;
-            //                                  //                                                    [self loadImages];
-            //                                  //
-            //                                  //                                                }else{
-            //                                  ////                                                    NSLog(@"TRY 4 ");
-            //                                  //                                                    [_gridScrollView addSubview:button];
-            //                                  //
-            //                                  //                                                    i++;
-            //                                  //                                                    [self loadImages];
-            //                                  //                                                }
-            //                                  //
-            //                                  //                                            } withProgressBlock:nil];
-            //                                  //
-            //                                  //                                        }else{
-            //                                  //
-            //                                  ////                                            NSLog(@"TRY 2 ");
-            //                                  //                                            KCSCollection *yookaObjects3 = [KCSCollection collectionFromString:@"yookaPosts2" ofClass:[YookaBackend class]];
-            //                                  //                                            KCSAppdataStore *store3 = [KCSAppdataStore storeWithCollection:yookaObjects3 options:nil];
-            //                                  //
-            //                                  //                                            KCSQuery* query8 = [KCSQuery queryOnField:@"dishName" withExactMatchForValue:dishName];
-            //                                  //                                            KCSQuery* query9 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"NAY"];
-            //                                  //                                            //                                    KCSQuery* query6 = [KCSQuery queryOnField:@"postVote" withExactMatchForValue:@"YES"];
-            //                                  //                                            KCSQuery* query10 = [KCSQuery queryForJoiningOperator:kKCSAnd onQueries:query8,query9, nil];
-            //                                  //
-            //                                  //                                            [store3 queryWithQuery:query10 withCompletionBlock:^(NSArray *objectsOrNil, NSError *errorOrNil) {
-            //                                  //                                                if (errorOrNil == nil) {
-            //                                  //
-            //                                                    _nayVote = [NSNumber numberWithInteger:objectsOrNil.count];
-            ////                                                    NSLog(@"venue name = %@",dishName);
-            ////                                                    NSLog(@"TRY 3 postVote = %@",_nayVote);
-            ////                                                    NSLog(@"yay = %@",_yayVote);
-            ////                                                    NSLog(@"nay = %@",_nayVote);
-            //
-            //                                                    CGFloat percent = [_yayVote floatValue]/([_yayVote doubleValue]+[_nayVote doubleValue]);
-            ////                                                    NSLog(@"percentage = %f",percent);
-            //
-            // Calculate this somehow
-            //                                UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-            //                                barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-            //                                [button addSubview:barImage];
-            //
-            //                                UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-            //                                barPercentage.image = [UIImage imageNamed:@"100.png"];
-            //                                [button addSubview:barPercentage];
-            
-            //                                UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-            //                                voteLabel.textColor = [UIColor whiteColor];
-            //                                [voteLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
-            //                                voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-            //                                voteLabel.textAlignment = NSTextAlignmentCenter;
-            //                                voteLabel.adjustsFontSizeToFitWidth = NO;
-            //                                [button addSubview:voteLabel];
-            //
-            //                                [_gridScrollView addSubview:button];
-            //
-            //                                                    i++;
-            //                                                    [self loadImages];
-            //                                  //
-            //                                  //                                                }else{
-            //                                  ////                                                    NSLog(@"TRY 4 ");
-            //                                  //                                                    [_gridScrollView addSubview:button];
-            //                                  //
-            //                                  //                                                    i++;
-            //                                  //                                                    [self loadImages];
-            //                                  //                                                }
-            //                                  //
-            //                                  //                                            } withProgressBlock:nil];
-            //                                  //                                        }
-            //                                  //
-            //                                  //                                    } withProgressBlock:nil];
-            //
-            //                                  if ([post_vote isEqualToString:@"YAY"]) {
-            //                                      CGFloat percent = 1.0;
-            //                                      // Calculate this somehow
-            //                                      UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-            //                                      barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-            //                                      [button addSubview:barImage];
-            //
-            //                                      UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-            //                                      barPercentage.image = [UIImage imageNamed:@"100.png"];
-            //                                      [button addSubview:barPercentage];
-            //
-            //                                      UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-            //                                      voteLabel.textColor = [UIColor whiteColor];
-            //                                      [voteLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
-            //                                      voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-            //                                      voteLabel.textAlignment = NSTextAlignmentCenter;
-            //                                      voteLabel.adjustsFontSizeToFitWidth = NO;
-            //                                      [button addSubview:voteLabel];
-            //                                  }else{
-            //                                      CGFloat percent = 0.0;
-            //                                      // Calculate this somehow
-            //                                      UIImageView *barImage = [[UIImageView alloc]initWithFrame:CGRectMake(35, 390, 250, 20)];
-            //                                      barImage.image = [UIImage imageNamed:@"ratingscalebehind.png"];
-            //                                      [button addSubview:barImage];
-            //
-            //                                      UIImageView *barPercentage = [[UIImageView alloc] initWithFrame:CGRectMake(42, 384, 238*percent, 35)];
-            //                                      barPercentage.image = [UIImage imageNamed:@"100.png"];
-            //                                      [button addSubview:barPercentage];
-            //
-            //                                      UILabel *voteLabel = [[UILabel alloc]initWithFrame:CGRectMake(145, 383, 40, 35)];
-            //                                      voteLabel.textColor = [UIColor whiteColor];
-            //                                      [voteLabel setFont:[UIFont fontWithName:@"OpenSans" size:10]];
-            //                                      voteLabel.text = [NSString stringWithFormat:@"%d%%",(int)(percent*100)];
-            //                                      voteLabel.textAlignment = NSTextAlignmentCenter;
-            //                                      voteLabel.adjustsFontSizeToFitWidth = NO;
-            //                                      [button addSubview:voteLabel];
-            //                                  }
-            //                                  //                                                    NSLog(@"percentage = %f",percent);
-            //
-            //                                  [_gridScrollView addSubview:button];
-            //
-            //
-            //                                  if (i==1) {
-            //                                      [self loadImages2];
-            //                                  }
-            //
-            //                                  i++;
-            //                                  [self loadImages];
-            //
-            //                              }];
             
         }
         
@@ -3739,11 +3592,20 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             _followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
             _followersCountLabel.text = followersCount;
             
+            _followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            _followersCountLabel3.text = followersCount;
+            
             self.userFollowersBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [self.userFollowersBtn  setFrame:CGRectMake(130, 225, 80, 50)];
             [self.userFollowersBtn setBackgroundColor:[UIColor clearColor]];
             [self.userFollowersBtn addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
             [self.profileScrollView addSubview:self.userFollowersBtn];
+            
+            self.userFollowersBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.userFollowersBtn3  setFrame:CGRectMake(130, 225, 80, 50)];
+            [self.userFollowersBtn3 setBackgroundColor:[UIColor clearColor]];
+            [self.userFollowersBtn3 addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
+            [self.feedScrollView addSubview:self.userFollowersBtn3];
             
             [self showFollowBtn];
 
@@ -3758,11 +3620,20 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                 _followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
                 _followersCountLabel.text = followersCount;
                 
+                _followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+                _followersCountLabel3.text = followersCount;
+                
                 self.userFollowersBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.userFollowersBtn  setFrame:CGRectMake(130, 225, 80, 50)];
                 [self.userFollowersBtn setBackgroundColor:[UIColor clearColor]];
                 [self.userFollowersBtn addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
                 [self.profileScrollView addSubview:self.userFollowersBtn];
+                
+                self.userFollowersBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.userFollowersBtn3  setFrame:CGRectMake(130, 225, 80, 50)];
+                [self.userFollowersBtn3 setBackgroundColor:[UIColor clearColor]];
+                [self.userFollowersBtn3 addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
+                [self.feedScrollView addSubview:self.userFollowersBtn3];
                 
                 [self showFollowBtn];
                 
@@ -3785,11 +3656,20 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                 _followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
                 _followersCountLabel.text = followersCount;
                 
+                _followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+                _followersCountLabel3.text = followersCount;
+                
                 self.userFollowersBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 [self.userFollowersBtn  setFrame:CGRectMake(130, 225, 80, 50)];
                 [self.userFollowersBtn setBackgroundColor:[UIColor clearColor]];
                 [self.userFollowersBtn addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
                 [self.profileScrollView addSubview:self.userFollowersBtn];
+                
+                self.userFollowersBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.userFollowersBtn3  setFrame:CGRectMake(130, 225, 80, 50)];
+                [self.userFollowersBtn3 setBackgroundColor:[UIColor clearColor]];
+                [self.userFollowersBtn3 addTarget:self action:@selector(userFollowers:) forControlEvents:UIControlEventTouchUpInside];
+                [self.feedScrollView addSubview:self.userFollowersBtn3];
                 
                 if ([_followerUsers containsObject:[KCSUser activeUser].email]) {
                     [self showUnfollowBtn];
@@ -3840,11 +3720,21 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
             _followingCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
             [self.profileScrollView addSubview:_followingCountLabel];
             
+            self.followingCountLabel3.text = followingCount;
+            self.followingCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+            [self.feedScrollView addSubview:self.followersCountLabel3];
+            
             _userFollowingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [_userFollowingBtn  setFrame:CGRectMake(220, 210, 90, 50)];
             [_userFollowingBtn setBackgroundColor:[UIColor clearColor]];
             [_userFollowingBtn addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
             [self.profileScrollView addSubview:_userFollowingBtn];
+            
+            self.userFollowingBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.userFollowingBtn3  setFrame:CGRectMake(220, 210, 90, 50)];
+            [self.userFollowingBtn3 setBackgroundColor:[UIColor clearColor]];
+            [self.userFollowingBtn3 addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
+            [self.feedScrollView addSubview:self.userFollowingBtn3];
             
         } else {
             
@@ -3857,11 +3747,21 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                 _followingCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
                 [self.profileScrollView addSubview:_followingCountLabel];
                 
+                self.followingCountLabel3.text = followingCount;
+                self.followingCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+                [self.feedScrollView addSubview:self.followersCountLabel3];
+                
                 _userFollowingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 [_userFollowingBtn  setFrame:CGRectMake(220, 210, 90, 50)];
                 [_userFollowingBtn setBackgroundColor:[UIColor clearColor]];
                 [_userFollowingBtn addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
                 [self.profileScrollView addSubview:_userFollowingBtn];
+                
+                self.userFollowingBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.userFollowingBtn3  setFrame:CGRectMake(220, 210, 90, 50)];
+                [self.userFollowingBtn3 setBackgroundColor:[UIColor clearColor]];
+                [self.userFollowingBtn3 addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
+                [self.feedScrollView addSubview:self.userFollowingBtn3];
                 
             } else {
                 
@@ -3880,11 +3780,21 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
                 _followingCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
                 [self.profileScrollView addSubview:_followingCountLabel];
                 
+                self.followingCountLabel3.text = followingCount;
+                self.followingCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+                [self.feedScrollView addSubview:self.followersCountLabel3];
+                
                 _userFollowingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 [_userFollowingBtn  setFrame:CGRectMake(220, 210, 90, 50)];
                 [_userFollowingBtn setBackgroundColor:[UIColor clearColor]];
                 [_userFollowingBtn addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
                 [self.profileScrollView addSubview:_userFollowingBtn];
+                
+                self.userFollowingBtn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+                [self.userFollowingBtn3  setFrame:CGRectMake(220, 210, 90, 50)];
+                [self.userFollowingBtn3 setBackgroundColor:[UIColor clearColor]];
+                [self.userFollowingBtn3 addTarget:self action:@selector(userFollowing:) forControlEvents:UIControlEventTouchUpInside];
+                [self.feedScrollView addSubview:self.userFollowingBtn3];
             }
         }
     } withProgressBlock:nil];
@@ -3914,16 +3824,9 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
 - (void)showFollowBtn
 {
     
-//    UIImageView *followBtn = [[UIImageView alloc]initWithFrame:CGRectMake(115, 200, 100, 35)];
-//    followBtn.image= [UIImage imageNamed:@"unfollow_new.png"];
-//    [self.profileScrollView addSubview:followBtn];
-    
     self.followBtn = [[FUIButton alloc]initWithFrame:CGRectMake(110, 201, 101, 24)];
     UIColor * color4 = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     self.followBtn.buttonColor = color4;
-    //UIColor * color5 = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-    //self.followBtn.shadowColor = color5;
-    //self.followBtn.shadowHeight = 3.0f;
     self.followBtn.cornerRadius = 10.0f;
     self.followBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:13.0];
     [self.followBtn setTitle:@"FOLLOW" forState:UIControlStateNormal];
@@ -3931,24 +3834,39 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
     [self.followBtn addTarget:self action:@selector(followBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
     [self.profileScrollView addSubview:self.followBtn];
     
+    self.followBtnc = [[FUIButton alloc]initWithFrame:CGRectMake(110, 201, 101, 24)];
+    self.followBtnc.buttonColor = color4;
+    self.followBtnc.cornerRadius = 10.0f;
+    self.followBtnc.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:13.0];
+    [self.followBtnc setTitle:@"FOLLOW" forState:UIControlStateNormal];
+    [self.followBtnc setTitleColor:[self colorWithHexString:@"3ac0ec"] forState:UIControlStateNormal];
+    [self.followBtnc addTarget:self action:@selector(followBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+    [self.feedScrollView addSubview:self.followBtnc];
+    
     
 }
 
 - (void)showUnfollowBtn
 {
     
-
-    
     self.followBtn2 = [[FUIButton alloc]initWithFrame:CGRectMake(110, 201, 101, 24)];
     UIColor * color4 = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     self.followBtn2.buttonColor = color4;
-
     self.followBtn2.cornerRadius = 10.0f;
     self.followBtn2.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:13.0];
     [self.followBtn2 setTitle:@"UNFOLLOW" forState:UIControlStateNormal];
     [self.followBtn2 setTitleColor:[self colorWithHexString:@"3ac0ec"] forState:UIControlStateNormal];
     [self.followBtn2 addTarget:self action:@selector(unFollowBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
     [self.profileScrollView addSubview:self.followBtn2];
+    
+    self.followBtn2c = [[FUIButton alloc]initWithFrame:CGRectMake(110, 201, 101, 24)];
+    self.followBtn2c.buttonColor = color4;
+    self.followBtn2c.cornerRadius = 10.0f;
+    self.followBtn2c.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:13.0];
+    [self.followBtn2c setTitle:@"UNFOLLOW" forState:UIControlStateNormal];
+    [self.followBtn2c setTitleColor:[self colorWithHexString:@"3ac0ec"] forState:UIControlStateNormal];
+    [self.followBtn2c addTarget:self action:@selector(unFollowBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
+    [self.feedScrollView addSubview:self.followBtn2c];
     
 
 }
@@ -3961,20 +3879,29 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
     [self showUnfollowBtn];
     [self.followBtn2 setEnabled:YES];
     
-    [_followersCountLabel removeFromSuperview];
+    [self.followersCountLabel removeFromSuperview];
+    [self.followersCountLabel3 removeFromSuperview];
     
     self.followersCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
     self.followersCountLabel.textAlignment = NSTextAlignmentCenter;
-    _followersCountLabel.textColor = [UIColor whiteColor];
+    self.followersCountLabel.textColor = [UIColor whiteColor];
+    self.followersCountLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
+    self.followersCountLabel3.textAlignment = NSTextAlignmentCenter;
+    self.followersCountLabel3.textColor = [UIColor whiteColor];
     if (_followerUsers.count) {
         NSString *followerCount = [NSString stringWithFormat:@"%lu",((unsigned long)_followerUsers.count+1)];
-        _followersCountLabel.text = followerCount;
+        self.followersCountLabel.text = followerCount;
+        self.followersCountLabel3.text = followerCount;
     }else{
         NSString *followerCount = [NSString stringWithFormat:@"1"];
-        _followersCountLabel.text = followerCount;
+        self.followersCountLabel.text = followerCount;
+        self.followersCountLabel3.text = followerCount;
     }
     self.followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
     [self.profileScrollView addSubview:_followersCountLabel];
+    
+    self.followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+    [self.feedScrollView addSubview:_followersCountLabel3];
     
     KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"Followers" ofClass:[YookaBackend class]];
     KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];
@@ -4216,21 +4143,30 @@ const NSInteger yookaThumbnailSpace2015_2 = 5;
 
 - (void)unFollowUser
 {
-    [_followersCountLabel removeFromSuperview];
+    [self.followersCountLabel removeFromSuperview];
+    [self.followersCountLabel3 removeFromSuperview];
 
     self.followersCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
-    _followersCountLabel.textColor = [UIColor whiteColor];
+    self.followersCountLabel.textColor = [UIColor whiteColor];
+    self.followersCountLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(107, 230, 107, 25)];
+    self.followersCountLabel3.textColor = [UIColor whiteColor];
     if (_followerUsers.count) {
         NSString *followerCount = [NSString stringWithFormat:@"%lu",((unsigned long)_followerUsers.count-1)];
-        _followersCountLabel.text = followerCount;
+        self.followersCountLabel.text = followerCount;
+        self.followersCountLabel3.text = followerCount;
     }else{
         NSString *followerCount = [NSString stringWithFormat:@"0"];
-        _followersCountLabel.text = followerCount;
+        self.followersCountLabel.text = followerCount;
+        self.followersCountLabel3.text = followerCount;
     }
 
     self.followersCountLabel.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
-    _followersCountLabel.textAlignment = NSTextAlignmentCenter;
+    self.followersCountLabel.textAlignment = NSTextAlignmentCenter;
     [self.profileScrollView addSubview:_followersCountLabel];
+    
+    self.followersCountLabel3.font = [UIFont fontWithName:@"OpenSans-Bold" size:18.0];
+    self.followersCountLabel3.textAlignment = NSTextAlignmentCenter;
+    [self.feedScrollView addSubview:_followersCountLabel3];
     
     KCSCollection *yookaObjects = [KCSCollection collectionFromString:@"Followers" ofClass:[YookaBackend class]];
     KCSAppdataStore *store = [KCSAppdataStore storeWithCollection:yookaObjects options:nil];

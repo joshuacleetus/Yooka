@@ -34,7 +34,6 @@
 
 @property (nonatomic, strong) YookaHuntsLandingViewController *landingViewController;
 @property (nonatomic, strong) YookaPostViewController *postViewController;
-@property (nonatomic, strong) YookaNewsFeedViewController *newsfeedViewController;
 @property (nonatomic, strong) YookaNewNewsfeedViewController *newsfeed2ViewController;
 @property (nonatomic, strong) YookaSearchLandingViewController *searchViewController;
 @property (nonatomic, strong) YookaProfileNewViewController *profileViewController;
@@ -111,7 +110,7 @@
     if ([viewName isEqualToString:@"YookaHuntsLandingViewController"]) {
             self.landingViewController = [[YookaHuntsLandingViewController alloc] init];
             self.landingViewController.delegate = self;
-        activeViewController = self.landingViewController;
+            activeViewController = self.landingViewController;
     }
     else if ([viewName isEqualToString:@"YookaPostViewController"]) {
         if (self.postViewController == nil) {
@@ -121,8 +120,12 @@
         activeViewController = self.postViewController;
     }
     else if ([viewName isEqualToString:@"YookaNewsFeedViewController"]) {
+        
+        NSLog(@"yooka check = %@",self.yooka_check);
+        if (self.newsfeedViewController == nil || [self.yooka_check isEqualToString:@"YES"]) {
             self.newsfeedViewController = [[YookaNewsFeedViewController alloc]init];
             self.newsfeedViewController.delegate = self;
+        }
          activeViewController = self.newsfeedViewController;
     }
     else if ([viewName isEqualToString:@"YookaSearchLandingViewController"]) {
@@ -160,6 +163,21 @@
     }
     
     activeViewController.view.frame = CGRectMake(self.view.frame.size.width - PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
+    
+    [self.view addSubview:activeViewController.view];
+    [self addChildViewController:activeViewController];
+    
+    [activeViewController didMoveToParentViewController:self];
+    
+    [self showActiveViewWithShadow:YES withOffset:-2];
+}
+
+- (void)showActiveViewWithName2:(NSString *)viewName {
+    
+        self.newsfeedViewController = [[YookaNewsFeedViewController alloc]init];
+        self.newsfeedViewController.delegate = self;
+        activeViewController = self.newsfeedViewController;
+        activeViewController.view.frame = CGRectMake(self.view.frame.size.width - PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
     
     [self.view addSubview:activeViewController.view];
     [self addChildViewController:activeViewController];
@@ -287,6 +305,15 @@
         activeViewController = nil;
     }
     [self showActiveViewWithName:viewName];
+    [self movePanelToOriginalPosition];
+}
+
+- (void)didSelectViewWithName2:(NSString *)viewName {
+    if (activeViewController != nil) {
+        [activeViewController.view removeFromSuperview];
+        activeViewController = nil;
+    }
+    [self showActiveViewWithName2:viewName];
     [self movePanelToOriginalPosition];
 }
 

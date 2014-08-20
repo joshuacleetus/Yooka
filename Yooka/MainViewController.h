@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PanelDelegate.h"
 #import "iCarousel.h"
+#import "YookaNewsFeedViewController.h"
 
 @interface MainViewController : UIViewController<UIScrollViewDelegate,UINavigationControllerDelegate,UINavigationBarDelegate,UITabBarControllerDelegate,UIAlertViewDelegate,KCSOfflineUpdateDelegate, NSURLConnectionDelegate>
 
@@ -17,5 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *navButton2;
 
 @property (nonatomic, strong) iCarousel *carousel;
+
+@property (nonatomic, strong) YookaNewsFeedViewController *newsfeedViewController;
+
+@property (nonatomic, strong) NSString *yooka_check;
 
 @end

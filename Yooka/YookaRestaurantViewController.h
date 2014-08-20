@@ -146,6 +146,7 @@
 @property (strong, nonatomic) IBOutlet UILabel* reviewsLabel;
 @property (strong, nonatomic) IBOutlet UILabel* detailsLabel;
 @property (strong, nonatomic) IBOutlet UILabel* menuLabel;
+@property (strong, nonatomic) IBOutlet UILabel* shareLabel;
 
 @property (nonatomic, strong) IBOutlet UIImageView *reviewsImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *detailsImageView;
@@ -177,6 +178,8 @@
 @property (nonatomic, strong) IBOutlet UIImageView *clockImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *priceImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *infoIconView;
+@property (nonatomic, strong) IBOutlet UIImageView *camera;
+@property (nonatomic, strong) IBOutlet UIImageView *arrow;
 
 @property (nonatomic, strong) IBOutlet UITableView *menuTableView;
 @property (nonatomic, strong) NSString *venueID;

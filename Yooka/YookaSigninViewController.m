@@ -12,8 +12,8 @@
 #import "YookaForgotPasswordViewController.h"
 #import "Flurry.h"
 
-#define kOFFSET_FOR_KEYBOARD 135.0
-#define kOFFSET_FOR_KEYBOARD_1 145.0
+#define kOFFSET_FOR_KEYBOARD 0.0
+#define kOFFSET_FOR_KEYBOARD_1 0.0
 #define kOFFSET_FOR_KEYBOARD_2 145.0
 #define kOFFSET_FOR_KEYBOARD_3 155.0
 
@@ -42,32 +42,25 @@
                                    action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:tap];
     
-    UIColor * color = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-    [self.view setBackgroundColor:color];
-    
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        if (screenSize.height > 480.0f) {
+        if (isiPhone5) {
             /*Do iPhone 5 stuff here.*/
             
-            self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 97, 120, 120)];
-            self.logoImage.image = [UIImage imageNamed:@"Yookatransparent.png"];
-            [self.view addSubview:self.logoImage];
+            [self.view setBackgroundColor:[self colorWithHexString:@"eeeeee"]];
             
-            self.loginPanel = [[UIImageView alloc]initWithFrame:CGRectMake(15, 241, 290, 91)];
-            self.loginPanel.image = [UIImage imageNamed:@"login_panel.png"];
-            [self.view addSubview:self.loginPanel];
+            UIImageView *text_field_holder = [[UIImageView alloc]initWithFrame:CGRectMake(0, 30, 320, 90)];
+            [text_field_holder setImage:[UIImage imageNamed:@"text_field_holder.png"]];
+            [self.view addSubview:text_field_holder];
             
-            _username = [[UITextField alloc] initWithFrame:CGRectMake(31, 241, 248, 43)];
+            _username = [[UITextField alloc] initWithFrame:CGRectMake(15, 32, 305, 42)];
             _username.borderStyle = UITextBorderStyleNone;
-            _username.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
-            _username.textColor = [UIColor blackColor];
-            _username.backgroundColor = [UIColor clearColor];
+            _username.font = [UIFont fontWithName:@"OpenSans" size:17.5f];
+            _username.textColor = [UIColor lightGrayColor];
+            _username.backgroundColor = [UIColor whiteColor];
             
             if ([_username respondsToSelector:@selector(setAttributedPlaceholder:)]) {
                 UIColor *color = [UIColor lightGrayColor];
-                _username.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email" attributes:@{NSForegroundColorAttributeName: color}];
+                _username.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email Address" attributes:@{NSForegroundColorAttributeName: color}];
             } else {
                 // TODO: Add fall-back code to set placeholder color.
                 _username.backgroundColor = [UIColor clearColor];
@@ -83,11 +76,11 @@
             [_username addTarget:self action:@selector(textFieldShouldReturn:)forControlEvents:UIControlEventEditingDidEndOnExit];
             [self.view addSubview:_username];
             
-            _password = [[UITextField alloc] initWithFrame:CGRectMake(31, 286, 248, 46)];
+            _password = [[UITextField alloc] initWithFrame:CGRectMake(15, 77, 305, 42)];
             _password.borderStyle = UITextBorderStyleNone;
-            _password.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
-            _password.textColor = [UIColor blackColor];
-            _password.backgroundColor = [UIColor clearColor];
+            _password.font = [UIFont fontWithName:@"OpenSans" size:17.5f];
+            _password.textColor = [UIColor lightGrayColor];
+            _password.backgroundColor = [UIColor whiteColor];
             
             if ([_password respondsToSelector:@selector(setAttributedPlaceholder:)]) {
                 UIColor *color = [UIColor lightGrayColor];
@@ -110,34 +103,20 @@
             [_password addTarget:self action:@selector(textFieldDidBeginEditing:)forControlEvents:UIControlEventEditingDidBegin];
             [self.view addSubview:_password];
             
-            UILabel *forgotPassword = [[UILabel alloc]initWithFrame:CGRectMake(15, 340, 300, 15)];
-            forgotPassword.textColor = [UIColor whiteColor];
-            [forgotPassword setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+            UILabel *forgotPassword = [[UILabel alloc]initWithFrame:CGRectMake(15, 140, 300, 18)];
+            forgotPassword.textColor = [self colorWithHexString:@"3ac0ec"];
+            [forgotPassword setFont:[UIFont fontWithName:@"OpenSans" size:13]];
             forgotPassword.text = @"Forgot Password?";
             forgotPassword.textAlignment = NSTextAlignmentCenter;
             forgotPassword.adjustsFontSizeToFitWidth = NO;
             [self.view addSubview:forgotPassword];
             
             resetPasswordBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [resetPasswordBtn setFrame:CGRectMake(80, 340, 150, 25)];
+            [resetPasswordBtn setFrame:CGRectMake(80, 130, 150, 25)];
             [resetPasswordBtn setTitle:nil forState:UIControlStateNormal];
             [resetPasswordBtn setBackgroundColor:[UIColor clearColor]];
             [resetPasswordBtn addTarget:self action:@selector(resetPassword:) forControlEvents:UIControlEventTouchUpInside];
             [self.view addSubview:resetPasswordBtn];
-            
-            self.signInBtn = [[FUIButton alloc]initWithFrame:CGRectMake(15, 380, 290, 43)];
-            UIColor * color4 = [UIColor colorWithRed:245/255.0f green:135/255.0f blue:77/255.0f alpha:1.0f];
-            self.signInBtn.buttonColor = color4;
-            UIColor * color5 = [UIColor colorWithRed:221/255.0f green:117/255.0f blue:62/255.0f alpha:1.0f];
-            self.signInBtn.shadowColor = color5;
-            self.signInBtn.shadowHeight = 3.0f;
-            self.signInBtn.cornerRadius = 6.0f;
-            self.signInBtn.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0];
-            [self.signInBtn setTitle:@"Signin" forState:UIControlStateNormal];
-            [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self.signInBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-            [self.signInBtn addTarget:self action:@selector(signInBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:self.signInBtn];
             
         } else {
             /*Do iPhone Classic stuff here.*/
@@ -244,7 +223,7 @@
     }else{
         
         YookaForgotPasswordViewController* media = [[YookaForgotPasswordViewController alloc] init];
-        [self presentViewController:media animated:YES completion:nil];
+        [self.navigationController pushViewController:media animated:NO];
         
     }
     
@@ -274,12 +253,40 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:145/255.0f green:208/255.0f blue:194/255.0f alpha:1.0f];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.tintColor = [self colorWithHexString:@"3ac0ec"];
     self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.title = @"Signin";
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    self.navigationItem.title = @"Sign In";
+    
+    if (IS_OS_7_OR_LATER) {
+        self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [self colorWithHexString:@"6e6e6e"],
+                                                                        NSFontAttributeName: [UIFont fontWithName:@"OpenSans" size:18.0f]
+                                                                        };
+        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
+         setTitleTextAttributes:
+         @{NSForegroundColorAttributeName:[self colorWithHexString:@"3ac0ec"],
+           NSFontAttributeName:[UIFont fontWithName:@"OpenSans" size:18.0f]
+           }
+         forState:UIControlStateNormal];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+    
+    if (IS_OS_5_OR_LATER) {
+        self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [self colorWithHexString:@"6e6e6e"],
+                                                                        UITextAttributeFont: [UIFont fontWithName:@"OpenSans" size:18.0f]
+                                                                        };
+        
+        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+         @{UITextAttributeTextColor:[self colorWithHexString:@"3ac0ec"],
+           UITextAttributeFont:[UIFont fontWithName:@"OpenSans" size:18.0f]
+           }
+                                                                                                forState:UIControlStateNormal];
+    }
+    
+    UIBarButtonItem *signinButton = [[UIBarButtonItem alloc] initWithTitle:@"Sign In" style:UIBarButtonItemStylePlain target:self action:@selector(signInBtnTouched:)];
+    self.navigationItem.rightBarButtonItem = signinButton;
     
     // register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -292,15 +299,59 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                            withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    
 }
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleDefault;
+}
+
+-(UIColor*)colorWithHexString:(NSString*)hex
+{
+    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+    
+    // String should be 6 or 8 characters
+    if ([cString length] < 6) return [UIColor grayColor];
+    
+    // strip 0X if it appears
+    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
+    
+    if ([cString length] != 6) return  [UIColor grayColor];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.location = 0;
+    range.length = 2;
+    NSString *rString = [cString substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [cString substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [cString substringWithRange:range];
+    
+    // Scan values
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    return [UIColor colorWithRed:((float) r / 255.0f)
+                           green:((float) g / 255.0f)
+                            blue:((float) b / 255.0f)
+                           alpha:1.0f];
+}
+
 
 - (void)signInBtnTouched:(id)sender
 {
-    [sender resignFirstResponder];
-    
     NSString *username = _username.text;
-//    NSLog(@"username = %@",username);
+    //    NSLog(@"username = %@",username);
     NSString *yookaUsername = [username lowercaseString];
+    
     
     [Flurry setUserID: yookaUsername];
     
